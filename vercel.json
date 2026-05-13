@@ -1,13 +1,7 @@
 {
   "functions": {
     "api/[...path].js": {
-      "includeFiles": [
-        "index.html",
-        "admin.html",
-        "styles.css",
-        "assets/**",
-        "banners/**"
-      ]
+      "includeFiles": "{index.html,admin.html,styles.css,assets/**,banners/**}"
     }
   },
   "rewrites": [
