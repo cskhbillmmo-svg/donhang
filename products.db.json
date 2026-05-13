@@ -1,0 +1,130 @@
+{
+  "products": [
+    {
+      "id": "P-INIT01",
+      "title": "Combo 10 Đôi Tất Uni cổ ngắn chất cotton - Hàng cao cấp - Kháng khuẩn , khử mùi, co giãn tốt",
+      "img": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000001
+    },
+    {
+      "id": "P-INIT02",
+      "title": "Combo 10 Đôi Tất Nam/Nữ Zare, Vớ Cổ Ngắn Trơn Đen Trắng Kháng Khuẩn-Thoáng Khí",
+      "img": "https://images.unsplash.com/photo-1582966772680-860e372bb558?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000002
+    },
+    {
+      "id": "P-INIT03",
+      "title": "Spin Curved Screen 1080P 27Inch Led 24Inch Display Computer Full Hd Lcd 100Hz",
+      "img": "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000003
+    },
+    {
+      "id": "P-INIT04",
+      "title": "Ốp điện thoại mềm hình mèo dễ thương cho điện thoại di động iPhone 7/8/plus 11 12 Promax",
+      "img": "https://images.unsplash.com/photo-1616410011236-7a42121dd981?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000004
+    },
+    {
+      "id": "P-INIT05",
+      "title": "Xiaomi Tv Google Xiaomi Tv a 4K 55 Inch L55Ma-Asea 2025",
+      "img": "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000005
+    },
+    {
+      "id": "P-INIT06",
+      "title": "Smart Tv Samsung Crystal Uhd Du7000 4K 43 Inch Tizen Os (2024)",
+      "img": "https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000006
+    },
+    {
+      "id": "P-INIT07",
+      "title": "ĐẦM XÒE DỰ TIỆC BÈO TAY SANG TRỌNG KÈM PHỤ KIỆN SIÊU XINH",
+      "img": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000007
+    },
+    {
+      "id": "P-INIT08",
+      "title": "Samsung A03 / A04 / A05 / A06 Case with Square Edges, Flexible Soft Cover",
+      "img": "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000008
+    },
+    {
+      "id": "P-INIT09",
+      "title": "Quạt Tích Điện Đa Năng SUPER – Gió Mạnh, Xoay 360°, Cắm USB",
+      "img": "https://images.unsplash.com/photo-1527015175922-36a306cf0e20?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000009
+    },
+    {
+      "id": "P-INIT10",
+      "title": "Quạt Mini Để Bàn Mã 806 – Tích Điện, Xoay 360, Cổng Sạc USB Tiện Dụng",
+      "img": "https://images.unsplash.com/photo-1565374395542-0ce18882c857?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000010
+    },
+    {
+      "id": "P-INIT11",
+      "title": "Dầu gội TRESEMME KERATIN SMOOTH Thailand 370ml",
+      "img": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000011
+    },
+    {
+      "id": "P-INIT12",
+      "title": "ISARO giầy thể thao nữ Đế Dày Năng Động Siêu Nhẹ",
+      "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000012
+    },
+    {
+      "id": "P-INIT13",
+      "title": "Đồng Hồ Nam OP Japan Watch Mặt Xanh Dây Da Chạy Đủ 6 Kim",
+      "img": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000013
+    },
+    {
+      "id": "P-INIT14",
+      "title": "Camera wifi Không Dây Thông Minh Camera Tự Động, Giám Sát Camera Quan Sát Mạng",
+      "img": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000014
+    },
+    {
+      "id": "P-INIT15",
+      "title": "Máy Ảnh Kỹ Thuật Số Mini Mèo Camera-007 Cute Có Thể Sạc Lại",
+      "img": "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000015
+    },
+    {
+      "id": "P-INIT16",
+      "title": "Tủ lạnh Casper Side by Side Inverter 462L/ 530L - Làm lạnh nhanh, cấp đông sâu",
+      "img": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000016
+    },
+    {
+      "id": "P-INIT17",
+      "title": "Nồi cơm điện lòng gốm cao cấp UNIE URC818, Dung tích 1,8L, 6 chế độ",
+      "img": "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000017
+    },
+    {
+      "id": "P-INIT18",
+      "title": "65inch - 4K Smart Google TV TCL 65T6C - HDR10+ - Dolby Atmos - Bảo Hành 2 Năm",
+      "img": "https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=520&q=80",
+      "enabled": true,
+      "createdAt": 1778600000018
+    }
+  ]
+}

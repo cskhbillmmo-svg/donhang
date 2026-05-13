@@ -1,0 +1,50 @@
+{
+  "orders": [
+    {
+      "id": "ORD-GCCLR0",
+      "status": "available",
+      "productTitle": "Đồng hồ Casio nam",
+      "productImg": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=520",
+      "amount": 1290000,
+      "commissionRate": 0.005,
+      "commission": 6450,
+      "assignedTo": "testui",
+      "claimedBy": null,
+      "claimedAt": null,
+      "approvedAt": null,
+      "rejectedAt": null,
+      "rejectedReason": null,
+      "createdAt": 1778667497606
+    },
+    {
+      "id": "ORD-2LUU30",
+      "status": "available",
+      "productTitle": "Tủ lạnh Casper Side by Side 462L Inverter",
+      "productImg": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=520",
+      "amount": 12990000,
+      "commissionRate": 0.005,
+      "commission": 64950,
+      "claimedBy": null,
+      "claimedAt": null,
+      "approvedAt": null,
+      "rejectedAt": null,
+      "rejectedReason": null,
+      "createdAt": 1778667092650
+    },
+    {
+      "id": "ORD-CKFKGK",
+      "status": "approved",
+      "productTitle": "Smart TV Samsung 43 inch",
+      "productImg": "https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=520&q=80",
+      "amount": 750000,
+      "commissionRate": 0.005,
+      "commission": 3750,
+      "claimedBy": "testui",
+      "claimedAt": 1778666856998,
+      "approvedAt": 1778666889326,
+      "rejectedAt": null,
+      "rejectedReason": null,
+      "createdAt": 1778666799069
+    }
+  ]
+}

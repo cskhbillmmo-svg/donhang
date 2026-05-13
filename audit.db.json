@@ -1,0 +1,80 @@
+{
+  "logs": [
+    {
+      "id": "AL-1778670713954-o3l6",
+      "ts": 1778670713954,
+      "action": "product-delete",
+      "target": "P-R30XS3",
+      "details": null
+    },
+    {
+      "id": "AL-1778670713877-y1gy",
+      "ts": 1778670713877,
+      "action": "vip-config-update",
+      "target": null,
+      "details": {
+        "levels": [
+          "VIP1",
+          "VIP2",
+          "VIP3",
+          "VIP4"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778670683657-3m6j",
+      "ts": 1778670683657,
+      "action": "admin-password-changed",
+      "target": null,
+      "details": null
+    },
+    {
+      "id": "AL-1778670683507-6ds3",
+      "ts": 1778670683507,
+      "action": "admin-password-changed",
+      "target": null,
+      "details": null
+    },
+    {
+      "id": "AL-1778670683455-a4sk",
+      "ts": 1778670683455,
+      "action": "product-create",
+      "target": "P-R30XS3",
+      "details": {
+        "title": "Sản phẩm test mới"
+      }
+    },
+    {
+      "id": "AL-1778670683422-alyo",
+      "ts": 1778670683422,
+      "action": "vip-config-update",
+      "target": null,
+      "details": {
+        "levels": [
+          "VIP1",
+          "VIP2",
+          "VIP3",
+          "VIP4"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778670073771-9k4g",
+      "ts": 1778670073771,
+      "action": "order-delete",
+      "target": "ORD-SV3UZM",
+      "details": null
+    },
+    {
+      "id": "AL-1778670073713-1y4m",
+      "ts": 1778670073713,
+      "action": "order-create",
+      "target": "ORD-SV3UZM",
+      "details": {
+        "productTitle": "TEST_LINK_LOGIC",
+        "amount": 1000,
+        "assignedTo": null
+      }
+    }
+  ]
+}

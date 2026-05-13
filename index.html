@@ -1,0 +1,2200 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexusSys - Enterprise System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="mobile-auth" id="appShell">
+      <section class="hero">
+        <div class="app-icon" aria-hidden="true">
+          <svg class="tiki-mark" viewBox="0 0 96 96" role="img">
+            <rect width="96" height="96" rx="0" fill="#0b74ff" />
+            <path d="M17 34h21" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M27.5 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M45 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M59 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M75 34 61 48" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M62 48 76 63" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+            <path d="M82 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <h1>Tiki</h1>
+        <p>Hệ thống xử lý đơn hàng chuyên nghiệp</p>
+      </section>
+
+      <section class="login-card auth-card" id="loginCard" aria-label="Đăng nhập hệ thống">
+        <form id="loginForm" action="#" method="post">
+          <label for="username">Tên đăng nhập</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0c2.3-2.4 3.5-5.4 3.5-9S14.3 5.4 12 3m0 18c-2.3-2.4-3.5-5.4-3.5-9S9.7 5.4 12 3M3.6 9h16.8M3.6 15h16.8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Nhập tài khoản"
+              autocomplete="username"
+            />
+          </div>
+
+          <label for="password">Mật khẩu</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 10V8a5 5 0 0 1 10 0v2m-9.5 0h9a1.5 1.5 0 0 1 1.5 1.5v6A1.5 1.5 0 0 1 16.5 19h-9A1.5 1.5 0 0 1 6 17.5v-6A1.5 1.5 0 0 1 7.5 10Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button class="icon-button" type="button" aria-label="Hiện mật khẩu">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M2.5 12s3.3-5 9.5-5 9.5 5 9.5 5-3.3 5-9.5 5-9.5-5-9.5-5Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </button>
+          </div>
+
+          <button class="login-button" type="submit">Đăng Nhập Hệ Thống</button>
+        </form>
+
+        <div class="divider"></div>
+
+        <p class="register-copy">
+          Chưa có tài khoản thành viên?
+          <button class="text-button" type="button" data-show="register">Đăng ký ngay</button>
+        </p>
+      </section>
+
+      <section class="login-card auth-card is-hidden" id="registerCard" aria-label="Đăng ký tài khoản">
+        <div class="form-title">
+          <h2>Đăng ký tài khoản</h2>
+          <p>Tạo tài khoản thành viên để truy cập hệ thống.</p>
+        </div>
+
+        <form id="registerForm" action="#" method="post">
+          <label for="fullname">Họ và tên</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input id="fullname" name="fullname" type="text" placeholder="Nhập họ và tên" autocomplete="name" />
+          </div>
+
+          <label for="phone">Số điện thoại</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 4h10a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 17 20H7a1.5 1.5 0 0 1-1.5-1.5v-13A1.5 1.5 0 0 1 7 4Zm4 13h2"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input id="phone" name="phone" type="tel" placeholder="Nhập số điện thoại" autocomplete="tel" />
+          </div>
+
+          <label for="newUsername">Tên đăng nhập</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0c2.3-2.4 3.5-5.4 3.5-9S14.3 5.4 12 3m0 18c-2.3-2.4-3.5-5.4-3.5-9S9.7 5.4 12 3M3.6 9h16.8M3.6 15h16.8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input id="newUsername" name="newUsername" type="text" placeholder="Tạo tên đăng nhập" autocomplete="username" />
+          </div>
+
+          <label for="newPassword">Mật khẩu</label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 10V8a5 5 0 0 1 10 0v2m-9.5 0h9a1.5 1.5 0 0 1 1.5 1.5v6A1.5 1.5 0 0 1 16.5 19h-9A1.5 1.5 0 0 1 6 17.5v-6A1.5 1.5 0 0 1 7.5 10Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <input id="newPassword" name="newPassword" type="password" placeholder="Tạo mật khẩu" autocomplete="new-password" />
+          </div>
+
+          <button class="login-button" type="submit">Đăng Ký Tài Khoản</button>
+        </form>
+
+        <div class="divider"></div>
+
+        <p class="register-copy">
+          Đã có tài khoản?
+          <button class="text-button" type="button" data-show="login">Đăng nhập</button>
+        </p>
+      </section>
+
+      <section class="home-screen is-hidden" id="homeScreen" aria-label="Ứng dụng">
+        <!-- Trang chủ -->
+        <div class="screen is-active home-route" data-route="home">
+          <div class="sale-heading">
+            <div>
+              <strong>Siêu hội chăm da</strong>
+              <span>Giảm đến 50% ›</span>
+            </div>
+            <div class="beauty-badge">SIÊU HỘI<br />LÀM ĐẸP</div>
+          </div>
+          <form class="shop-search" id="searchForm" action="#">
+            <label class="search-box" for="shopSearch">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <input id="shopSearch" type="search" placeholder="Bạn tìm gì hôm nay" />
+            </label>
+            <button class="cart-button" type="button" aria-label="Giỏ hàng">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M4 5h2l2 10h9l2-7H8M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </form>
+
+        <section class="intro-banner" aria-label="Banner giới thiệu">
+          <div class="banner-track">
+            <article class="banner-slide">
+              <img src="./banners/banner-1.jpg" alt="Banner giới thiệu 1" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-2.jpg" alt="Banner giới thiệu 2" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-3.jpg" alt="Banner giới thiệu 3" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-4.jpg" alt="Banner giới thiệu 4" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-5.jpg" alt="Banner giới thiệu 5" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-6.jpg" alt="Banner giới thiệu 6" />
+            </article>
+            <article class="banner-slide">
+              <img src="./banners/banner-7.jpg" alt="Banner giới thiệu 7" />
+            </article>
+          </div>
+          <div class="banner-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </section>
+
+          <section class="product-section">
+            <h2>Dành riêng cho bạn</h2>
+
+            <div class="product-grid" id="productGrid"></div>
+            <p class="empty-products is-hidden" id="emptyProducts">Không tìm thấy sản phẩm phù hợp.</p>
+          </section>
+
+          <section class="commission-feed">
+            <h2>Hoa hồng gần đây</h2>
+            <ul id="commissionList"></ul>
+          </section>
+        </div>
+
+        <!-- Lịch sử đơn hàng -->
+        <div class="screen" data-route="orders">
+          <header class="page-banner">
+            <h2 id="ordersTitle">Chờ Xử Lý</h2>
+          </header>
+          <div class="tab-bar" role="tablist">
+            <button type="button" class="tab is-active" data-tab="pending">
+              Chờ Xử Lý <span class="tab-badge">1</span>
+            </button>
+            <button type="button" class="tab" data-tab="done">Hoàn Thành</button>
+            <button type="button" class="tab" data-tab="processed">Đã Xử Lý</button>
+          </div>
+          <div class="tab-panel is-active" data-panel="pending">
+            <div id="ordersPending"></div>
+            <div class="empty-state is-hidden" id="ordersPendingEmpty">Chưa có đơn chờ xử lý.</div>
+          </div>
+          <div class="tab-panel" data-panel="done">
+            <div id="ordersDone"></div>
+            <div class="empty-state is-hidden" id="ordersDoneEmpty">Chưa có đơn hoàn thành.</div>
+          </div>
+          <div class="tab-panel" data-panel="processed">
+            <div id="ordersProcessed"></div>
+            <div class="empty-state is-hidden" id="ordersProcessedEmpty">Chưa có đơn đã xử lý.</div>
+          </div>
+        </div>
+
+        <!-- Đơn hàng (Grab order) -->
+        <div class="screen" data-route="grab">
+          <header class="page-banner">
+            <h2>Đơn hàng</h2>
+          </header>
+          <article class="voucher-card" id="voucherCard">
+            <div class="voucher-image" id="voucherImage">
+              <span class="voucher-ribbon">CLASSIC</span>
+              <div class="voucher-art" id="voucherArt">
+                <span class="voucher-title">SIÊU<br />VOUCHER</span>
+                <span class="voucher-sub">ƯU ĐÃI HÀNG LỚN CỰC HỜI</span>
+                <span class="voucher-amount">500K</span>
+              </div>
+            </div>
+            <div class="voucher-info">
+              <div>
+                <span id="voucherProductLabel">Thành viên áp dụng</span>
+                <strong id="voucherProductName">VIP1</strong>
+              </div>
+              <div>
+                <span>Phạm vi số lượng</span>
+                <strong>0 ₫ To<br />10.000.000 ₫</strong>
+              </div>
+              <div>
+                <span>Tỷ lệ hoa hồng</span>
+                <strong class="accent">0.5%</strong>
+              </div>
+            </div>
+          </article>
+
+          <section class="account-stats">
+            <h3>Tài khoản của tôi.</h3>
+            <ul>
+              <li>
+                <span>Cấp độ: VIP1</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="#22c55e" />
+                  <path d="m8 12 3 3 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </li>
+              <li>
+                <span id="grabReceived">Số đơn hàng được nhận: 1/30</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="#22c55e" />
+                  <path d="m8 12 3 3 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </li>
+              <li>
+                <span id="grabBalance">Số dư còn lại: 30.000 ₫</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="#22c55e" />
+                  <path d="m8 12 3 3 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </li>
+            </ul>
+            <button class="receive-button" type="button" id="receiveBtn">Nhận Ngay</button>
+          </section>
+
+          <p class="note">Ghi chú : Tất cả đơn hàng sẽ được hệ thống LAZADA tự động phân phối đơn ngẫu nhiên</p>
+          <p class="note">- Giới hạn đơn hàng tùy thuộc vào cấp bậc VIP của bạn</p>
+        </div>
+
+        <!-- Ví tiền -->
+        <div class="screen" data-route="wallet">
+          <!-- Sub: main -->
+          <div class="wallet-sub is-active" data-sub="main">
+            <header class="wallet-banner">
+              <div class="wallet-title">
+                <h2>Ví tiền</h2>
+                <button class="eye-button" type="button" id="balanceEye" aria-label="Ẩn/hiện số dư">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.5 12s3.3-5 9.5-5 9.5 5 9.5 5-3.3 5-9.5 5-9.5-5-9.5-5Z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                    <circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  </svg>
+                </button>
+              </div>
+              <div class="wallet-total">
+                <span>Tổng tài sản</span>
+                <strong class="balance" data-amount="30000">30.000 ₫</strong>
+              </div>
+              <div class="wallet-split">
+                <div>
+                  <span>Khả dụng</span>
+                  <strong class="balance" data-amount="30000">30.000 ₫</strong>
+                </div>
+                <div>
+                  <span>Đóng băng</span>
+                  <strong class="balance" data-amount="0">0 ₫</strong>
+                </div>
+              </div>
+            </header>
+
+            <div class="wallet-actions">
+              <button type="button" class="wallet-btn deposit" data-sub-go="deposit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14m0 0-6-6m6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Nạp tiền
+              </button>
+              <button type="button" class="wallet-btn withdraw" data-sub-go="withdraw">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 19V5m0 0-6 6m6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Rút tiền
+              </button>
+            </div>
+
+            <section class="tx-section">
+              <div class="tx-head">
+                <h3>Lịch sử giao dịch</h3>
+                <a href="#" data-sub-go="history">Xem tất cả</a>
+              </div>
+              <ul class="tx-list" id="txListRecent"></ul>
+            </section>
+          </div>
+
+          <!-- Sub: deposit -->
+          <div class="wallet-sub" data-sub="deposit">
+            <header class="sub-header">
+              <button class="back-btn" type="button" data-sub-go="main" aria-label="Quay lại">
+                <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+              <h2>Nạp tiền</h2>
+            </header>
+            <div class="balance-card">
+              <span>Số dư hiện tại</span>
+              <strong>30.000 ₫</strong>
+            </div>
+            <h3 class="section-title">Chọn số tiền</h3>
+            <div class="amount-grid" id="depositAmounts">
+              <button type="button" data-amount="100000">100.000 ₫</button>
+              <button type="button" data-amount="200000">200.000 ₫</button>
+              <button type="button" data-amount="500000">500.000 ₫</button>
+              <button type="button" data-amount="1000000">1.000.000 ₫</button>
+              <button type="button" data-amount="2000000">2.000.000 ₫</button>
+              <button type="button" data-amount="5000000">5.000.000 ₫</button>
+            </div>
+            <input type="text" class="amount-input" id="depositCustom" placeholder="Hoặc nhập số tiền khác" inputmode="numeric" />
+            <h3 class="section-title">Phương thức thanh toán</h3>
+            <div class="payment-method is-selected">
+              <span class="pm-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2.5 2.5 7v1.5h19V7L12 2.5Z" fill="currentColor"/><path d="M4 10v8m4-8v8m4-8v8m4-8v8m4-8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="19" width="20" height="2.5" rx="0.5" fill="currentColor"/><circle cx="12" cy="5.5" r="0.8" fill="#fff"/></svg>
+              </span>
+              <span class="pm-name">Chuyển khoản ngân hàng</span>
+              <svg class="pm-check" viewBox="0 0 24 24"><path d="m5 13 4 4 10-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </div>
+            <button type="button" class="confirm-button" id="depositConfirm" disabled>
+              Xác nhận
+              <svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <p class="confirm-note">Bạn sẽ được chuyển đến trang thông tin chuyển khoản</p>
+          </div>
+
+          <!-- Sub: withdraw -->
+          <div class="wallet-sub" data-sub="withdraw">
+            <header class="sub-header">
+              <button class="back-btn" type="button" data-sub-go="main" aria-label="Quay lại">
+                <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+              <h2>Rút tiền</h2>
+            </header>
+            <div class="balance-card balance-card-blue">
+              <span>Số dư khả dụng</span>
+              <strong>30.000 ₫</strong>
+            </div>
+            <h3 class="section-title">Tài khoản nhận tiền</h3>
+            <div class="bank-empty" id="bankEmpty">
+              <div class="bank-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2.5 2.5 7v1.5h19V7L12 2.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10v8m4-8v8m4-8v8m4-8v8m4-8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2" y="19" width="20" height="2.5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+              </div>
+              <strong>Chưa có tài khoản ngân hàng</strong>
+              <p>Thêm tài khoản để rút tiền</p>
+              <button type="button" class="add-bank-btn" data-sub-go="add-bank">Thêm tài khoản</button>
+            </div>
+            <div class="bank-info is-hidden" id="bankInfo">
+              <div class="bank-info-head">
+                <span class="bank-badge" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 2.5 2.5 7v1.5h19V7L12 2.5Z" fill="currentColor"/><path d="M4 10v8m4-8v8m4-8v8m4-8v8m4-8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="19" width="20" height="2.5" rx="0.5" fill="currentColor"/><circle cx="12" cy="5.5" r="0.8" fill="#fff"/></svg>
+                </span>
+                <div>
+                  <strong id="bankInfoName">--</strong>
+                  <small id="bankInfoAccount">--</small>
+                </div>
+              </div>
+              <div class="bank-info-row"><span>Chủ tài khoản</span><strong id="bankInfoHolder">--</strong></div>
+              <div class="bank-info-row" id="bankInfoBranchRow"><span>Chi nhánh</span><strong id="bankInfoBranch">--</strong></div>
+            </div>
+            <h3 class="section-title">Số tiền rút</h3>
+            <div class="amount-grid disabled" id="withdrawAmounts">
+              <button type="button" data-amount="100000" disabled>100.000 ₫</button>
+              <button type="button" data-amount="200000" disabled>200.000 ₫</button>
+              <button type="button" data-amount="500000" disabled>500.000 ₫</button>
+              <button type="button" data-amount="1000000" disabled>1.000.000 ₫</button>
+              <button type="button" data-amount="2000000" disabled>2.000.000 ₫</button>
+              <button type="button" data-amount="5000000" disabled>5.000.000 ₫</button>
+            </div>
+            <input type="text" class="amount-input" id="withdrawCustom" placeholder="Hoặc nhập số tiền khác" inputmode="numeric" disabled />
+            <div class="warn-banner">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v5m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <span>Rút tối thiểu: <strong>100.000 ₫</strong></span>
+            </div>
+            <div class="error-banner is-hidden" id="withdrawError">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v5m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <span id="withdrawErrorText"></span>
+            </div>
+            <button type="button" class="confirm-button" id="withdrawConfirm" disabled>Rút tiền</button>
+          </div>
+
+          <!-- Sub: add-bank -->
+          <div class="wallet-sub" data-sub="add-bank">
+            <header class="sub-header">
+              <button class="back-btn" type="button" data-sub-go="withdraw" aria-label="Quay lại">
+                <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+              <h2>Thông tin ngân hàng</h2>
+            </header>
+            <div class="notice-banner">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v6m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <div>
+                <strong>Lưu ý quan trọng</strong>
+                <p>Mỗi tài khoản chỉ được liên kết với 1 ngân hàng duy nhất. Sau khi thêm, bạn không thể tự chỉnh sửa hoặc xóa. Vui lòng liên hệ CSKH nếu cần thay đổi.</p>
+              </div>
+            </div>
+            <h3 class="section-title">Thêm tài khoản mới</h3>
+            <div class="warn-banner block">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v5m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <span>Vui lòng kiểm tra kỹ thông tin trước khi lưu. Sau khi thêm, bạn sẽ không thể tự chỉnh sửa.</span>
+            </div>
+            <form id="bankForm" class="bank-form" autocomplete="off">
+              <label>Ngân hàng <span class="req">*</span>
+                <input type="text" name="bank" placeholder="VD: Vietcombank" required />
+              </label>
+              <label>Số tài khoản <span class="req">*</span>
+                <input type="text" name="account" placeholder="VD: 1234567890" inputmode="numeric" required />
+              </label>
+              <label>Tên chủ tài khoản <span class="req">*</span>
+                <input type="text" name="holder" placeholder="VD: NGUYEN VAN A" required />
+              </label>
+              <label>Chi nhánh (không bắt buộc)
+                <input type="text" name="branch" placeholder="VD: CN Quận 1" />
+              </label>
+              <div class="bank-form-actions">
+                <button type="button" class="btn-cancel" data-sub-go="withdraw">Hủy</button>
+                <button type="submit" class="btn-save">Lưu</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Sub: history -->
+          <div class="wallet-sub" data-sub="history">
+            <header class="sub-header">
+              <button class="back-btn" type="button" data-sub-go="main" aria-label="Quay lại">
+                <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+              <h2>Lịch sử giao dịch</h2>
+            </header>
+            <div class="tab-bar history-tabs" role="tablist">
+              <button type="button" class="tab is-active" data-htab="balance">Biến động số dư</button>
+              <button type="button" class="tab" data-htab="withdraw">Lịch sử rút tiền</button>
+            </div>
+            <div class="tab-panel is-active" data-hpanel="balance">
+              <ul class="tx-list tx-list-full" id="txListBalance"></ul>
+              <div class="empty-state is-hidden" id="txEmptyBalance">Chưa có giao dịch nào.</div>
+            </div>
+            <div class="tab-panel" data-hpanel="withdraw">
+              <ul class="tx-list tx-list-full" id="txListWithdraw"></ul>
+              <div class="empty-state" id="txEmptyWithdraw">Chưa có lịch sử rút tiền.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cá nhân -->
+        <div class="screen" data-route="profile">
+        <div class="profile-sub is-active" data-psub="main">
+          <header class="profile-banner">
+            <div class="avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div class="profile-id">
+              <h2 id="profilePhone">0862206752</h2>
+              <span class="vip-badge">👑 VIP 1</span>
+            </div>
+          </header>
+
+          <section class="profile-stats">
+            <div>
+              <strong id="statTotalCommission">0 ₫</strong>
+              <span>Tổng hoa hồng</span>
+            </div>
+            <div>
+              <strong id="statOrderCount">0</strong>
+              <span>Đơn đã xử lý</span>
+            </div>
+            <div>
+              <strong class="accent" id="statCommissionRate">15%</strong>
+              <span>Hoa hồng</span>
+            </div>
+          </section>
+
+          <section class="referral-card">
+            <div class="referral-text">
+              <span>Mã giới thiệu của bạn</span>
+              <strong>695026</strong>
+              <p>Mời bạn bè đăng ký và nhận hoa hồng từ các cấp dưới</p>
+            </div>
+            <div class="referral-actions">
+              <button type="button" aria-label="Sao chép">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="8" y="8" width="11" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.7" />
+                </svg>
+              </button>
+              <button type="button" class="primary" aria-label="Chia sẻ">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="6" cy="12" r="2.5" fill="currentColor" />
+                  <circle cx="18" cy="6" r="2.5" fill="currentColor" />
+                  <circle cx="18" cy="18" r="2.5" fill="currentColor" />
+                  <path d="m8 11 8-4m-8 6 8 4" stroke="currentColor" stroke-width="1.7" fill="none" />
+                </svg>
+              </button>
+            </div>
+          </section>
+
+          <ul class="profile-menu">
+            <li>
+              <span class="menu-icon menu-icon-bank">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 3 7v2h18V7L12 3Z" fill="currentColor"/>
+                  <path d="M5 10v8m4-8v8m6-8v8m4-8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <rect x="2.5" y="19" width="19" height="2.5" rx="0.6" fill="currentColor"/>
+                </svg>
+              </span>
+              <span>Thông tin ngân hàng</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </li>
+            <li>
+              <span class="menu-icon menu-icon-invite">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3.5" fill="currentColor"/>
+                  <path d="M2.5 19c.8-3.4 3.5-5 6.5-5s5.7 1.6 6.5 5Z" fill="currentColor"/>
+                  <circle cx="17" cy="6" r="2" fill="currentColor"/>
+                  <path d="M17 9.5v5m-2.5-2.5h5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span>Giới thiệu bạn bè</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </li>
+            <li>
+              <span class="menu-icon menu-icon-security">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2.5 4 5.5v6c0 4.5 3.4 8.4 8 9.5 4.6-1.1 8-5 8-9.5v-6l-8-3Z" fill="currentColor"/>
+                  <path d="m9 12 2.2 2.2L15.5 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>Bảo mật</span>
+              <svg class="chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </li>
+          </ul>
+
+          <button class="logout-button" type="button" id="logoutButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 12H4m0 0 4-4m-4 4 4 4M11 4h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Đăng xuất
+          </button>
+        </div>
+
+        <!-- Profile sub: bank -->
+        <div class="profile-sub" data-psub="bank">
+          <header class="sub-header">
+            <button class="back-btn" type="button" data-psub-go="main" aria-label="Quay lại">
+              <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <h2>Thông tin ngân hàng</h2>
+          </header>
+          <div class="notice-banner">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v6m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <div>
+              <strong>Lưu ý quan trọng</strong>
+              <p>Tài khoản đầu tiên trong danh sách sẽ được dùng làm tài khoản nhận khi rút tiền. Bạn có thể thêm nhiều ngân hàng hoặc xóa.</p>
+            </div>
+          </div>
+          <div class="bank-empty" id="profileBankEmpty">
+            <div class="bank-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2.5 2.5 7v1.5h19V7L12 2.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 10v8m4-8v8m4-8v8m4-8v8m4-8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2" y="19" width="20" height="2.5" rx="0.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            </div>
+            <strong>Chưa có tài khoản ngân hàng</strong>
+            <p>Thêm tài khoản ngân hàng để có thể rút tiền</p>
+            <button type="button" class="add-bank-btn" data-psub-go="bank-form">+ Thêm tài khoản</button>
+          </div>
+          <div id="profileBankList"></div>
+          <button type="button" class="add-bank-btn-row is-hidden" id="addAnotherBankBtn" data-psub-go="bank-form">+ Thêm tài khoản khác</button>
+        </div>
+
+        <!-- Profile sub: bank-form (reuses same form) -->
+        <div class="profile-sub" data-psub="bank-form">
+          <header class="sub-header">
+            <button class="back-btn" type="button" data-psub-go="bank" aria-label="Quay lại">
+              <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <h2>Thông tin ngân hàng</h2>
+          </header>
+          <div class="notice-banner">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v6m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <div>
+              <strong>Lưu ý quan trọng</strong>
+              <p>Mỗi tài khoản chỉ được liên kết với 1 ngân hàng duy nhất. Sau khi thêm, bạn không thể tự chỉnh sửa hoặc xóa.</p>
+            </div>
+          </div>
+          <h3 class="section-title">Thêm tài khoản mới</h3>
+          <div class="warn-banner block">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v5m0 4h.01" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <span>Vui lòng kiểm tra kỹ thông tin trước khi lưu. Sau khi thêm, bạn sẽ không thể tự chỉnh sửa.</span>
+          </div>
+          <form id="profileBankForm" class="bank-form" autocomplete="off">
+            <label>Ngân hàng <span class="req">*</span>
+              <input type="text" name="bank" placeholder="VD: Vietcombank" required />
+            </label>
+            <label>Số tài khoản <span class="req">*</span>
+              <input type="text" name="account" placeholder="VD: 1234567890" inputmode="numeric" required />
+            </label>
+            <label>Tên chủ tài khoản <span class="req">*</span>
+              <input type="text" name="holder" placeholder="VD: NGUYEN VAN A" required />
+            </label>
+            <label>Chi nhánh (không bắt buộc)
+              <input type="text" name="branch" placeholder="VD: CN Quận 1" />
+            </label>
+            <div class="bank-form-actions">
+              <button type="button" class="btn-cancel" data-psub-go="bank">Hủy</button>
+              <button type="submit" class="btn-save">Lưu</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Profile sub: referral -->
+        <div class="profile-sub" data-psub="referral">
+          <header class="sub-header sub-header-blue">
+            <button class="back-btn" type="button" data-psub-go="main" aria-label="Quay lại">
+              <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <h2>Giới thiệu bạn bè</h2>
+          </header>
+          <article class="invite-card">
+            <div class="invite-head">
+              <span class="invite-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M3 12h18M12 3a13 13 0 0 1 0 18M12 3a13 13 0 0 0 0 18" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+              </span>
+              <div>
+                <strong>Mời bạn bè</strong>
+                <small>Nhận hoa hồng từ 3 cấp dưới</small>
+              </div>
+            </div>
+            <div class="invite-code">
+              <span>Mã giới thiệu của bạn</span>
+              <strong id="referralCode">695026</strong>
+            </div>
+            <div class="invite-actions">
+              <button type="button" class="invite-btn" id="copyRef">
+                <svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.7" /></svg>
+                Sao chép
+              </button>
+              <button type="button" class="invite-btn" id="shareRef">
+                <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5" fill="currentColor" /><circle cx="18" cy="6" r="2.5" fill="currentColor" /><circle cx="18" cy="18" r="2.5" fill="currentColor" /><path d="m8 11 8-4m-8 6 8 4" stroke="currentColor" stroke-width="1.7" fill="none" /></svg>
+                Chia sẻ
+              </button>
+            </div>
+          </article>
+          <section class="tier-block">
+            <h3>Tổng hoa hồng giới thiệu</h3>
+            <strong class="tier-total">0 ₫</strong>
+            <div class="tier-grid">
+              <div><span>F1</span><strong>0 ₫</strong><small>0 thành viên</small></div>
+              <div><span>F2</span><strong>0 ₫</strong><small>0 thành viên</small></div>
+              <div><span>F3</span><strong>0 ₫</strong><small>0 thành viên</small></div>
+            </div>
+          </section>
+          <section>
+            <h3 class="section-title">
+              <svg viewBox="0 0 24 24" class="inline-icon"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7" /><path d="M2.5 19c.8-3 3.5-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+              Mạng lưới của bạn
+            </h3>
+            <div class="empty-state network-empty">
+              <div class="empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M3 19c1-3 4-4.5 7-4.5m5-1.5h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+              </div>
+              <strong>Chưa có thành viên</strong>
+              <p>Chia sẻ mã mời để mở rộng mạng lưới của bạn</p>
+            </div>
+          </section>
+        </div>
+
+        <!-- Profile sub: security -->
+        <div class="profile-sub" data-psub="security">
+          <header class="sub-header">
+            <button class="back-btn" type="button" data-psub-go="main" aria-label="Quay lại">
+              <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <h2>Bảo mật</h2>
+          </header>
+
+          <div class="security-hero" id="securityStatus">
+            <div class="security-hero-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.4 8.4 8 9 4.6-.6 8-4.5 8-9V6l-8-3Z" fill="currentColor"/><path d="m9 12 2 2 4-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="security-hero-text">
+              <strong>Trạng thái bảo mật</strong>
+              <span id="securityStatusText">Chưa thiết lập mật khẩu rút tiền</span>
+            </div>
+            <span class="security-hero-badge" id="securityHeroBadge">Cần thiết lập</span>
+          </div>
+
+          <h3 class="section-title">Mật khẩu đăng nhập</h3>
+          <div class="security-card">
+            <div class="security-row">
+              <span>Trạng thái</span>
+              <span class="badge-ok">Đã thiết lập</span>
+            </div>
+            <div class="security-row">
+              <span>Mật khẩu hiện tại</span>
+              <strong>••••••••</strong>
+            </div>
+            <p class="security-note">🔒 Mật khẩu được mã hóa, tối thiểu 6 ký tự. Để đổi mật khẩu đăng nhập, vui lòng liên hệ CSKH.</p>
+          </div>
+
+          <h3 class="section-title">Mật khẩu rút tiền</h3>
+
+          <!-- State: chưa thiết lập (form) -->
+          <div class="security-card" id="pwFormCard">
+            <p class="security-sub">Bảo vệ tài khoản khi rút tiền — bắt buộc nhập trước mỗi lần rút.</p>
+            <form id="withdrawPwForm" class="pw-form" autocomplete="off">
+              <label class="pw-label">Mật khẩu mới
+                <div class="pw-field">
+                  <input type="password" name="pw1" id="pwInput1" placeholder="Tối thiểu 6 ký tự" required minlength="6" maxlength="32" />
+                  <button type="button" class="pw-eye" aria-label="Hiện/ẩn mật khẩu" data-toggle-pw>
+                    <svg viewBox="0 0 24 24"><path d="M2.5 12s3.3-5 9.5-5 9.5 5 9.5 5-3.3 5-9.5 5-9.5-5-9.5-5Z" fill="none" stroke="currentColor" stroke-width="1.6" /><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+                  </button>
+                </div>
+                <small class="pw-hint" id="pwHint1">Mật khẩu tối thiểu 6 ký tự</small>
+              </label>
+              <label class="pw-label">Xác nhận mật khẩu
+                <div class="pw-field">
+                  <input type="password" name="pw2" id="pwInput2" placeholder="Nhập lại mật khẩu" required minlength="6" maxlength="32" />
+                  <button type="button" class="pw-eye" aria-label="Hiện/ẩn mật khẩu" data-toggle-pw>
+                    <svg viewBox="0 0 24 24"><path d="M2.5 12s3.3-5 9.5-5 9.5 5 9.5 5-3.3 5-9.5 5-9.5-5-9.5-5Z" fill="none" stroke="currentColor" stroke-width="1.6" /><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+                  </button>
+                </div>
+                <small class="pw-hint" id="pwHint2">Nhập lại để xác nhận</small>
+              </label>
+              <button type="submit" class="btn-save" id="pwSubmit" disabled>Thiết lập mật khẩu</button>
+            </form>
+          </div>
+
+          <!-- State: đã thiết lập -->
+          <div class="security-card is-hidden" id="pwSetCard">
+            <div class="security-row">
+              <span>Trạng thái</span>
+              <span class="badge-ok">Đã thiết lập</span>
+            </div>
+            <div class="security-row">
+              <span>Mật khẩu rút tiền</span>
+              <strong>••••••••</strong>
+            </div>
+            <div class="pw-actions">
+              <button type="button" class="btn-secondary" id="pwChangeBtn">Đổi mật khẩu</button>
+              <button type="button" class="btn-danger" id="pwClearBtn">Xóa mật khẩu</button>
+            </div>
+          </div>
+
+          <p class="security-warn" id="pwWarn">⚠️ Bạn nên thiết lập mật khẩu rút tiền để bảo vệ tài khoản</p>
+        </div>
+        </div>
+
+        <nav class="bottom-nav" aria-label="Điều hướng">
+          <button type="button" class="active" data-go="home">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 11.5 12 5l8 6.5V20h-5v-5H9v5H4v-8.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+            </svg>
+            <span>Trang chủ</span>
+          </button>
+          <button type="button" data-go="orders">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M12 7v6l4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Lịch sử</span>
+          </button>
+          <button type="button" data-go="grab">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16v3H4zM6 9v11h12V9M9 13h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Đơn hàng</span>
+          </button>
+          <button type="button" data-go="wallet">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="7" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M3 11h18M16 15h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Ví tiền</span>
+          </button>
+          <button type="button" data-go="profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M5 20a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Cá nhân</span>
+          </button>
+        </nav>
+      </section>
+
+      <footer class="auth-footer">© 2026 TIKI LOGISTICS. ALL RIGHTS RESERVED.</footer>
+    </main>
+
+    <div class="modal-overlay" id="successModal" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-labelledby="successTitle" aria-modal="true">
+        <div class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="11" fill="#22c55e" />
+            <path d="m7 12 3.5 3.5L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h3 id="successTitle">Đã tạo lệnh nạp số tiền thành công</h3>
+        <p id="successAmount">+1.000.000 ₫</p>
+        <p class="success-sub">Yêu cầu sẽ được hệ thống xử lý trong 5-30 phút.</p>
+        <button type="button" class="modal-close" id="successClose">Đã hiểu</button>
+      </div>
+    </div>
+
+    <script>
+      const loginCard = document.querySelector("#loginCard");
+      const registerCard = document.querySelector("#registerCard");
+      const loginForm = document.querySelector("#loginForm");
+      const registerForm = document.querySelector("#registerForm");
+      const appShell = document.querySelector("#appShell");
+      const hero = document.querySelector(".hero");
+      const homeScreen = document.querySelector("#homeScreen");
+      const authFooter = document.querySelector(".auth-footer");
+      const logoutButton = document.querySelector("#logoutButton");
+      const screens = document.querySelectorAll("#homeScreen .screen");
+      const navButtons = document.querySelectorAll(".bottom-nav button");
+      const tabs = document.querySelectorAll('[data-route="orders"] .tab-bar .tab');
+      const panels = document.querySelectorAll('[data-route="orders"] .tab-panel');
+      const ordersTitle = document.querySelector("#ordersTitle");
+      const searchForm = document.querySelector("#searchForm");
+      const shopSearch = document.querySelector("#shopSearch");
+      const emptyProducts = document.querySelector("#emptyProducts");
+
+      // Products fetched from /api/products at app start (admin-managed)
+      let PRODUCTS = [];
+
+      async function fetchProducts() {
+        try {
+          const r = await fetch("/api/products");
+          if (!r.ok) return;
+          const d = await r.json();
+          PRODUCTS = (d.products || []).filter((p) => p.enabled !== false).map((p) => ({ title: p.title, img: p.img }));
+          renderProducts();
+        } catch (e) {}
+      }
+
+      const NAME_POOL = [
+        "Long", "Mai", "Hùng", "Trang", "Linh", "Quân", "Nam", "Hà", "Phúc",
+        "Khánh", "Tú", "Vy", "Anh", "Thảo", "Dũng", "Minh", "Huy", "Lan",
+        "Sơn", "Hoa", "Đạt", "Hương", "Tuấn", "Yến", "Bảo", "Ngọc", "Thanh",
+        "Hiền", "Khoa", "Trúc"
+      ];
+
+      function maskName(name) {
+        if (name.length <= 2) return name;
+        const visible = Math.min(2, Math.floor(name.length / 2));
+        return name.slice(0, 1) + "***" + name.slice(-1);
+      }
+
+      function randomCommission(minutesAgo) {
+        const raw = NAME_POOL[Math.floor(Math.random() * NAME_POOL.length)];
+        const masked = Math.random() < 0.45 ? maskName(raw) : raw;
+        const amount = Math.floor(80 + Math.random() * 500) * 1000;
+        return {
+          name: masked,
+          time: minutesAgo === 0 ? "vừa xong" : `${minutesAgo} phút trước`,
+          amount: "+" + amount.toLocaleString("vi-VN") + " ₫"
+        };
+      }
+
+      let COMMISSIONS = [
+        randomCommission(2),
+        randomCommission(5),
+        randomCommission(8),
+        randomCommission(12),
+        randomCommission(18)
+      ];
+
+      function normalizeText(value) {
+        return value
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/đ/g, "d");
+      }
+
+      function renderProducts(keyword = "") {
+        const grid = document.querySelector("#productGrid");
+        const normalizedKeyword = normalizeText(keyword.trim());
+        const filteredProducts = normalizedKeyword
+          ? PRODUCTS.map((product, index) => ({ product, index })).filter(({ product }) =>
+              normalizeText(product.title).includes(normalizedKeyword)
+            )
+          : PRODUCTS.map((product, index) => ({ product, index }));
+
+        grid.innerHTML = filteredProducts.map(({ product: p, index: i }) => `
+          <article class="product-card" role="button" tabindex="0" data-product-index="${i}">
+            <img src="${p.img}" alt="" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;rect width=%22100%22 height=%22100%22 fill=%22%23f1f5f9%22/&gt;&lt;path d=%22M30 65 L45 50 L55 60 L70 45 L80 55 L80 75 L20 75 Z%22 fill=%22%23cbd5e1%22/&gt;&lt;circle cx=%2270%22 cy=%2235%22 r=%226%22 fill=%22%23cbd5e1%22/&gt;&lt;/svg&gt;'" />
+            <div>
+              <span class="choice">CHOICE</span>
+              <h3>${p.title}</h3>
+              <p><span>★</span> 4.9 (1234)</p>
+            </div>
+          </article>
+        `).join("");
+        grid.querySelectorAll(".product-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const idx = Number(card.dataset.productIndex);
+            selectProduct(PRODUCTS[idx]);
+            goTo("grab");
+          });
+        });
+        emptyProducts.classList.toggle("is-hidden", filteredProducts.length > 0);
+      }
+
+      function selectProduct(product) {
+        const art = document.querySelector("#voucherArt");
+        const label = document.querySelector("#voucherProductLabel");
+        const name = document.querySelector("#voucherProductName");
+        if (!product) {
+          art.innerHTML = `
+            <span class="voucher-title">SIÊU<br />VOUCHER</span>
+            <span class="voucher-sub">ƯU ĐÃI HÀNG LỚN CỰC HỜI</span>
+            <span class="voucher-amount">500K</span>
+          `;
+          art.style.backgroundImage = "";
+          label.textContent = "Thành viên áp dụng";
+          name.textContent = "VIP1";
+          return;
+        }
+        art.innerHTML = "";
+        art.style.backgroundImage = `url("${product.img}")`;
+        art.style.backgroundSize = "cover";
+        art.style.backgroundPosition = "center";
+        label.textContent = "Sản phẩm đã chọn";
+        name.textContent = product.title;
+      }
+
+      function renderCommissions() {
+        const list = document.querySelector("#commissionList");
+        list.innerHTML = COMMISSIONS.map((c, i) => `
+          <li${i === 0 ? ' class="just-in"' : ''}>
+            <span class="comm-avatar">${c.name.charAt(0).toUpperCase()}</span>
+            <div>
+              <strong>${c.name}</strong>
+              <small>${c.time}</small>
+            </div>
+            <span class="comm-amount">${c.amount}</span>
+          </li>
+        `).join("");
+      }
+
+      let commissionTimer = null;
+
+      function startCommissionFeed() {
+        if (commissionTimer) clearInterval(commissionTimer);
+        commissionTimer = setInterval(() => {
+          // age existing entries
+          COMMISSIONS = COMMISSIONS.map((c) => {
+            const match = c.time.match(/^(\d+)/);
+            if (!match) return { ...c, time: "1 phút trước" };
+            const newMin = Number(match[1]) + 1;
+            return { ...c, time: `${newMin} phút trước` };
+          });
+          // push new entry at top, drop the last
+          COMMISSIONS.unshift(randomCommission(0));
+          if (COMMISSIONS.length > 5) COMMISSIONS.length = 5;
+          renderCommissions();
+        }, 3500 + Math.random() * 2000);
+      }
+
+      function goTo(route) {
+        screens.forEach((s) => s.classList.toggle("is-active", s.dataset.route === route));
+        navButtons.forEach((b) => b.classList.toggle("active", b.dataset.go === route));
+        if (route === "wallet") goWalletSub("main");
+        if (route === "profile") goProfileSub("main");
+        window.scrollTo({ top: 0 });
+      }
+
+      function goWalletSub(sub) {
+        document
+          .querySelectorAll('[data-route="wallet"] .wallet-sub')
+          .forEach((s) => s.classList.toggle("is-active", s.dataset.sub === sub));
+        window.scrollTo({ top: 0 });
+      }
+
+      function goProfileSub(sub) {
+        document
+          .querySelectorAll('[data-route="profile"] .profile-sub')
+          .forEach((s) => s.classList.toggle("is-active", s.dataset.psub === sub));
+        window.scrollTo({ top: 0 });
+      }
+
+      navButtons.forEach((btn) => btn.addEventListener("click", () => goTo(btn.dataset.go)));
+
+      document.querySelectorAll("[data-sub-go]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          goWalletSub(el.dataset.subGo);
+        });
+      });
+
+      document.querySelectorAll("[data-psub-go]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          goProfileSub(el.dataset.psubGo);
+        });
+      });
+
+      document.querySelectorAll(".profile-menu li").forEach((li, idx) => {
+        const targetMap = { 0: "bank", 1: "referral", 2: "security" };
+        const target = targetMap[idx];
+        if (!target) return;
+        li.style.cursor = "pointer";
+        li.addEventListener("click", () => goProfileSub(target));
+      });
+
+      const depositAmounts = document.querySelectorAll("#depositAmounts button");
+      const depositCustom = document.querySelector("#depositCustom");
+      const depositConfirm = document.querySelector("#depositConfirm");
+      let depositAmount = 0;
+
+      function refreshDepositConfirm() {
+        depositConfirm.disabled = !depositAmount || depositAmount <= 0;
+      }
+
+      depositAmounts.forEach((b) => {
+        b.addEventListener("click", () => {
+          depositAmounts.forEach((x) => x.classList.toggle("is-active", x === b));
+          depositCustom.value = "";
+          depositAmount = Number(b.dataset.amount);
+          refreshDepositConfirm();
+        });
+      });
+
+      depositCustom.addEventListener("input", () => {
+        depositAmounts.forEach((x) => x.classList.remove("is-active"));
+        depositAmount = Number(depositCustom.value.replace(/[^0-9]/g, ""));
+        refreshDepositConfirm();
+      });
+
+      const successModal = document.querySelector("#successModal");
+      const successAmount = document.querySelector("#successAmount");
+      const successClose = document.querySelector("#successClose");
+
+      function showSuccess(amount, kind = "deposit") {
+        const title = document.querySelector("#successTitle");
+        const sub = successModal.querySelector(".success-sub");
+        if (kind === "withdraw") {
+          title.textContent = "Đã tạo lệnh rút số tiền thành công";
+          sub.textContent = "Yêu cầu sẽ được hệ thống xử lý trong 5-30 phút.";
+          successAmount.textContent = "-" + amount.toLocaleString("vi-VN") + " ₫";
+          successAmount.classList.add("is-withdraw");
+        } else {
+          title.textContent = "Đã tạo lệnh nạp số tiền thành công";
+          sub.textContent = "Yêu cầu sẽ được hệ thống xử lý trong 5-30 phút.";
+          successAmount.textContent = "+" + amount.toLocaleString("vi-VN") + " ₫";
+          successAmount.classList.remove("is-withdraw");
+        }
+        successModal.classList.add("is-open");
+        successModal.setAttribute("aria-hidden", "false");
+      }
+
+      function hideSuccess() {
+        successModal.classList.remove("is-open");
+        successModal.setAttribute("aria-hidden", "true");
+      }
+
+      depositConfirm.addEventListener("click", async () => {
+        if (!depositAmount) return;
+        const username = getCurrentUsername();
+        if (!username) { showToast("Bạn cần đăng nhập."); return; }
+        depositConfirm.disabled = true;
+        try {
+          const r = await fetch("/api/deposit/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, amount: depositAmount, paymentMethod: "Chuyển khoản ngân hàng" })
+          });
+          const d = await r.json();
+          if (!r.ok) {
+            showToast(d.message || "Không thể tạo yêu cầu nạp.");
+          } else {
+            showSuccess(depositAmount, "deposit");
+            depositAmounts.forEach((x) => x.classList.remove("is-active"));
+            depositCustom.value = "";
+            depositAmount = 0;
+            await fetchMyTransactions();
+          }
+        } catch (e) {
+          showToast("Lỗi mạng.");
+        } finally {
+          refreshDepositConfirm();
+        }
+      });
+
+      successClose.addEventListener("click", () => {
+        hideSuccess();
+        goWalletSub("main");
+      });
+
+      successModal.addEventListener("click", (e) => {
+        if (e.target === successModal) hideSuccess();
+      });
+
+      const ORDERS_KEY = "xulydonhang.orders";
+
+      let CURRENT_VIP = { level: "VIP1", rate: 0.005, refRate: 0.15, dailyCap: 30, minRange: 0, maxRange: 10000000 };
+
+      function currentVip() { return CURRENT_VIP; }
+
+      function loadOrders() {
+        try {
+          const raw = localStorage.getItem(ORDERS_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        // Empty until user claims an order from admin pool
+        return [];
+      }
+
+      function saveOrders(list) {
+        try { localStorage.setItem(ORDERS_KEY, JSON.stringify(list)); } catch (e) {}
+      }
+
+      function orderCardHtml(o) {
+        const statusLabel = o.status === "pending" ? "Chờ phân phối" : o.status === "done" ? "Hoàn thành" : "Đã xử lý";
+        const titleText = o.title || (o.status === "pending" ? "Chờ Phân Phối" : o.status === "done" ? "Hoàn Thành" : "Đã Xử Lý");
+        const subtitle = o.subtitle || "";
+        const commissionRow = o.commission > 0
+          ? `<div class="order-id" style="color:#16a34a;font-weight:700">Hoa hồng: +${o.commission.toLocaleString("vi-VN")} ₫</div>`
+          : "";
+        return `
+          <article class="order-card">
+            <span class="order-status status-${o.status}">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+                <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+              ${statusLabel}
+            </span>
+            <div class="order-clock" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" />
+                <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h3>${titleText}</h3>
+            <p>${subtitle}</p>
+            <div class="order-id">Mã đơn: ${o.id}</div>
+            ${commissionRow}
+          </article>
+        `;
+      }
+
+      function renderOrders() {
+        const orders = loadOrders();
+        const groups = { pending: [], done: [], processed: [] };
+        orders.forEach((o) => { (groups[o.status] || groups.pending).push(o); });
+
+        ["pending", "done", "processed"].forEach((key) => {
+          const list = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}`);
+          const empty = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}Empty`);
+          if (!list || !empty) return;
+          if (groups[key].length === 0) {
+            list.innerHTML = "";
+            empty.classList.remove("is-hidden");
+          } else {
+            list.innerHTML = groups[key].map(orderCardHtml).join("");
+            empty.classList.add("is-hidden");
+          }
+        });
+
+        // Update tab badge "Chờ Xử Lý"
+        const pendingBadge = document.querySelector('.tab[data-tab="pending"] .tab-badge');
+        if (pendingBadge) {
+          if (groups.pending.length > 0) {
+            pendingBadge.textContent = groups.pending.length;
+            pendingBadge.style.display = "";
+          } else {
+            pendingBadge.style.display = "none";
+          }
+        }
+      }
+
+      function renderProfileStats() {
+        const orders = loadOrders();
+        const vip = currentVip();
+        const totalOrders = orders.length;
+        const totalCommission = orders.reduce((sum, o) => sum + (o.status === "done" || o.status === "processed" ? (o.commission || 0) : 0), 0);
+        const elCount = document.querySelector("#statOrderCount");
+        const elTotal = document.querySelector("#statTotalCommission");
+        const elRate = document.querySelector("#statCommissionRate");
+        if (elCount) elCount.textContent = String(totalOrders);
+        if (elTotal) elTotal.textContent = totalCommission.toLocaleString("vi-VN") + " ₫";
+        if (elRate) elRate.textContent = Math.round(vip.refRate * 100) + "%";
+        // Update grab-order page too
+        const grabReceived = document.querySelector("#grabReceived");
+        if (grabReceived) grabReceived.textContent = `Số đơn hàng được nhận: ${totalOrders}/${vip.dailyCap}`;
+        const grabBalance = document.querySelector("#grabBalance");
+        if (grabBalance) grabBalance.textContent = `Số dư còn lại: ${AVAILABLE_BALANCE.toLocaleString("vi-VN")} ₫`;
+        const receiveBtn = document.querySelector("#receiveBtn");
+        if (receiveBtn) {
+          const atCap = totalOrders >= vip.dailyCap;
+          receiveBtn.disabled = atCap;
+          receiveBtn.classList.toggle("is-ready", !atCap);
+          receiveBtn.textContent = atCap ? `Đã đạt giới hạn ${vip.dailyCap}/${vip.dailyCap}` : "Nhận Ngay";
+        }
+      }
+
+      const TX_KEY = "xulydonhang.txs";
+
+      function loadTxs() {
+        try {
+          const raw = localStorage.getItem(TX_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        const seed = [{
+          id: "seed-" + Date.now(),
+          type: "deposit",
+          amount: 30000,
+          status: "completed",
+          source: "Hệ thống",
+          note: "Hệ thống nạp tiền 30.000 ₫ vào tài khoản",
+          ts: Date.now()
+        }];
+        localStorage.setItem(TX_KEY, JSON.stringify(seed));
+        return seed;
+      }
+
+      function saveTxs(list) {
+        try { localStorage.setItem(TX_KEY, JSON.stringify(list)); } catch (e) {}
+      }
+
+      function addTx(tx) {
+        const list = loadTxs();
+        list.unshift({ id: "tx-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6), ts: Date.now(), ...tx });
+        saveTxs(list);
+        renderTxs();
+      }
+
+      function fmtTxTime(ts) {
+        const d = new Date(ts);
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+      }
+
+      function txItemHtml(tx, opts = {}) {
+        const isDeposit = tx.type === "deposit";
+        const sign = isDeposit ? "+" : "-";
+        const amountClass = isDeposit ? "up" : "down";
+        const iconPath = isDeposit
+          ? '<path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />'
+          : '<path d="M17 7 7 17m0 0h8m-8 0v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />';
+        const note = tx.note || (isDeposit
+          ? `Nạp tiền ${tx.amount.toLocaleString("vi-VN")} ₫ qua ${tx.source || "ngân hàng"}`
+          : `Rút tiền ${tx.amount.toLocaleString("vi-VN")} ₫ về ${tx.source || "ngân hàng"}`);
+        const right = opts.includeSource
+          ? `<div class="tx-right"><span class="tx-amount ${amountClass}">${sign}${tx.amount.toLocaleString("vi-VN")} ₫</span><small class="tx-source">${tx.source || (isDeposit ? "Ngân hàng" : "Rút về")}</small></div>`
+          : `<span class="tx-amount ${amountClass}">${sign}${tx.amount.toLocaleString("vi-VN")} ₫</span>`;
+        const statusBadge = tx.status === "pending" ? '<span class="tx-status pending">Đang xử lý</span>' : "";
+        return `
+          <li>
+            <span class="tx-icon tx-icon-${tx.type}"><svg viewBox="0 0 24 24">${iconPath}</svg></span>
+            <div class="tx-body">
+              <p>${note} ${statusBadge}</p>
+              <small>
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                ${fmtTxTime(tx.ts)}
+              </small>
+            </div>
+            ${right}
+          </li>
+        `;
+      }
+
+      function renderTxs() {
+        const list = loadTxs();
+        // Recent on wallet main (top 1)
+        const recent = document.querySelector("#txListRecent");
+        if (recent) {
+          recent.innerHTML = list.slice(0, 1).map((t) => txItemHtml(t)).join("");
+        }
+        // History balance tab (all)
+        const fullBal = document.querySelector("#txListBalance");
+        const emptyBal = document.querySelector("#txEmptyBalance");
+        if (fullBal) {
+          fullBal.innerHTML = list.map((t) => txItemHtml(t, { includeSource: true })).join("");
+          emptyBal.classList.toggle("is-hidden", list.length > 0);
+          fullBal.classList.toggle("is-hidden", list.length === 0);
+        }
+        // History withdraw tab (only withdrawals)
+        const fullW = document.querySelector("#txListWithdraw");
+        const emptyW = document.querySelector("#txEmptyWithdraw");
+        if (fullW) {
+          const withdraws = list.filter((t) => t.type === "withdraw");
+          fullW.innerHTML = withdraws.map((t) => txItemHtml(t, { includeSource: true })).join("");
+          emptyW.classList.toggle("is-hidden", withdraws.length > 0);
+          fullW.classList.toggle("is-hidden", withdraws.length === 0);
+        }
+      }
+
+      const BANK_KEY = "xulydonhang.bank";
+      const MIN_WITHDRAW = 100000;
+      let AVAILABLE_BALANCE = 30000;
+      let TOTAL_BALANCE = 30000;
+      let FROZEN_BALANCE = 0;
+      const bankForm = document.querySelector("#bankForm");
+      const bankEmpty = document.querySelector("#bankEmpty");
+      const bankInfo = document.querySelector("#bankInfo");
+      const withdrawAmounts = document.querySelectorAll("#withdrawAmounts button");
+      const withdrawCustom = document.querySelector("#withdrawCustom");
+      const withdrawConfirm = document.querySelector("#withdrawConfirm");
+      const withdrawError = document.querySelector("#withdrawError");
+      const withdrawErrorText = document.querySelector("#withdrawErrorText");
+      let withdrawAmount = 0;
+      let currentBank = null;
+
+      function fmtVnd(n) {
+        return n.toLocaleString("vi-VN") + " ₫";
+      }
+
+      const BANKS_KEY = "xulydonhang.banks";
+
+      function loadBanks() {
+        try {
+          const raw = localStorage.getItem(BANKS_KEY);
+          if (raw) return JSON.parse(raw);
+          // migrate old single-bank key
+          const old = localStorage.getItem(BANK_KEY);
+          if (old) {
+            const parsed = JSON.parse(old);
+            const arr = [{ id: "bank-legacy-" + Date.now(), ...parsed }];
+            localStorage.setItem(BANKS_KEY, JSON.stringify(arr));
+            localStorage.removeItem(BANK_KEY);
+            return arr;
+          }
+        } catch (e) {}
+        return [];
+      }
+
+      function saveBanks(list) {
+        try { localStorage.setItem(BANKS_KEY, JSON.stringify(list)); } catch (e) {}
+      }
+
+      function loadBank() {
+        const list = loadBanks();
+        return list.length > 0 ? list[0] : null;
+      }
+
+      function addBank(b) {
+        const list = loadBanks();
+        list.push({ id: "bank-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6), ...b });
+        saveBanks(list);
+      }
+
+      function deleteBank(id) {
+        const list = loadBanks().filter((b) => b.id !== id);
+        saveBanks(list);
+      }
+
+      function saveBank(b) {
+        // legacy entry point used by form submit — now appends
+        addBank(b);
+      }
+
+      function bankCardHtml(b, opts = {}) {
+        const branchRow = b.branch
+          ? `<div class="bank-info-row"><span>Chi nhánh</span><strong>${b.branch}</strong></div>`
+          : "";
+        const removeBtn = opts.removable
+          ? `<button type="button" class="bank-remove" data-remove-bank="${b.id}" aria-label="Xóa tài khoản">
+              <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-7 0v13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>`
+          : "";
+        return `
+          <div class="bank-info">
+            <div class="bank-info-head">
+              <span class="bank-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2.5 2.5 7v1.5h19V7L12 2.5Z" fill="currentColor"/><path d="M4 10v8m4-8v8m4-8v8m4-8v8m4-8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2" y="19" width="20" height="2.5" rx="0.5" fill="currentColor"/><circle cx="12" cy="5.5" r="0.8" fill="#fff"/></svg>
+              </span>
+              <div class="bank-info-name">
+                <strong>${b.bank}</strong>
+                <small>${b.account}</small>
+              </div>
+              ${removeBtn}
+            </div>
+            <div class="bank-info-row"><span>Chủ tài khoản</span><strong>${b.holder}</strong></div>
+            ${branchRow}
+          </div>
+        `;
+      }
+
+      function renderBank() {
+        const banks = loadBanks();
+        currentBank = banks[0] || null;
+
+        // Wallet withdraw single card (primary bank only)
+        if (currentBank) {
+          bankEmpty.classList.add("is-hidden");
+          bankInfo.classList.remove("is-hidden");
+          document.querySelector("#bankInfoName").textContent = currentBank.bank;
+          document.querySelector("#bankInfoAccount").textContent = currentBank.account;
+          document.querySelector("#bankInfoHolder").textContent = currentBank.holder;
+          if (currentBank.branch) {
+            document.querySelector("#bankInfoBranch").textContent = currentBank.branch;
+            document.querySelector("#bankInfoBranchRow").classList.remove("is-hidden");
+          } else {
+            document.querySelector("#bankInfoBranchRow").classList.add("is-hidden");
+          }
+        } else {
+          bankEmpty.classList.remove("is-hidden");
+          bankInfo.classList.add("is-hidden");
+        }
+
+        // Profile bank page: full list
+        const list = document.querySelector("#profileBankList");
+        const empty = document.querySelector("#profileBankEmpty");
+        const addBtn = document.querySelector("#addAnotherBankBtn");
+        if (list) {
+          if (banks.length === 0) {
+            empty.classList.remove("is-hidden");
+            list.innerHTML = "";
+            addBtn.classList.add("is-hidden");
+          } else {
+            empty.classList.add("is-hidden");
+            list.innerHTML = banks.map((b) => bankCardHtml(b, { removable: true })).join("");
+            addBtn.classList.remove("is-hidden");
+            list.querySelectorAll("[data-remove-bank]").forEach((btn) => {
+              btn.addEventListener("click", () => {
+                if (!confirm("Xóa tài khoản ngân hàng này?")) return;
+                deleteBank(btn.dataset.removeBank);
+                renderBank();
+                showToast("Đã xóa tài khoản");
+              });
+            });
+          }
+        }
+
+        // Withdraw controls
+        const hasBank = !!currentBank;
+        document.querySelector("#withdrawAmounts").classList.toggle("disabled", !hasBank);
+        withdrawAmounts.forEach((b) => {
+          const v = Number(b.dataset.amount);
+          b.disabled = !hasBank || v > AVAILABLE_BALANCE;
+        });
+        withdrawCustom.disabled = !hasBank;
+        refreshWithdrawConfirm();
+      }
+
+      function refreshWithdrawConfirm() {
+        let err = "";
+        if (!currentBank) {
+          err = "Vui lòng thêm tài khoản ngân hàng trước.";
+        } else if (withdrawAmount > 0 && withdrawAmount < MIN_WITHDRAW) {
+          err = `Số tiền rút tối thiểu là ${fmtVnd(MIN_WITHDRAW)}.`;
+        } else if (withdrawAmount > AVAILABLE_BALANCE) {
+          err = `Số tiền rút không được vượt quá số dư khả dụng (${fmtVnd(AVAILABLE_BALANCE)}).`;
+        }
+        if (err && withdrawAmount > 0) {
+          withdrawErrorText.textContent = err;
+          withdrawError.classList.remove("is-hidden");
+        } else {
+          withdrawError.classList.add("is-hidden");
+        }
+        withdrawConfirm.disabled = !(
+          currentBank && withdrawAmount >= MIN_WITHDRAW && withdrawAmount <= AVAILABLE_BALANCE
+        );
+        // also update preset disabled state in case balance changed
+        withdrawAmounts.forEach((b) => {
+          const v = Number(b.dataset.amount);
+          b.disabled = !currentBank || v > AVAILABLE_BALANCE;
+        });
+      }
+
+      withdrawAmounts.forEach((b) => {
+        b.addEventListener("click", () => {
+          if (b.disabled) return;
+          withdrawAmounts.forEach((x) => x.classList.toggle("is-active", x === b));
+          withdrawCustom.value = "";
+          withdrawAmount = Number(b.dataset.amount);
+          refreshWithdrawConfirm();
+        });
+      });
+
+      withdrawCustom.addEventListener("input", () => {
+        withdrawAmounts.forEach((x) => x.classList.remove("is-active"));
+        withdrawAmount = Number(withdrawCustom.value.replace(/[^0-9]/g, ""));
+        refreshWithdrawConfirm();
+      });
+
+      function handleBankSubmit(form, redirect) {
+        const fd = new FormData(form);
+        const bank = {
+          bank: (fd.get("bank") || "").toString().trim(),
+          account: (fd.get("account") || "").toString().trim(),
+          holder: (fd.get("holder") || "").toString().trim().toUpperCase(),
+          branch: (fd.get("branch") || "").toString().trim(),
+        };
+        if (!bank.bank || !bank.account || !bank.holder) return;
+        saveBank(bank);
+        renderBank();
+        form.reset();
+        showToast("Đã thêm tài khoản ngân hàng");
+        redirect();
+      }
+
+      bankForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        handleBankSubmit(bankForm, () => goWalletSub("withdraw"));
+      });
+
+      const profileBankForm = document.querySelector("#profileBankForm");
+      if (profileBankForm) {
+        profileBankForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          handleBankSubmit(profileBankForm, () => goProfileSub("bank"));
+        });
+      }
+
+      // Copy / Share referral code
+      const copyBtn = document.querySelector("#copyRef");
+      const shareBtn = document.querySelector("#shareRef");
+      function getRefCode() {
+        return (document.querySelector("#referralCode")?.textContent || "").trim();
+      }
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (e) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); } catch (e) {}
+          document.body.removeChild(ta);
+          return true;
+        }
+      }
+      if (copyBtn) copyBtn.addEventListener("click", async () => {
+        const ok = await copyText(getRefCode());
+        showToast(ok ? "Đã sao chép mã giới thiệu" : "Không thể sao chép");
+      });
+      if (shareBtn) shareBtn.addEventListener("click", async () => {
+        const code = getRefCode();
+        const url = `${location.origin}/?ref=${code}`;
+        const text = `Tham gia hệ thống với mã giới thiệu của tôi: ${code}\n${url}`;
+        if (navigator.share) {
+          try { await navigator.share({ title: "Mã giới thiệu", text, url }); return; } catch (e) {}
+        }
+        await copyText(text);
+        showToast("Đã sao chép link mời");
+      });
+
+      // Top profile referral card copy/share (small icons on profile main)
+      const profileMainRef = document.querySelectorAll(".referral-actions button");
+      if (profileMainRef[0]) profileMainRef[0].addEventListener("click", async () => {
+        await copyText("695026");
+        showToast("Đã sao chép mã giới thiệu");
+      });
+      if (profileMainRef[1]) profileMainRef[1].addEventListener("click", () => {
+        goProfileSub("referral");
+      });
+
+      // Security: withdraw password
+      const PW_KEY = "xulydonhang.withdrawPw";
+      const pwForm = document.querySelector("#withdrawPwForm");
+      const pwInput1 = document.querySelector("#pwInput1");
+      const pwInput2 = document.querySelector("#pwInput2");
+      const pwHint1 = document.querySelector("#pwHint1");
+      const pwHint2 = document.querySelector("#pwHint2");
+      const pwSubmit = document.querySelector("#pwSubmit");
+      const pwFormCard = document.querySelector("#pwFormCard");
+      const pwSetCard = document.querySelector("#pwSetCard");
+      const pwChangeBtn = document.querySelector("#pwChangeBtn");
+      const pwClearBtn = document.querySelector("#pwClearBtn");
+      const pwWarn = document.querySelector("#pwWarn");
+
+      function validatePwInputs() {
+        if (!pwInput1 || !pwInput2) return false;
+        const a = pwInput1.value;
+        const b = pwInput2.value;
+        let ok = true;
+        // hint1
+        if (a.length === 0) {
+          pwHint1.textContent = "Mật khẩu tối thiểu 6 ký tự";
+          pwHint1.className = "pw-hint";
+        } else if (a.length < 6) {
+          pwHint1.textContent = `Còn thiếu ${6 - a.length} ký tự`;
+          pwHint1.className = "pw-hint is-warn";
+          ok = false;
+        } else {
+          pwHint1.textContent = "✓ Mật khẩu hợp lệ";
+          pwHint1.className = "pw-hint is-ok";
+        }
+        // hint2
+        if (b.length === 0) {
+          pwHint2.textContent = "Nhập lại để xác nhận";
+          pwHint2.className = "pw-hint";
+          ok = false;
+        } else if (b !== a) {
+          pwHint2.textContent = "✗ Hai mật khẩu không khớp";
+          pwHint2.className = "pw-hint is-err";
+          ok = false;
+        } else {
+          pwHint2.textContent = "✓ Mật khẩu khớp";
+          pwHint2.className = "pw-hint is-ok";
+        }
+        pwSubmit.disabled = !ok || a.length < 6 || a !== b;
+        return ok && a.length >= 6 && a === b;
+      }
+
+      if (pwInput1) pwInput1.addEventListener("input", validatePwInputs);
+      if (pwInput2) pwInput2.addEventListener("input", validatePwInputs);
+
+      if (pwForm) {
+        pwForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (!validatePwInputs()) return;
+          try { localStorage.setItem(PW_KEY, "set"); } catch (e) {}
+          pwForm.reset();
+          validatePwInputs();
+          refreshSecurity();
+          showToast("Đã thiết lập mật khẩu rút tiền");
+        });
+      }
+
+      if (pwChangeBtn) pwChangeBtn.addEventListener("click", () => {
+        try { localStorage.removeItem(PW_KEY); } catch (e) {}
+        refreshSecurity();
+        setTimeout(() => pwInput1?.focus(), 100);
+      });
+
+      if (pwClearBtn) pwClearBtn.addEventListener("click", () => {
+        if (!confirm("Xóa mật khẩu rút tiền? Bạn sẽ không cần nhập mật khẩu khi rút tiền.")) return;
+        try { localStorage.removeItem(PW_KEY); } catch (e) {}
+        refreshSecurity();
+        showToast("Đã xóa mật khẩu rút tiền");
+      });
+
+      document.querySelectorAll("[data-toggle-pw]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = btn.parentElement.querySelector("input");
+          const isPw = input.type === "password";
+          input.type = isPw ? "text" : "password";
+          btn.classList.toggle("is-on", isPw);
+        });
+      });
+
+      function refreshSecurity() {
+        const set = localStorage.getItem(PW_KEY) === "set";
+        const el = document.querySelector("#securityStatusText");
+        const card = document.querySelector("#securityStatus");
+        const badge = document.querySelector("#securityHeroBadge");
+        if (!el || !card) return;
+        if (set) {
+          el.textContent = "Tài khoản đã được bảo vệ.";
+          card.classList.add("is-set");
+          badge.textContent = "An toàn";
+          pwFormCard?.classList.add("is-hidden");
+          pwSetCard?.classList.remove("is-hidden");
+          pwWarn?.classList.add("is-hidden");
+        } else {
+          el.textContent = "Chưa thiết lập mật khẩu rút tiền";
+          card.classList.remove("is-set");
+          badge.textContent = "Cần thiết lập";
+          pwFormCard?.classList.remove("is-hidden");
+          pwSetCard?.classList.add("is-hidden");
+          pwWarn?.classList.remove("is-hidden");
+        }
+      }
+
+      // Receive (Nhận Ngay) — claim an order from server pool (admin-managed)
+      function getCurrentUsername() {
+        try {
+          const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+          return s && s.username ? s.username : null;
+        } catch (e) { return null; }
+      }
+
+      async function fetchMyOrders() {
+        const username = getCurrentUsername();
+        if (!username) return;
+        try {
+          const r = await fetch(`/api/orders/mine/${encodeURIComponent(username)}`);
+          if (!r.ok) return;
+          const d = await r.json();
+          const serverOrders = (d.orders || []).map((o) => ({
+            id: o.id,
+            status: o.status === "claimed" ? "pending" : (o.status === "approved" ? "done" : "processed"),
+            serverStatus: o.status,
+            title: o.status === "claimed" ? "Chờ admin duyệt"
+                  : o.status === "approved" ? "Đơn đã hoàn thành"
+                  : o.status === "rejected" ? "Đơn bị từ chối" : o.productTitle,
+            subtitle: o.status === "rejected" ? (o.rejectedReason || "Đã bị từ chối")
+                    : (o.productTitle || "").slice(0, 60),
+            amount: o.amount,
+            commission: o.status === "approved" ? o.commission : 0,
+            ts: o.claimedAt || o.createdAt,
+            productImg: o.productImg
+          }));
+          // keep any seed orders that don't exist on server (for backward compat) — actually let's just use server orders
+          saveOrders(serverOrders);
+          renderOrders();
+          renderProfileStats();
+        } catch (e) {}
+      }
+
+      async function fetchMyTransactions() {
+        const username = getCurrentUsername();
+        if (!username) return;
+        try {
+          const r = await fetch(`/api/transactions/mine/${encodeURIComponent(username)}`);
+          if (!r.ok) return;
+          const d = await r.json();
+          // Update balance constants
+          if (d.balance) {
+            AVAILABLE_BALANCE = d.balance.available;
+            TOTAL_BALANCE = d.balance.total;
+            FROZEN_BALANCE = d.balance.frozen;
+            updateBalanceDisplay();
+          }
+          if (d.vip) {
+            CURRENT_VIP = d.vip;
+            updateVipDisplay();
+          }
+          // Sync server txs into local for rendering
+          const serverTxs = (d.txs || []).map((t) => ({
+            id: t.id,
+            type: t.type,
+            amount: t.amount,
+            status: t.status === "approved" ? "completed" : t.status,
+            source: t.bankInfo ? `${t.bankInfo.bank} (${t.bankInfo.account})` : (t.paymentMethod || "Hệ thống"),
+            note: (t.type === "deposit"
+              ? `Yêu cầu nạp tiền ${t.amount.toLocaleString("vi-VN")} ₫`
+              : `Yêu cầu rút tiền ${t.amount.toLocaleString("vi-VN")} ₫ về ${t.bankInfo ? t.bankInfo.bank : 'NH'}`)
+              + (t.status === "rejected" ? ` (Bị từ chối: ${t.rejectedReason || ""})` : ""),
+            ts: t.createdAt
+          }));
+          // Seed system entry on top if no deposits/withdrawals at all
+          if (serverTxs.length === 0) {
+            serverTxs.push({
+              id: "seed-init",
+              type: "deposit",
+              amount: 30000,
+              status: "completed",
+              source: "Hệ thống",
+              note: "Hệ thống nạp tiền 30.000 ₫ vào tài khoản",
+              ts: Date.now()
+            });
+          }
+          saveTxs(serverTxs);
+          renderTxs();
+        } catch (e) {}
+      }
+
+      function updateVipDisplay() {
+        // Profile VIP badge
+        const vipBadge = document.querySelector(".vip-badge");
+        if (vipBadge) vipBadge.textContent = `👑 ${CURRENT_VIP.level}`;
+        // Profile commission rate stat
+        const elRate = document.querySelector("#statCommissionRate");
+        if (elRate) elRate.textContent = Math.round(CURRENT_VIP.refRate * 100) + "%";
+        // Grab order voucher card: VIP level, range, rate
+        const voucherInfo = document.querySelectorAll(".voucher-info > div strong");
+        // Voucher info has 3 strongs: VIP1, "0₫ To 10M", 0.5%
+        // We only update when not in product-selected mode (ie when label is "Thành viên áp dụng")
+        const voucherLabel = document.querySelector("#voucherProductLabel");
+        if (voucherLabel && voucherLabel.textContent === "Thành viên áp dụng") {
+          const voucherName = document.querySelector("#voucherProductName");
+          if (voucherName) voucherName.textContent = CURRENT_VIP.level;
+        }
+        if (voucherInfo[1]) voucherInfo[1].innerHTML = `${CURRENT_VIP.minRange.toLocaleString("vi-VN")} ₫ To<br />${CURRENT_VIP.maxRange.toLocaleString("vi-VN")} ₫`;
+        if (voucherInfo[2]) voucherInfo[2].textContent = (CURRENT_VIP.rate * 100).toFixed(1) + "%";
+        // Account stats: cấp độ
+        const accountStatsLis = document.querySelectorAll(".account-stats li");
+        if (accountStatsLis[0]) accountStatsLis[0].querySelector("span").textContent = `Cấp độ: ${CURRENT_VIP.level}`;
+      }
+
+      function updateBalanceDisplay() {
+        document.querySelectorAll(".balance").forEach((el, i) => {
+          // i=0: total, i=1: available, i=2: frozen
+          let val;
+          if (i === 0) val = TOTAL_BALANCE;
+          else if (i === 1) val = AVAILABLE_BALANCE;
+          else val = FROZEN_BALANCE;
+          const text = val.toLocaleString("vi-VN") + " ₫";
+          el.dataset.amount = String(val);
+          if (!balanceHidden) {
+            el.textContent = text;
+            el.dataset.real = text;
+          } else {
+            el.dataset.real = text;
+            el.textContent = "••••• ₫";
+          }
+        });
+        // Update wallet sub headers
+        const balanceCardStrong = document.querySelectorAll(".balance-card strong");
+        balanceCardStrong.forEach((el) => {
+          el.textContent = AVAILABLE_BALANCE.toLocaleString("vi-VN") + " ₫";
+        });
+      }
+
+      async function fetchPoolCount() {
+        try {
+          const username = getCurrentUsername() || "";
+          const r = await fetch(`/api/orders/pool?username=${encodeURIComponent(username)}`);
+          if (!r.ok) return null;
+          const d = await r.json();
+          return d.available;
+        } catch (e) { return null; }
+      }
+
+      function updatePoolBadge(count) {
+        const grabReceived = document.querySelector("#grabReceived");
+        if (!grabReceived) return;
+        const orders = loadOrders();
+        const vip = currentVip();
+        const totalOrders = orders.length;
+        const poolText = count != null ? ` • ${count} đơn trong pool` : "";
+        grabReceived.textContent = `Số đơn hàng được nhận: ${totalOrders}/${vip.dailyCap}${poolText}`;
+      }
+
+      const receiveBtn = document.querySelector("#receiveBtn");
+      if (receiveBtn) {
+        receiveBtn.addEventListener("click", async () => {
+          const username = getCurrentUsername();
+          if (!username) { showToast("Bạn cần đăng nhập."); return; }
+          const orders = loadOrders();
+          const vip = currentVip();
+          if (orders.length >= vip.dailyCap) {
+            showToast("Đã đạt giới hạn nhận đơn hôm nay");
+            return;
+          }
+          receiveBtn.disabled = true;
+          receiveBtn.textContent = "Đang nhận đơn…";
+          try {
+            const r = await fetch("/api/orders/claim", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username })
+            });
+            const d = await r.json();
+            if (!r.ok) {
+              showToast(d.message || "Không thể nhận đơn");
+            } else {
+              showToast(`Đã nhận đơn ${d.order.id} • ${d.order.amount.toLocaleString("vi-VN")} ₫. Chờ admin duyệt.`);
+              await fetchMyOrders();
+            }
+          } catch (e) {
+            showToast("Lỗi mạng");
+          } finally {
+            renderProfileStats();
+          }
+        });
+      }
+
+      // Periodic poll — refresh orders + transactions + pool every 5s
+      let ordersPollTimer = null;
+      function startOrdersPolling() {
+        if (ordersPollTimer) clearInterval(ordersPollTimer);
+        const tick = async () => {
+          await fetchMyOrders();
+          await fetchMyTransactions();
+          const c = await fetchPoolCount();
+          updatePoolBadge(c);
+        };
+        tick();
+        ordersPollTimer = setInterval(tick, 5000);
+      }
+
+      // Toast
+      function showToast(msg) {
+        let t = document.querySelector("#toast");
+        if (!t) {
+          t = document.createElement("div");
+          t.id = "toast";
+          t.className = "toast";
+          document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.classList.add("is-show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => t.classList.remove("is-show"), 1800);
+      }
+
+      withdrawConfirm.addEventListener("click", async () => {
+        if (withdrawConfirm.disabled) return;
+        const username = getCurrentUsername();
+        if (!username) { showToast("Bạn cần đăng nhập."); return; }
+        if (!currentBank) { showToast("Cần thêm tài khoản ngân hàng trước."); return; }
+        withdrawConfirm.disabled = true;
+        try {
+          const r = await fetch("/api/withdraw/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, amount: withdrawAmount, bankInfo: currentBank })
+          });
+          const d = await r.json();
+          if (!r.ok) {
+            showToast(d.message || "Không thể tạo yêu cầu rút.");
+          } else {
+            showSuccess(withdrawAmount, "withdraw");
+            withdrawAmounts.forEach((x) => x.classList.remove("is-active"));
+            withdrawCustom.value = "";
+            withdrawAmount = 0;
+            await fetchMyTransactions();
+          }
+        } catch (e) {
+          showToast("Lỗi mạng.");
+        } finally {
+          refreshWithdrawConfirm();
+        }
+      });
+
+      const balanceEye = document.querySelector("#balanceEye");
+      let balanceHidden = false;
+      balanceEye.addEventListener("click", () => {
+        balanceHidden = !balanceHidden;
+        document.querySelectorAll(".balance").forEach((el) => {
+          if (balanceHidden) {
+            if (!el.dataset.real) el.dataset.real = el.textContent;
+            el.textContent = "••••• ₫";
+          } else if (el.dataset.real) {
+            el.textContent = el.dataset.real;
+          }
+        });
+      });
+
+      document.querySelectorAll(".history-tabs .tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".history-tabs .tab").forEach((t) => t.classList.toggle("is-active", t === tab));
+          document.querySelectorAll('[data-hpanel]').forEach((p) => p.classList.toggle("is-active", p.dataset.hpanel === tab.dataset.htab));
+        });
+      });
+
+      document.querySelectorAll(".promo-strip article").forEach((el) => {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", () => goTo("grab"));
+      });
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.toggle("is-active", t === tab));
+          panels.forEach((p) => p.classList.toggle("is-active", p.dataset.panel === tab.dataset.tab));
+          ordersTitle.textContent = tab.textContent.replace(/\s*\d+\s*$/, "").trim();
+        });
+      });
+
+      document.querySelectorAll("[data-show]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const showRegister = button.dataset.show === "register";
+          loginCard.classList.toggle("is-hidden", showRegister);
+          registerCard.classList.toggle("is-hidden", !showRegister);
+        });
+      });
+
+      async function postJson(url, data) {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.message || "Có lỗi xảy ra.");
+        }
+        return payload;
+      }
+
+      const SESSION_KEY = "xulydonhang.session";
+
+      function saveSession(account) {
+        try {
+          localStorage.setItem(SESSION_KEY, JSON.stringify(account));
+        } catch (e) {}
+      }
+
+      function loadSession() {
+        try {
+          const raw = localStorage.getItem(SESSION_KEY);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function clearSession() {
+        try {
+          localStorage.removeItem(SESSION_KEY);
+        } catch (e) {}
+      }
+
+      function enterApp(account) {
+        if (account) {
+          const phone = account.phone || "0862206752";
+          document.querySelector("#profilePhone").textContent = phone;
+          if (account.vip) { CURRENT_VIP = account.vip; }
+        }
+        appShell.classList.add("is-home");
+        hero.classList.add("is-hidden");
+        loginCard.classList.add("is-hidden");
+        registerCard.classList.add("is-hidden");
+        authFooter.classList.add("is-hidden");
+        homeScreen.classList.remove("is-hidden");
+        fetchProducts();
+        renderProducts();
+        renderCommissions();
+        startCommissionFeed();
+        renderBank();
+        renderTxs();
+        renderOrders();
+        renderProfileStats();
+        updateVipDisplay();
+        refreshSecurity();
+        startOrdersPolling();
+        goTo("home");
+      }
+
+      registerForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        try {
+          const result = await postJson("/api/register", {
+            fullName: document.querySelector("#fullname").value,
+            phone: document.querySelector("#phone").value,
+            username: document.querySelector("#newUsername").value,
+            password: document.querySelector("#newPassword").value,
+          });
+          alert(result.message);
+          registerForm.reset();
+          loginCard.classList.remove("is-hidden");
+          registerCard.classList.add("is-hidden");
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        try {
+          const result = await postJson("/api/login", {
+            username: document.querySelector("#username").value,
+            password: document.querySelector("#password").value,
+          });
+          const account = result.account || {};
+          saveSession(account);
+          enterApp(account);
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+      logoutButton.addEventListener("click", () => {
+        clearSession();
+        if (commissionTimer) {
+          clearInterval(commissionTimer);
+          commissionTimer = null;
+        }
+        if (ordersPollTimer) {
+          clearInterval(ordersPollTimer);
+          ordersPollTimer = null;
+        }
+        appShell.classList.remove("is-home");
+        hero.classList.remove("is-hidden");
+        loginCard.classList.remove("is-hidden");
+        registerCard.classList.add("is-hidden");
+        authFooter.classList.remove("is-hidden");
+        homeScreen.classList.add("is-hidden");
+        loginForm.reset();
+        goTo("home");
+      });
+
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        renderProducts(shopSearch.value);
+      });
+
+      shopSearch.addEventListener("input", () => {
+        if (!shopSearch.value.trim()) {
+          renderProducts();
+        }
+      });
+
+      const savedAccount = loadSession();
+      if (savedAccount) {
+        enterApp(savedAccount);
+      }
+    </script>
+  </body>
+</html>

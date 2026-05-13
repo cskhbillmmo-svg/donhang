@@ -1,0 +1,81 @@
+{
+  "txs": [
+    {
+      "id": "TX-OASD7B",
+      "type": "adjustment",
+      "username": "demo",
+      "amount": -10000,
+      "paymentMethod": null,
+      "bankInfo": null,
+      "reason": "Phí xử lý",
+      "status": "approved",
+      "rejectedReason": null,
+      "createdAt": 1778668584696,
+      "approvedAt": 1778668584696,
+      "rejectedAt": null,
+      "approvedBy": "admin"
+    },
+    {
+      "id": "TX-NUNT6L",
+      "type": "adjustment",
+      "username": "testui",
+      "amount": 200000,
+      "paymentMethod": null,
+      "bankInfo": null,
+      "reason": "Thưởng đăng ký",
+      "status": "approved",
+      "rejectedReason": null,
+      "createdAt": 1778668584670,
+      "approvedAt": 1778668584670,
+      "rejectedAt": null,
+      "approvedBy": "admin"
+    },
+    {
+      "id": "TX-93TESK",
+      "type": "deposit",
+      "username": "testui",
+      "amount": 100000,
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "bankInfo": null,
+      "status": "rejected",
+      "rejectedReason": "Không nhận được tiền chuyển",
+      "createdAt": 1778668066955,
+      "approvedAt": null,
+      "rejectedAt": 1778668066958,
+      "approvedBy": null
+    },
+    {
+      "id": "TX-AKJHQ6",
+      "type": "withdraw",
+      "username": "testui",
+      "amount": 200000,
+      "paymentMethod": null,
+      "bankInfo": {
+        "bank": "Vietcombank",
+        "account": "1234567890",
+        "holder": "NGUYEN VAN A",
+        "branch": ""
+      },
+      "status": "approved",
+      "rejectedReason": null,
+      "createdAt": 1778668066918,
+      "approvedAt": 1778668066951,
+      "rejectedAt": null,
+      "approvedBy": "admin"
+    },
+    {
+      "id": "TX-3O505N",
+      "type": "deposit",
+      "username": "testui",
+      "amount": 500000,
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "bankInfo": null,
+      "status": "approved",
+      "rejectedReason": null,
+      "createdAt": 1778668044515,
+      "approvedAt": 1778668044526,
+      "rejectedAt": null,
+      "approvedBy": "admin"
+    }
+  ]
+}
