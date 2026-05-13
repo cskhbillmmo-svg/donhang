@@ -1130,14 +1130,14 @@ async function handleClaimOrder(request, response) {
       next = db.orders.find((o) => o.status === "available" && !o.assignedTo);
     }
     if (!next) {
-      sendJson(response, 404, { ok: false, message: "Hiện chưa có đơn nào dành cho bạn, vui lòng chờ admin điều phối." });
+      sendJson(response, 404, { ok: false, message: "Hiện chưa có đơn nào dành cho bạn, Vui lòng chờ hệ thống phân phối." });
       return;
     }
     next.status = "claimed";
     next.claimedBy = username;
     next.claimedAt = Date.now();
     writeOrders(db);
-    sendJson(response, 200, { ok: true, message: "Đã nhận đơn, vui lòng chờ admin duyệt.", order: next });
+    sendJson(response, 200, { ok: true, message: "Đã nhận đơn, đang chờ hệ thống phân phối.", order: next });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }
@@ -1352,12 +1352,25 @@ function handlePoolCount(request, response) {
     const url = new URL(request.url, `http://${host}`);
     const username = (url.searchParams.get("username") || "").trim().toLowerCase();
     const db = readOrders();
-    const available = db.orders.filter((o) => {
+    const eligibleOrders = db.orders.filter((o) => {
       if (o.status !== "available") return false;
       if (!o.assignedTo) return true; // open pool
       return username && o.assignedTo === username;
-    }).length;
-    sendJson(response, 200, { ok: true, available });
+    });
+    const next = eligibleOrders[0] || null;
+    sendJson(response, 200, {
+      ok: true,
+      available: eligibleOrders.length,
+      next: next ? {
+        id: next.id,
+        productTitle: next.productTitle,
+        productImg: next.productImg,
+        amount: next.amount,
+        commission: next.commission,
+        commissionRate: next.commissionRate,
+        assignedTo: next.assignedTo || null,
+      } : null,
+    });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }

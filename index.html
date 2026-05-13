@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NexusSys - Enterprise System</title>
+    <title>Tiki - Xử lý đơn hàng</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -262,26 +262,26 @@
         <!-- Lịch sử đơn hàng -->
         <div class="screen" data-route="orders">
           <header class="page-banner">
-            <h2 id="ordersTitle">Chờ Xử Lý</h2>
+            <h2 id="ordersTitle">Chờ xử lý</h2>
           </header>
           <div class="tab-bar" role="tablist">
             <button type="button" class="tab is-active" data-tab="pending">
-              Chờ Xử Lý <span class="tab-badge">1</span>
+              Chờ xử lý <span class="tab-badge">1</span>
             </button>
+            <button type="button" class="tab" data-tab="processed">Chờ xử lý</button>
             <button type="button" class="tab" data-tab="done">Hoàn Thành</button>
-            <button type="button" class="tab" data-tab="processed">Đã Xử Lý</button>
           </div>
           <div class="tab-panel is-active" data-panel="pending">
             <div id="ordersPending"></div>
-            <div class="empty-state is-hidden" id="ordersPendingEmpty">Chưa có đơn chờ xử lý.</div>
+            <div class="empty-state is-hidden" id="ordersPendingEmpty">Chưa có đơn chờ phân phối.</div>
+          </div>
+          <div class="tab-panel" data-panel="processed">
+            <div id="ordersProcessed"></div>
+            <div class="empty-state is-hidden" id="ordersProcessedEmpty">Chưa có đơn chờ xử lý.</div>
           </div>
           <div class="tab-panel" data-panel="done">
             <div id="ordersDone"></div>
             <div class="empty-state is-hidden" id="ordersDoneEmpty">Chưa có đơn hoàn thành.</div>
-          </div>
-          <div class="tab-panel" data-panel="processed">
-            <div id="ordersProcessed"></div>
-            <div class="empty-state is-hidden" id="ordersProcessedEmpty">Chưa có đơn đã xử lý.</div>
           </div>
         </div>
 
@@ -343,7 +343,7 @@
             <button class="receive-button" type="button" id="receiveBtn">Nhận Ngay</button>
           </section>
 
-          <p class="note">Ghi chú : Tất cả đơn hàng sẽ được hệ thống LAZADA tự động phân phối đơn ngẫu nhiên</p>
+          <p class="note">Ghi chú : Tất cả đơn hàng sẽ được hệ thống Tiki tự động phân phối đơn ngẫu nhiên</p>
           <p class="note">- Giới hạn đơn hàng tùy thuộc vào cấp bậc VIP của bạn</p>
         </div>
 
@@ -902,7 +902,7 @@
         </nav>
       </section>
 
-      <footer class="auth-footer">© 2026 TIKI LOGISTICS. ALL RIGHTS RESERVED.</footer>
+      <footer class="auth-footer">© 2026 TIKI. ALL RIGHTS RESERVED.</footer>
     </main>
 
     <div class="modal-overlay" id="successModal" aria-hidden="true">
@@ -1230,9 +1230,10 @@
         if (e.target === successModal) hideSuccess();
       });
 
-      const ORDERS_KEY = "xulydonhang.orders";
+      const ORDERS_KEY = "tiki.orders";
 
       let CURRENT_VIP = { level: "VIP1", rate: 0.005, refRate: 0.15, dailyCap: 30, minRange: 0, maxRange: 10000000 };
+      let NEXT_POOL_ORDER = null;
 
       function currentVip() { return CURRENT_VIP; }
 
@@ -1249,12 +1250,45 @@
         try { localStorage.setItem(ORDERS_KEY, JSON.stringify(list)); } catch (e) {}
       }
 
+      function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char]));
+      }
+
+      function formatCurrency(value) {
+        const amount = Number(value || 0);
+        return Number.isFinite(amount) ? amount.toLocaleString("vi-VN") + " ₫" : "0 ₫";
+      }
+
       function orderCardHtml(o) {
-        const statusLabel = o.status === "pending" ? "Chờ phân phối" : o.status === "done" ? "Hoàn thành" : "Đã xử lý";
-        const titleText = o.title || (o.status === "pending" ? "Chờ Phân Phối" : o.status === "done" ? "Hoàn Thành" : "Đã Xử Lý");
+        const statusLabel = o.status === "pending" ? "Chờ xử lý" : o.status === "done" ? "Hoàn thành" : "Chờ xử lý";
+        const titleText = o.status === "pending" ? "Chờ xử lý" : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
+        if (o.status === "pending") {
+          return `
+            <article class="order-card order-card-pending">
+              <div class="order-loading" aria-hidden="true">
+                <span class="send-order-icon">Gửi đơn</span>
+              </div>
+              <h3>${escapeHtml(titleText)}</h3>
+            </article>
+          `;
+        }
         const subtitle = o.subtitle || "";
+        const productName = subtitle || o.productTitle || o.title || "Sản phẩm";
+        const productImg = o.productImg ? escapeHtml(o.productImg) : "";
+        const thumb = productImg
+          ? `<img src="${productImg}" alt="${escapeHtml(productName)}" loading="lazy" />`
+          : `<svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" />
+              <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>`;
         const commissionRow = o.commission > 0
-          ? `<div class="order-id" style="color:#16a34a;font-weight:700">Hoa hồng: +${o.commission.toLocaleString("vi-VN")} ₫</div>`
+          ? `<div class="order-commission">Hoa hồng: +${formatCurrency(o.commission)}</div>`
           : "";
         return `
           <article class="order-card">
@@ -1265,15 +1299,18 @@
               </svg>
               ${statusLabel}
             </span>
-            <div class="order-clock" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" />
-                <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-              </svg>
+            <div class="order-product">
+              <div class="order-product-thumb" aria-hidden="true">${thumb}</div>
+              <div class="order-product-info">
+                <h3>${escapeHtml(titleText)}</h3>
+                <p>${escapeHtml(productName)}</p>
+                <div class="order-product-meta">
+                  <span>Giá trị đơn</span>
+                  <strong>${formatCurrency(o.amount)}</strong>
+                </div>
+              </div>
             </div>
-            <h3>${titleText}</h3>
-            <p>${subtitle}</p>
-            <div class="order-id">Mã đơn: ${o.id}</div>
+            <div class="order-id">Mã đơn: ${escapeHtml(o.id)}</div>
             ${commissionRow}
           </article>
         `;
@@ -1297,7 +1334,7 @@
           }
         });
 
-        // Update tab badge "Chờ Xử Lý"
+        // Update tab badge "Chờ xử lý"
         const pendingBadge = document.querySelector('.tab[data-tab="pending"] .tab-badge');
         if (pendingBadge) {
           if (groups.pending.length > 0) {
@@ -1334,7 +1371,7 @@
         }
       }
 
-      const TX_KEY = "xulydonhang.txs";
+      const TX_KEY = "tiki.txs";
 
       function loadTxs() {
         try {
@@ -1426,7 +1463,7 @@
         }
       }
 
-      const BANK_KEY = "xulydonhang.bank";
+      const BANK_KEY = "tiki.bank";
       const MIN_WITHDRAW = 100000;
       let AVAILABLE_BALANCE = 30000;
       let TOTAL_BALANCE = 30000;
@@ -1446,7 +1483,7 @@
         return n.toLocaleString("vi-VN") + " ₫";
       }
 
-      const BANKS_KEY = "xulydonhang.banks";
+      const BANKS_KEY = "tiki.banks";
 
       function loadBanks() {
         try {
@@ -1692,7 +1729,7 @@
       });
 
       // Security: withdraw password
-      const PW_KEY = "xulydonhang.withdrawPw";
+      const PW_KEY = "tiki.withdrawPw";
       const pwForm = document.querySelector("#withdrawPwForm");
       const pwInput1 = document.querySelector("#pwInput1");
       const pwInput2 = document.querySelector("#pwInput2");
@@ -1816,16 +1853,17 @@
           const d = await r.json();
           const serverOrders = (d.orders || []).map((o) => ({
             id: o.id,
-            status: o.status === "claimed" ? "pending" : (o.status === "approved" ? "done" : "processed"),
+            status: o.status === "claimed" ? "pending" : (o.status === "completed" ? "done" : "processed"),
             serverStatus: o.status,
-            title: o.status === "claimed" ? "Chờ admin duyệt"
-                  : o.status === "approved" ? "Đơn đã hoàn thành"
+            title: o.status === "claimed" ? "Chờ xử lý"
+                  : o.status === "approved" ? "Chờ xử lý"
                   : o.status === "rejected" ? "Đơn bị từ chối" : o.productTitle,
             subtitle: o.status === "rejected" ? (o.rejectedReason || "Đã bị từ chối")
                     : (o.productTitle || "").slice(0, 60),
             amount: o.amount,
             commission: o.status === "approved" ? o.commission : 0,
             ts: o.claimedAt || o.createdAt,
+            productTitle: o.productTitle,
             productImg: o.productImg
           }));
           // keep any seed orders that don't exist on server (for backward compat) — actually let's just use server orders
@@ -1930,14 +1968,66 @@
         });
       }
 
+      function updateGrabOrderPreview(order) {
+        const card = document.querySelector("#voucherCard");
+        const art = document.querySelector("#voucherArt");
+        const ribbon = document.querySelector(".voucher-ribbon");
+        const label = document.querySelector("#voucherProductLabel");
+        const name = document.querySelector("#voucherProductName");
+        const voucherInfo = document.querySelectorAll(".voucher-info > div");
+        const voucherStrong = document.querySelectorAll(".voucher-info > div strong");
+        if (!card || !art || !label || !name || voucherInfo.length < 3 || voucherStrong.length < 3) return;
+
+        if (!order) {
+          card.classList.remove("has-order");
+          card.classList.add("is-empty-order");
+          art.innerHTML = `
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 7h12l-1 12H7L6 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+              <path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          `;
+          art.style.backgroundImage = "";
+          if (ribbon) ribbon.textContent = "TIKI";
+          label.textContent = "Trạng thái đơn hàng";
+          name.textContent = "Chưa có đơn hàng";
+          voucherInfo[1].querySelector("span").textContent = "Thông báo";
+          voucherStrong[1].textContent = "Vui lòng đợi hệ thống Tiki phân phối đơn mới.";
+          voucherInfo[2].querySelector("span").textContent = "Cấp hiện tại";
+          voucherStrong[2].textContent = CURRENT_VIP.level;
+          return;
+        }
+
+        const productTitle = order.productTitle || `Đơn ${order.id}`;
+        card.classList.remove("is-empty-order");
+        card.classList.add("has-order");
+        art.innerHTML = order.productImg ? "" : `<span class="voucher-title">${escapeHtml(productTitle.slice(0, 18))}</span>`;
+        art.style.backgroundImage = order.productImg ? `url("${String(order.productImg).replace(/"/g, "%22")}")` : "";
+        art.style.backgroundSize = "cover";
+        art.style.backgroundPosition = "center";
+        if (ribbon) ribbon.textContent = order.assignedTo ? "ĐƠN GÁN" : "ĐƠN MỚI";
+        label.textContent = "Đơn đang có";
+        name.textContent = productTitle;
+        voucherInfo[1].querySelector("span").textContent = "Giá trị đơn";
+        voucherStrong[1].textContent = formatCurrency(order.amount);
+        voucherInfo[2].querySelector("span").textContent = "Hoa hồng dự kiến";
+        voucherStrong[2].textContent = "+" + formatCurrency(order.commission || Math.round(Number(order.amount || 0) * CURRENT_VIP.rate));
+      }
+
       async function fetchPoolCount() {
         try {
           const username = getCurrentUsername() || "";
           const r = await fetch(`/api/orders/pool?username=${encodeURIComponent(username)}`);
           if (!r.ok) return null;
           const d = await r.json();
+          NEXT_POOL_ORDER = d.next || null;
+          updateGrabOrderPreview(NEXT_POOL_ORDER);
           return d.available;
-        } catch (e) { return null; }
+        } catch (e) {
+          NEXT_POOL_ORDER = null;
+          updateGrabOrderPreview(null);
+          return null;
+        }
       }
 
       function updatePoolBadge(count) {
@@ -1971,10 +2061,18 @@
             });
             const d = await r.json();
             if (!r.ok) {
-              showToast(d.message || "Không thể nhận đơn");
+              const message = (d.message || "Không thể nhận đơn")
+                .replace(/vui lòng chờ admin điều phối/gi, "Vui lòng chờ hệ thống phân phối")
+                .replace(/vui lòng chờ admin duyệt/gi, "Vui lòng chờ hệ thống phân phối")
+                .replace(/chờ admin điều phối/gi, "Vui lòng chờ hệ thống phân phối")
+                .replace(/chờ admin duyệt/gi, "Vui lòng chờ hệ thống phân phối")
+                .replace(/đang chờ hệ thống phân phối/gi, "Vui lòng chờ hệ thống phân phối");
+              showToast(message);
             } else {
-              showToast(`Đã nhận đơn ${d.order.id} • ${d.order.amount.toLocaleString("vi-VN")} ₫. Chờ admin duyệt.`);
+              showToast(`Đã nhận đơn ${d.order.id} • ${d.order.amount.toLocaleString("vi-VN")} ₫. Đang chờ hệ thống phân phối.`);
               await fetchMyOrders();
+              const c = await fetchPoolCount();
+              updatePoolBadge(c);
             }
           } catch (e) {
             showToast("Lỗi mạng");
@@ -2125,7 +2223,7 @@
         return payload;
       }
 
-      const SESSION_KEY = "xulydonhang.session";
+      const SESSION_KEY = "tiki.session";
 
       function saveSession(account) {
         try {

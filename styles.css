@@ -49,10 +49,12 @@ button {
 
 .mobile-auth {
   position: relative;
-  width: min(100%, 414px);
+  width: 100%;
+  max-width: 414px;
   min-height: 100svh;
-  overflow: hidden;
-  padding: 286px 24px 42px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 56px 24px 28px;
   background:
     radial-gradient(circle at 8% 4%, rgba(91, 69, 210, 0.2), transparent 30%),
     radial-gradient(circle at 92% 99%, rgba(111, 73, 235, 0.34), transparent 33%),
@@ -63,7 +65,8 @@ button {
   padding: 0;
   color: var(--ink);
   background: #f3f6fb;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .hero {
@@ -73,9 +76,9 @@ button {
 .app-icon {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 22px;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 18px;
   border-radius: 0;
   background: #0b74ff;
   box-shadow: 0 16px 32px rgba(11, 116, 255, 0.22);
@@ -83,27 +86,27 @@ button {
 
 .tiki-mark {
   display: block;
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
 }
 
 h1 {
-  margin: 0 0 10px;
-  font-size: 31px;
+  margin: 0 0 8px;
+  font-size: 29px;
   line-height: 1;
   font-weight: 900;
   color: #ffffff;
 }
 
 .hero p {
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   color: #b8c4dc;
   font-size: 15px;
   line-height: 1.45;
 }
 
 .login-card {
-  padding: 36px 32px 34px;
+  padding: 28px 32px 30px;
   border: 1px solid var(--card-line);
   border-radius: 22px;
   background: var(--card);
@@ -120,14 +123,14 @@ h1 {
 }
 
 .form-title {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
 .form-title h2 {
   margin: 0 0 8px;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 21px;
   line-height: 1.2;
 }
 
@@ -143,7 +146,7 @@ form {
 }
 
 label {
-  margin-bottom: 12px;
+  margin-bottom: 9px;
   color: #d8deec;
   font-size: 14px;
   font-weight: 800;
@@ -154,7 +157,7 @@ label {
   grid-template-columns: 28px 1fr auto;
   align-items: center;
   min-height: 54px;
-  margin-bottom: 29px;
+  margin-bottom: 22px;
   padding: 0 14px;
   border: 1px solid var(--field-line);
   border-radius: 16px;
@@ -204,7 +207,7 @@ label {
 
 .login-button {
   width: 100%;
-  min-height: 56px;
+  min-height: 54px;
   margin-top: -3px;
   border: 0;
   border-radius: 14px;
@@ -218,7 +221,7 @@ label {
 
 .divider {
   height: 1px;
-  margin: 31px 0 27px;
+  margin: 28px 0 24px;
   background: rgba(145, 154, 181, 0.13);
 }
 
@@ -240,25 +243,104 @@ label {
 }
 
 footer {
-  margin-top: 33px;
+  margin-top: 28px;
   color: rgba(83, 96, 120, 0.7);
   text-align: center;
   font-size: 11px;
   line-height: 1.4;
 }
 
+@media (min-width: 415px) {
+  body {
+    min-height: 100vh;
+    padding: 0;
+    background: #515663;
+  }
+
+  .mobile-auth {
+    min-height: 100vh;
+    box-shadow: 0 0 42px rgba(8, 11, 24, 0.28);
+  }
+
+  .mobile-auth.is-home {
+    min-height: 100vh;
+  }
+}
+
+@media (max-height: 780px) {
+  .mobile-auth {
+    padding-top: 34px;
+  }
+
+  .app-icon {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 13px;
+  }
+
+  .tiki-mark {
+    width: 58px;
+    height: 58px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .hero p {
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  .login-card {
+    padding: 24px 28px 26px;
+  }
+
+  .field {
+    min-height: 50px;
+    margin-bottom: 18px;
+  }
+
+  .field input {
+    height: 48px;
+  }
+
+  .login-button {
+    min-height: 50px;
+  }
+
+  .divider {
+    margin: 22px 0 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .mobile-auth {
+    padding: 28px 18px 24px;
+  }
+
+  .login-card {
+    padding: 22px 24px 24px;
+  }
+
+  .field {
+    margin-bottom: 17px;
+  }
+}
+
 /* ============ APP SHELL ============ */
 .home-screen {
   position: relative;
   min-height: 100svh;
-  padding-bottom: 76px;
+  padding-bottom: calc(82px + env(safe-area-inset-bottom));
   color: var(--ink);
   background: #f3f6fb;
+  overflow-x: hidden;
 }
 
 .screen {
   display: none;
-  padding: 12px 16px 12px;
+  padding: 0;
 }
 
 .screen.is-active {
@@ -272,17 +354,19 @@ footer {
 
 .home-route {
   min-height: 100%;
-  margin: -12px -16px 0;
-  padding: 0 0 92px;
-  background: linear-gradient(#2398f2 0 760px, #ffffff 760px);
+  width: 100%;
+  margin: 0;
+  padding: 0 0 calc(104px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  background: linear-gradient(#2398f2 0 610px, #ffffff 610px);
 }
 
 .sale-heading {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 12px;
-  padding: 72px 26px 8px;
+  gap: 10px;
+  padding: 56px 14px 8px;
   color: #ffffff;
   background: linear-gradient(180deg, #1565f4 0%, #0d63f5 100%);
 }
@@ -294,7 +378,7 @@ footer {
 }
 
 .sale-heading strong {
-  font-size: 28px;
+  font-size: 25px;
   line-height: 1.05;
   font-weight: 900;
 }
@@ -302,41 +386,41 @@ footer {
 .sale-heading span {
   margin-top: 4px;
   color: #fff359;
-  font-size: 27px;
+  font-size: 25px;
   line-height: 1.05;
   font-weight: 900;
 }
 
 .beauty-badge {
-  flex: 0 0 165px;
-  padding: 10px 12px;
+  flex: 0 0 138px;
+  padding: 9px 10px;
   clip-path: polygon(9% 0, 100% 0, 91% 100%, 0 100%);
   color: #1474df;
   background: #ffe16e;
   text-align: center;
-  font-size: 23px;
+  font-size: 19px;
   line-height: 0.95;
   font-weight: 900;
 }
 
 .shop-search {
   display: grid;
-  grid-template-columns: 1fr 58px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  gap: 8px;
   align-items: center;
-  margin: 0 24px;
-  padding: 14px;
-  border-radius: 16px;
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 15px;
   background: #ffffff;
   transform: translateY(1px);
 }
 
 .search-box {
   display: grid;
-  grid-template-columns: 38px 1fr;
+  grid-template-columns: 30px minmax(0, 1fr);
   align-items: center;
-  min-height: 56px;
-  padding: 0 18px;
+  min-height: 48px;
+  padding: 0 12px;
   border: 1px solid #d9dde6;
   border-radius: 10px;
   color: #777b88;
@@ -344,18 +428,18 @@ footer {
 }
 
 .search-box svg {
-  width: 31px;
-  height: 31px;
+  width: 25px;
+  height: 25px;
 }
 
 .search-box input {
   min-width: 0;
-  height: 54px;
+  height: 46px;
   border: 0;
   outline: 0;
   color: #111827;
   background: transparent;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -376,22 +460,22 @@ footer {
 .cart-button {
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  width: 44px;
+  height: 44px;
   border: 0;
   color: #202124;
   background: #ffffff;
 }
 
 .cart-button svg {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
 }
 
 .intro-banner {
   position: relative;
   overflow: hidden;
-  margin: 24px 24px 0;
+  margin: 18px 10px 0;
   border-radius: 0;
   background: transparent;
   padding-bottom: 30px;
@@ -444,12 +528,12 @@ footer {
 
 .product-section,
 .commission-feed {
-  padding-right: 16px;
-  padding-left: 16px;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .product-section {
-  padding-top: 18px;
+  padding-top: 14px;
 }
 
 @keyframes bannerSlide {
@@ -495,9 +579,9 @@ footer {
 
 .product-section h2,
 .commission-feed h2 {
-  margin: 4px 0 16px;
+  margin: 4px 0 12px;
   color: #050505;
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.15;
   font-weight: 900;
 }
@@ -505,7 +589,7 @@ footer {
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 16px;
+  gap: 12px 10px;
 }
 
 .product-card {
@@ -557,7 +641,7 @@ footer {
   min-height: 38px;
   margin: 0 0 9px;
   color: #0f172a;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.28;
   font-weight: 500;
 }
@@ -565,7 +649,7 @@ footer {
 .product-card p {
   margin: 0;
   color: #475569;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .product-card p span {
@@ -732,10 +816,10 @@ footer {
 
 .order-card {
   position: relative;
-  padding: 16px 16px 18px;
+  padding: 14px;
   border-radius: 12px;
   background: #fff;
-  text-align: center;
+  text-align: left;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
 }
 
@@ -775,24 +859,134 @@ footer {
   height: 28px;
 }
 
+.order-card-pending {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 30px 16px 28px;
+  text-align: center;
+}
+
+.order-loading {
+  display: grid;
+  place-items: center;
+  width: 180px;
+  height: 72px;
+}
+
+.send-order-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 156px;
+  height: 56px;
+  border-radius: 8px;
+  background: #0b74ff;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(11, 116, 255, 0.24);
+}
+
+.order-card-pending h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.order-product {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  padding-top: 22px;
+}
+
+.order-product-thumb {
+  display: grid;
+  place-items: center;
+  flex: 0 0 92px;
+  width: 92px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.order-product-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-product-thumb svg {
+  width: 30px;
+  height: 30px;
+}
+
+.order-product-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .order-card h3 {
   margin: 0 0 4px;
   font-size: 15px;
   font-weight: 800;
+  line-height: 1.25;
 }
 
 .order-card p {
-  margin: 0 0 12px;
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
   color: #64748b;
   font-size: 13px;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.order-product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 9px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.order-product-meta strong {
+  flex-shrink: 0;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .order-id {
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px dashed var(--line);
   text-align: left;
   color: #475569;
   font-size: 12px;
+}
+
+.order-commission {
+  padding-top: 8px;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .empty-state {
@@ -902,6 +1096,29 @@ footer {
 .voucher-info strong.accent {
   color: var(--brand);
   font-size: 18px;
+}
+
+.voucher-card.is-empty-order .voucher-image {
+  background: #eef4ff;
+}
+
+.voucher-card.is-empty-order .voucher-art {
+  background: #eef4ff;
+  color: #5b63f6;
+}
+
+.voucher-card.is-empty-order .voucher-art svg {
+  width: 48px;
+  height: 48px;
+}
+
+.voucher-card.is-empty-order .voucher-ribbon {
+  background: #dbe7ff;
+  color: #2453d6;
+}
+
+.voucher-card.is-empty-order .voucher-info strong {
+  -webkit-line-clamp: 4;
 }
 
 .account-stats {
@@ -2637,9 +2854,9 @@ footer {
   z-index: 2;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  width: min(100%, 414px);
+  width: min(100vw, 414px);
   transform: translateX(-50%);
-  padding: 8px 8px 10px;
+  padding: 7px 8px calc(9px + env(safe-area-inset-bottom));
   border-top: 1px solid #e9edf5;
   background: #ffffff;
   box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.08);
@@ -2649,18 +2866,18 @@ footer {
   display: grid;
   justify-items: center;
   gap: 4px;
-  min-height: 50px;
+  min-height: 48px;
   padding: 2px 0;
   border: 0;
   color: #6b7280;
   background: transparent;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .bottom-nav svg {
-  width: 24px;
-  height: 24px;
+  width: 23px;
+  height: 23px;
 }
 
 .bottom-nav button.active {
@@ -2669,14 +2886,46 @@ footer {
 
 @media (max-width: 380px) {
   .mobile-auth {
-    padding: 220px 18px 34px;
+    padding: 28px 18px 24px;
   }
 
   .login-card {
-    padding: 30px 24px;
+    padding: 22px 24px 24px;
   }
 
   .voucher-card {
     grid-template-columns: 100px 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .mobile-auth.is-home {
+    padding: 0;
+  }
+
+  .sale-heading {
+    padding: 48px 10px 8px;
+  }
+
+  .sale-heading strong,
+  .sale-heading span {
+    font-size: 22px;
+  }
+
+  .beauty-badge {
+    flex-basis: 124px;
+    font-size: 17px;
+  }
+
+  .search-box input {
+    font-size: 16px;
+  }
+
+  .product-card div {
+    padding: 10px 10px 11px;
+  }
+
+  .bottom-nav button {
+    font-size: 10.5px;
   }
 }

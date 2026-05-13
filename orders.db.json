@@ -1,6 +1,22 @@
 {
   "orders": [
     {
+      "id": "ORD-YTZFFX",
+      "amount": 89000,
+      "status": "approved",
+      "claimedAt": 1778683798570,
+      "claimedBy": "demo",
+      "createdAt": 1778683388669,
+      "approvedAt": 1778683821971,
+      "assignedTo": "demo",
+      "commission": 445,
+      "productImg": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=520&q=80",
+      "rejectedAt": null,
+      "productTitle": "Combo 10 Đôi Tất Uni cổ ngắn chất cotton",
+      "commissionRate": 0.005,
+      "rejectedReason": null
+    },
+    {
       "id": "ORD-GCCLR0",
       "amount": 1290000,
       "status": "available",
@@ -19,11 +35,11 @@
     {
       "id": "ORD-2LUU30",
       "amount": 12990000,
-      "status": "available",
-      "claimedAt": null,
-      "claimedBy": null,
+      "status": "approved",
+      "claimedAt": 1778681608837,
+      "claimedBy": "demo",
       "createdAt": 1778667092650,
-      "approvedAt": null,
+      "approvedAt": 1778683276378,
       "commission": 64950,
       "productImg": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=520",
       "rejectedAt": null,

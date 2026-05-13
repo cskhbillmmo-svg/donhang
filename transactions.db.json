@@ -1,6 +1,20 @@
 {
   "txs": [
     {
+      "id": "TX-GYMK2R",
+      "type": "deposit",
+      "amount": 100000,
+      "status": "pending",
+      "bankInfo": null,
+      "username": "buingoc109",
+      "createdAt": 1778681802214,
+      "approvedAt": null,
+      "approvedBy": null,
+      "rejectedAt": null,
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "rejectedReason": null
+    },
+    {
       "id": "TX-OASD7B",
       "type": "adjustment",
       "amount": -10000,

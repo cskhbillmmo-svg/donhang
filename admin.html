@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — Xử lý đơn hàng</title>
+    <title>Tiki Admin - Xử lý đơn hàng</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -569,7 +569,7 @@
   </head>
   <body>
     <div id="loginScreen" class="login-screen">
-      <h1>Admin Panel</h1>
+      <h1>Tiki Admin</h1>
       <p>Quản lý đơn hàng cho hệ thống xử lý đơn.</p>
       <form id="loginForm">
         <label>Mật khẩu admin
@@ -581,7 +581,7 @@
 
     <div id="appScreen" style="display:none">
       <header class="topbar">
-        <h1>Admin — Xử lý đơn hàng</h1>
+        <h1>Tiki Admin - Xử lý đơn hàng</h1>
         <div>
           <span class="pool" id="poolCount">--</span>
           <button class="btn-ghost" id="logoutBtn" style="color:#fff;margin-left:8px">Đăng xuất</button>
@@ -778,7 +778,7 @@
         { title: "Nồi cơm điện UNIE URC818 1.8L", img: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=520&q=80", amount: 690000 }
       ];
 
-      const KEY = "xulydonhang.adminPw";
+      const KEY = "tiki.adminPw";
       let adminPw = sessionStorage.getItem(KEY) || "";
       let currentFilter = "all";
 

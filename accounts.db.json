@@ -68,14 +68,36 @@
     },
     {
       "id": "2d891fca-e61f-4553-884c-b5f10cdf7cac",
-      "fullName": "Check User",
-      "phone": "0900000012",
-      "username": "check1254885309",
-      "passwordHash": "f699165d3a9f5d0886b799e4a6f816917ae039c6d6567cd34167066bb4406f0e",
       "salt": "3e6cddb5f5a042dac59fd64e1c973493",
-      "vipLevel": "VIP1",
+      "phone": "0900000012",
       "blocked": false,
-      "createdAt": "2026-05-13T13:24:41.177Z"
+      "fullName": "Check User",
+      "username": "check1254885309",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-13T13:24:41.177Z",
+      "passwordHash": "f699165d3a9f5d0886b799e4a6f816917ae039c6d6567cd34167066bb4406f0e"
+    },
+    {
+      "id": "bbb703f7-f99e-4032-8924-7254d21ee81e",
+      "salt": "efb1d3d2ba74a5010392d4c12ab58df0",
+      "phone": "06546788",
+      "blocked": false,
+      "fullName": "jksdskjd",
+      "username": "kjsdklwowm",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-13T13:57:51.144Z",
+      "passwordHash": "1b4162e10792e6be83b129077e5c5370ab6ac7b41f47e2b11c3d126631c4fbb7"
+    },
+    {
+      "id": "7395c3ac-6a21-4cec-b631-73b765189583",
+      "salt": "670957c587af729cdc6879826844566a",
+      "phone": "0862206752",
+      "blocked": false,
+      "fullName": "bùi văn ngọc",
+      "username": "buingoc109",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-13T14:02:31.861Z",
+      "passwordHash": "197884751ed103f96217a39c35a003cf95ba59d06a08ab2947a13dc023696746"
     }
   ]
 }

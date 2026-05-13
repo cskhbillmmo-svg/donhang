@@ -1,6 +1,37 @@
 {
   "logs": [
     {
+      "id": "AL-1778683821973-cc0a",
+      "ts": 1778683821973,
+      "action": "order-approve",
+      "target": "ORD-YTZFFX",
+      "details": {
+        "user": "demo",
+        "amount": 89000
+      }
+    },
+    {
+      "id": "AL-1778683388671-48yi",
+      "ts": 1778683388671,
+      "action": "order-create",
+      "target": "ORD-YTZFFX",
+      "details": {
+        "amount": 89000,
+        "assignedTo": "demo",
+        "productTitle": "Combo 10 Đôi Tất Uni cổ ngắn chất cotton"
+      }
+    },
+    {
+      "id": "AL-1778683276380-eduh",
+      "ts": 1778683276380,
+      "action": "order-approve",
+      "target": "ORD-2LUU30",
+      "details": {
+        "user": "demo",
+        "amount": 12990000
+      }
+    },
+    {
       "id": "AL-1778670713954-o3l6",
       "ts": 1778670713954,
       "action": "product-delete",
