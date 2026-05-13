@@ -10,10 +10,16 @@ const txPath = path.join(root, "transactions.db.json");
 const configPath = path.join(root, "config.db.json");
 const productsPath = path.join(root, "products.db.json");
 const auditPath = path.join(root, "audit.db.json");
-const host = "127.0.0.1";
+const host = process.env.HOST || "0.0.0.0";
 const port = Number(process.env.PORT) || 8000;
 const INITIAL_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 const INITIAL_BALANCE = 30000;
+const SUPABASE_URL = process.env.SUPABASE_URL || "https://anqjrhololyuulghrbap.supabase.co";
+const SUPABASE_KEY = process.env.SUPABASE_KEY || "sb_publishable_j4lN7sNReirmd2U2LD7njw_I4ZwAb9G";
+const SUPABASE_TABLE = process.env.SUPABASE_TABLE || "app_store";
+const USE_SUPABASE = (process.env.USE_SUPABASE || "1") !== "0";
+
+const localStores = new Map();
 
 const DEFAULT_VIP_LEVELS = {
   VIP1: { rate: 0.005, refRate: 0.15, dailyCap: 30, minRange: 0, maxRange: 10000000 },
@@ -22,24 +28,129 @@ const DEFAULT_VIP_LEVELS = {
   VIP4: { rate: 0.015, refRate: 0.25, dailyCap: 100, minRange: 0, maxRange: 100000000 },
 };
 
-function ensureConfig() {
-  if (!fs.existsSync(configPath)) {
+const STORE_FILES = {
+  config: configPath,
+  accounts: dbPath,
+  orders: ordersPath,
+  transactions: txPath,
+  products: productsPath,
+  audit: auditPath,
+};
+
+const STORE_DEFAULTS = {
+  config: () => {
     const { hash, salt } = hashPassword(INITIAL_ADMIN_PASSWORD);
-    fs.writeFileSync(configPath, JSON.stringify({
+    return {
       vipLevels: DEFAULT_VIP_LEVELS,
       adminPasswordHash: hash,
       adminPasswordSalt: salt,
-    }, null, 2));
+    };
+  },
+  accounts: () => ({ accounts: [] }),
+  orders: () => ({ orders: [] }),
+  transactions: () => ({ txs: [] }),
+  products: () => ({ products: [] }),
+  audit: () => ({ logs: [] }),
+};
+
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function localReadStore(key) {
+  const filePath = STORE_FILES[key];
+  if (filePath && fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
   }
+  return STORE_DEFAULTS[key]();
+}
+
+function localWriteStore(key, value) {
+  const filePath = STORE_FILES[key];
+  if (filePath) {
+    fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+  }
+}
+
+async function supabaseRequest(pathname, options = {}) {
+  const response = await fetch(`${SUPABASE_URL}${pathname}`, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...(options.headers || {}),
+    },
+  });
+  const text = await response.text();
+  const body = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    const message = body && (body.message || body.error) ? (body.message || body.error) : response.statusText;
+    throw new Error(message);
+  }
+  return body;
+}
+
+async function loadStoreFromSupabase(key) {
+  const rows = await supabaseRequest(`/rest/v1/${SUPABASE_TABLE}?key=eq.${encodeURIComponent(key)}&select=data`);
+  if (Array.isArray(rows) && rows[0] && rows[0].data) {
+    return rows[0].data;
+  }
+  const initial = localReadStore(key);
+  await saveStoreToSupabase(key, initial);
+  return initial;
+}
+
+async function saveStoreToSupabase(key, value) {
+  await supabaseRequest(`/rest/v1/${SUPABASE_TABLE}?on_conflict=key`, {
+    method: "POST",
+    body: JSON.stringify({
+      key,
+      data: value,
+      updated_at: new Date().toISOString(),
+    }),
+    headers: { Prefer: "resolution=merge-duplicates" },
+  });
+}
+
+function readStore(key) {
+  if (!localStores.has(key)) {
+    const value = localReadStore(key);
+    localStores.set(key, value);
+  }
+  return cloneData(localStores.get(key));
+}
+
+function writeStore(key, value) {
+  localStores.set(key, cloneData(value));
+  localWriteStore(key, value);
+  if (USE_SUPABASE) {
+    saveStoreToSupabase(key, value).catch((error) => {
+      console.error(`[supabase] save ${key} failed: ${error.message}`);
+    });
+  }
+}
+
+async function initStorage() {
+  for (const key of Object.keys(STORE_FILES)) {
+    const value = USE_SUPABASE ? await loadStoreFromSupabase(key) : localReadStore(key);
+    localStores.set(key, value);
+    localWriteStore(key, value);
+  }
+}
+
+function ensureConfig() {
+  if (!localStores.has("config")) localStores.set("config", localReadStore("config"));
 }
 
 function readConfig() {
   ensureConfig();
-  return JSON.parse(fs.readFileSync(configPath, "utf8"));
+  return readStore("config");
 }
 
 function writeConfig(c) {
-  fs.writeFileSync(configPath, JSON.stringify(c, null, 2));
+  writeStore("config", c);
 }
 
 function getVipLevels() {
@@ -60,30 +171,24 @@ const mimeTypes = {
 };
 
 function ensureDb() {
-  if (!fs.existsSync(dbPath)) {
-    fs.writeFileSync(dbPath, JSON.stringify({ accounts: [] }, null, 2));
-  }
+  if (!localStores.has("accounts")) localStores.set("accounts", localReadStore("accounts"));
 }
 
 function ensureOrders() {
-  if (!fs.existsSync(ordersPath)) {
-    fs.writeFileSync(ordersPath, JSON.stringify({ orders: [] }, null, 2));
-  }
+  if (!localStores.has("orders")) localStores.set("orders", localReadStore("orders"));
 }
 
 function ensureTx() {
-  if (!fs.existsSync(txPath)) {
-    fs.writeFileSync(txPath, JSON.stringify({ txs: [] }, null, 2));
-  }
+  if (!localStores.has("transactions")) localStores.set("transactions", localReadStore("transactions"));
 }
 
 function readTx() {
   ensureTx();
-  return JSON.parse(fs.readFileSync(txPath, "utf8"));
+  return readStore("transactions");
 }
 
 function writeTx(db) {
-  fs.writeFileSync(txPath, JSON.stringify(db, null, 2));
+  writeStore("transactions", db);
 }
 
 // Compute balance for a user from approved deposits + commission + adjustments, minus approved + pending withdrawals.
@@ -108,20 +213,20 @@ function computeBalance(username) {
 
 function readDb() {
   ensureDb();
-  return JSON.parse(fs.readFileSync(dbPath, "utf8"));
+  return readStore("accounts");
 }
 
 function writeDb(db) {
-  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
+  writeStore("accounts", db);
 }
 
 function readOrders() {
   ensureOrders();
-  return JSON.parse(fs.readFileSync(ordersPath, "utf8"));
+  return readStore("orders");
 }
 
 function writeOrders(db) {
-  fs.writeFileSync(ordersPath, JSON.stringify(db, null, 2));
+  writeStore("orders", db);
 }
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
@@ -175,29 +280,25 @@ function checkAdmin(data) {
 }
 
 function ensureProducts() {
-  if (!fs.existsSync(productsPath)) {
-    fs.writeFileSync(productsPath, JSON.stringify({ products: [] }, null, 2));
-  }
+  if (!localStores.has("products")) localStores.set("products", localReadStore("products"));
 }
 function readProducts() {
   ensureProducts();
-  return JSON.parse(fs.readFileSync(productsPath, "utf8"));
+  return readStore("products");
 }
 function writeProducts(p) {
-  fs.writeFileSync(productsPath, JSON.stringify(p, null, 2));
+  writeStore("products", p);
 }
 
 function ensureAudit() {
-  if (!fs.existsSync(auditPath)) {
-    fs.writeFileSync(auditPath, JSON.stringify({ logs: [] }, null, 2));
-  }
+  if (!localStores.has("audit")) localStores.set("audit", localReadStore("audit"));
 }
 function readAudit() {
   ensureAudit();
-  return JSON.parse(fs.readFileSync(auditPath, "utf8"));
+  return readStore("audit");
 }
 function writeAudit(a) {
-  fs.writeFileSync(auditPath, JSON.stringify(a, null, 2));
+  writeStore("audit", a);
 }
 
 function audit(action, target, details) {
@@ -1337,13 +1438,16 @@ const server = http.createServer((request, response) => {
   sendJson(response, 404, { ok: false, message: "Không tìm thấy API." });
 });
 
-ensureDb();
-ensureOrders();
-ensureTx();
-ensureConfig();
-ensureProducts();
-ensureAudit();
-server.listen(port, host, () => {
-  console.log(`Server running at http://${host}:${port}`);
-  console.log(`Initial admin password (if first run): ${INITIAL_ADMIN_PASSWORD}`);
-});
+initStorage()
+  .then(() => {
+    server.listen(port, host, () => {
+      console.log(`Server running at http://${host}:${port}`);
+      console.log(`Storage: ${USE_SUPABASE ? `Supabase ${SUPABASE_TABLE}` : "local JSON"}`);
+      console.log(`Initial admin password (if first run): ${INITIAL_ADMIN_PASSWORD}`);
+    });
+  })
+  .catch((error) => {
+    console.error("[storage] Supabase init failed:", error.message);
+    console.error("[storage] Create the app_store table in Supabase, or set USE_SUPABASE=0 to use local JSON.");
+    process.exit(1);
+  });

@@ -920,6 +920,20 @@
       </div>
     </div>
 
+    <div class="confirm-overlay" id="messageModal" aria-hidden="true">
+      <div class="confirm-card" role="dialog" aria-labelledby="messageTitle" aria-modal="true">
+        <div class="confirm-icon" id="messageIcon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="11" />
+            <path d="m7 12 3.5 3.5L17 9" />
+          </svg>
+        </div>
+        <h3 id="messageTitle">Thành công</h3>
+        <p id="messageText">Thao tác đã được xử lý.</p>
+        <button type="button" id="messageClose">Đã hiểu</button>
+      </div>
+    </div>
+
     <script>
       const loginCard = document.querySelector("#loginCard");
       const registerCard = document.querySelector("#registerCard");
@@ -938,6 +952,11 @@
       const searchForm = document.querySelector("#searchForm");
       const shopSearch = document.querySelector("#shopSearch");
       const emptyProducts = document.querySelector("#emptyProducts");
+      const messageModal = document.querySelector("#messageModal");
+      const messageTitle = document.querySelector("#messageTitle");
+      const messageText = document.querySelector("#messageText");
+      const messageIcon = document.querySelector("#messageIcon");
+      const messageClose = document.querySelector("#messageClose");
 
       // Products fetched from /api/products at app start (admin-managed)
       let PRODUCTS = [];
@@ -1994,6 +2013,26 @@
         showToast._t = setTimeout(() => t.classList.remove("is-show"), 1800);
       }
 
+      function showMessage(title, text, type = "success") {
+        messageTitle.textContent = title;
+        messageText.textContent = text;
+        messageIcon.classList.toggle("is-error", type === "error");
+        messageModal.classList.add("is-show");
+        messageModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeMessage() {
+        messageModal.classList.remove("is-show");
+        messageModal.setAttribute("aria-hidden", "true");
+      }
+
+      messageClose.addEventListener("click", closeMessage);
+      messageModal.addEventListener("click", (event) => {
+        if (event.target === messageModal) {
+          closeMessage();
+        }
+      });
+
       withdrawConfirm.addEventListener("click", async () => {
         if (withdrawConfirm.disabled) return;
         const username = getCurrentUsername();
@@ -2136,12 +2175,12 @@
             username: document.querySelector("#newUsername").value,
             password: document.querySelector("#newPassword").value,
           });
-          alert(result.message);
+          showMessage("Đăng ký thành công", result.message || "Tài khoản của bạn đã được tạo.");
           registerForm.reset();
           loginCard.classList.remove("is-hidden");
           registerCard.classList.add("is-hidden");
         } catch (error) {
-          alert(error.message);
+          showMessage("Không thể đăng ký", error.message, "error");
         }
       });
 
@@ -2156,7 +2195,7 @@
           saveSession(account);
           enterApp(account);
         } catch (error) {
-          alert(error.message);
+          showMessage("Đăng nhập thất bại", error.message, "error");
         }
       });
 

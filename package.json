@@ -1,0 +1,12 @@
+{
+  "name": "xulydonhang",
+  "version": "1.0.0",
+  "description": "He thong xu ly don hang — Node static + admin panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

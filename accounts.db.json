@@ -21,6 +21,39 @@
       "vipLevel": "VIP3",
       "blocked": false,
       "createdAt": "2026-05-13T08:24:07.624Z"
+    },
+    {
+      "id": "b2844ef8-a901-4bc0-a369-4c057d340648",
+      "fullName": "sdsd",
+      "phone": "5465401564",
+      "username": "okbeu",
+      "passwordHash": "78469593abf5f614ae80ac85ef998df79ec6168e5ad3bedb7ef1e864b7b9219e",
+      "salt": "3d16722fb15ce3bf3347b9b73dab5581",
+      "vipLevel": "VIP1",
+      "blocked": false,
+      "createdAt": "2026-05-13T13:15:10.002Z"
+    },
+    {
+      "id": "d678161d-ddef-49a7-9130-6fa161e4db06",
+      "fullName": "sdsd",
+      "phone": "sdsds",
+      "username": "dsd",
+      "passwordHash": "5777303465e440c1dcfedbc296082d2b5f05d088727020472dfb9624c26f75a8",
+      "salt": "b119470071889d516c1b2358c437ead7",
+      "vipLevel": "VIP1",
+      "blocked": false,
+      "createdAt": "2026-05-13T13:15:49.656Z"
+    },
+    {
+      "id": "593c30a7-1776-4bb6-a446-e65e00e305af",
+      "fullName": "dxx",
+      "phone": "sdsd",
+      "username": "sdsdsd",
+      "passwordHash": "683b755f66c7d82b9024b5dd8888613b77798c1bcbd0dbc0a9a9609e7fc6990b",
+      "salt": "3e0b59659381b2765ee168067306fecb",
+      "vipLevel": "VIP1",
+      "blocked": false,
+      "createdAt": "2026-05-13T13:18:29.658Z"
     }
   ]
 }
