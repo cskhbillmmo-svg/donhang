@@ -1,8 +1,23 @@
 {
+  "functions": {
+    "api/[...path].js": {
+      "includeFiles": [
+        "index.html",
+        "admin.html",
+        "styles.css",
+        "assets/**",
+        "banners/**"
+      ]
+    }
+  },
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "/api/[...path].js"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
     },
     {
       "source": "/admin",
