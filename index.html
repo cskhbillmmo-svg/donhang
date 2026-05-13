@@ -262,11 +262,11 @@
         <!-- Lịch sử đơn hàng -->
         <div class="screen" data-route="orders">
           <header class="page-banner">
-            <h2 id="ordersTitle">Chờ xử lý</h2>
+            <h2 id="ordersTitle">Chờ phân phối</h2>
           </header>
           <div class="tab-bar" role="tablist">
             <button type="button" class="tab is-active" data-tab="pending">
-              Chờ xử lý <span class="tab-badge">1</span>
+              Chờ phân phối <span class="tab-badge">1</span>
             </button>
             <button type="button" class="tab" data-tab="processed">Chờ xử lý</button>
             <button type="button" class="tab" data-tab="done">Hoàn Thành</button>
@@ -1231,6 +1231,7 @@
       });
 
       const ORDERS_KEY = "tiki.orders";
+      const SUBMITTED_ORDERS_KEY = "tiki.submittedOrders";
 
       let CURRENT_VIP = { level: "VIP1", rate: 0.005, refRate: 0.15, dailyCap: 30, minRange: 0, maxRange: 10000000 };
       let NEXT_POOL_ORDER = null;
@@ -1250,6 +1251,20 @@
         try { localStorage.setItem(ORDERS_KEY, JSON.stringify(list)); } catch (e) {}
       }
 
+      function loadSubmittedOrderIds() {
+        try {
+          const raw = localStorage.getItem(SUBMITTED_ORDERS_KEY);
+          if (raw) return new Set(JSON.parse(raw));
+        } catch (e) {}
+        return new Set();
+      }
+
+      function markOrderSubmitted(id) {
+        const ids = loadSubmittedOrderIds();
+        ids.add(id);
+        try { localStorage.setItem(SUBMITTED_ORDERS_KEY, JSON.stringify(Array.from(ids))); } catch (e) {}
+      }
+
       function escapeHtml(value) {
         return String(value ?? "").replace(/[&<>"']/g, (char) => ({
           "&": "&amp;",
@@ -1266,18 +1281,9 @@
       }
 
       function orderCardHtml(o) {
-        const statusLabel = o.status === "pending" ? "Chờ xử lý" : o.status === "done" ? "Hoàn thành" : "Chờ xử lý";
-        const titleText = o.status === "pending" ? "Chờ xử lý" : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
-        if (o.status === "pending") {
-          return `
-            <article class="order-card order-card-pending">
-              <div class="order-loading" aria-hidden="true">
-                <span class="send-order-icon">Gửi đơn</span>
-              </div>
-              <h3>${escapeHtml(titleText)}</h3>
-            </article>
-          `;
-        }
+        const titleText = o.status === "pending"
+          ? "Đang chờ hệ thống phân phối"
+          : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
         const subtitle = o.subtitle || "";
         const productName = subtitle || o.productTitle || o.title || "Sản phẩm";
         const productImg = o.productImg ? escapeHtml(o.productImg) : "";
@@ -1290,28 +1296,46 @@
         const commissionRow = o.commission > 0
           ? `<div class="order-commission">Hoa hồng: +${formatCurrency(o.commission)}</div>`
           : "";
+        const sendOrderButton = o.status === "processed"
+          ? `<div class="send-order-area"><button class="send-order-button" type="button" data-order-id="${escapeHtml(o.id)}">Gửi đơn</button></div>`
+          : "";
+        const doneBadge = o.status === "done"
+          ? `<div class="order-done-badge">
+               <svg viewBox="0 0 24 24" aria-hidden="true">
+                 <circle cx="12" cy="12" r="10" fill="#22c55e" />
+                 <path d="m7.5 12.5 3 3 6-7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+               </svg>
+               <span>Đã hoàn thành</span>
+             </div>`
+          : "";
+        const titleHtml = o.status === "pending"
+          ? `<h3>${escapeHtml(titleText)}<span class="loader-spinner" aria-hidden="true"></span></h3>`
+          : `<h3>${escapeHtml(titleText)}</h3>
+             <p>${escapeHtml(productName)}</p>`;
+        const metaRow = o.status !== "pending"
+          ? `<div class="order-product-meta">
+                  <span>Giá trị đơn</span>
+                  <strong>${formatCurrency(o.amount)}</strong>
+                </div>`
+          : "";
+        const orderIdRow = o.status !== "pending"
+          ? `<div class="order-id">Mã đơn: ${escapeHtml(o.id)}</div>`
+          : "";
         return `
-          <article class="order-card">
-            <span class="order-status status-${o.status}">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
-                <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-              </svg>
-              ${statusLabel}
-            </span>
+          <article class="order-card${o.status === "pending" ? " is-pending-order" : ""}">
             <div class="order-product">
               <div class="order-product-thumb" aria-hidden="true">${thumb}</div>
               <div class="order-product-info">
-                <h3>${escapeHtml(titleText)}</h3>
-                <p>${escapeHtml(productName)}</p>
-                <div class="order-product-meta">
-                  <span>Giá trị đơn</span>
-                  <strong>${formatCurrency(o.amount)}</strong>
-                </div>
+                ${titleHtml}
+                ${metaRow}
               </div>
             </div>
-            <div class="order-id">Mã đơn: ${escapeHtml(o.id)}</div>
-            ${commissionRow}
+            ${orderIdRow}
+            <div class="order-footer">
+              ${commissionRow}
+              ${doneBadge}
+            </div>
+            ${sendOrderButton}
           </article>
         `;
       }
@@ -1851,21 +1875,30 @@
           const r = await fetch(`/api/orders/mine/${encodeURIComponent(username)}`);
           if (!r.ok) return;
           const d = await r.json();
-          const serverOrders = (d.orders || []).map((o) => ({
-            id: o.id,
-            status: o.status === "claimed" ? "pending" : (o.status === "completed" ? "done" : "processed"),
-            serverStatus: o.status,
-            title: o.status === "claimed" ? "Chờ xử lý"
-                  : o.status === "approved" ? "Chờ xử lý"
-                  : o.status === "rejected" ? "Đơn bị từ chối" : o.productTitle,
-            subtitle: o.status === "rejected" ? (o.rejectedReason || "Đã bị từ chối")
-                    : (o.productTitle || "").slice(0, 60),
-            amount: o.amount,
-            commission: o.status === "approved" ? o.commission : 0,
-            ts: o.claimedAt || o.createdAt,
-            productTitle: o.productTitle,
-            productImg: o.productImg
-          }));
+          const submittedIds = loadSubmittedOrderIds();
+          const serverOrders = (d.orders || []).map((o) => {
+            const isSubmitted = submittedIds.has(o.id);
+            const baseStatus = o.status === "claimed" ? "pending"
+              : (o.status === "completed" ? "done" : "processed");
+            const status = isSubmitted && baseStatus === "processed" ? "done" : baseStatus;
+            const title = status === "done" ? "Hoàn Thành"
+              : o.status === "claimed" ? "Chờ phân phối"
+              : o.status === "approved" ? "Chờ xử lý"
+              : o.status === "rejected" ? "Đơn bị từ chối" : o.productTitle;
+            return {
+              id: o.id,
+              status,
+              serverStatus: o.status,
+              title,
+              subtitle: o.status === "rejected" ? (o.rejectedReason || "Đã bị từ chối")
+                      : (o.productTitle || "").slice(0, 60),
+              amount: o.amount,
+              commission: (o.status === "approved" || isSubmitted) ? o.commission : 0,
+              ts: o.claimedAt || o.createdAt,
+              productTitle: o.productTitle,
+              productImg: o.productImg
+            };
+          });
           // keep any seed orders that don't exist on server (for backward compat) — actually let's just use server orders
           saveOrders(serverOrders);
           renderOrders();
@@ -2192,6 +2225,25 @@
           panels.forEach((p) => p.classList.toggle("is-active", p.dataset.panel === tab.dataset.tab));
           ordersTitle.textContent = tab.textContent.replace(/\s*\d+\s*$/, "").trim();
         });
+      });
+
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".send-order-button");
+        if (!btn) return;
+        const orderId = btn.dataset.orderId;
+        if (!orderId) return;
+        btn.disabled = true;
+        markOrderSubmitted(orderId);
+        const orders = loadOrders().map((o) => {
+          if (o.id !== orderId) return o;
+          return { ...o, status: "done", title: "Hoàn Thành" };
+        });
+        saveOrders(orders);
+        renderOrders();
+        renderProfileStats();
+        showToast("Xử lý đơn thành công");
+        const doneTab = document.querySelector('.tab[data-tab="done"]');
+        if (doneTab) doneTab.click();
       });
 
       document.querySelectorAll("[data-show]").forEach((button) => {

@@ -859,43 +859,6 @@ footer {
   height: 28px;
 }
 
-.order-card-pending {
-  display: grid;
-  justify-items: center;
-  gap: 14px;
-  padding: 30px 16px 28px;
-  text-align: center;
-}
-
-.order-loading {
-  display: grid;
-  place-items: center;
-  width: 180px;
-  height: 72px;
-}
-
-.send-order-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 156px;
-  height: 56px;
-  border-radius: 8px;
-  background: #0b74ff;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1;
-  box-shadow: 0 8px 18px rgba(11, 116, 255, 0.24);
-}
-
-.order-card-pending h3 {
-  margin: 0;
-  color: #0f172a;
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1.35;
-}
-
 .order-product {
   display: flex;
   gap: 12px;
@@ -987,6 +950,77 @@ footer {
   color: #16a34a;
   font-size: 12px;
   font-weight: 800;
+}
+
+.order-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.order-footer:empty {
+  display: none;
+}
+
+.order-done-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.order-done-badge svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.is-pending-order .order-product-info h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loader-spinner {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  border-top-color: #0b74ff;
+  animation: loader-spin 0.9s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+.send-order-area {
+  display: flex;
+  justify-content: center;
+  padding-top: 18px;
+}
+
+.send-order-button {
+  display: inline-grid;
+  place-items: center;
+  width: min(100%, 260px);
+  min-height: 58px;
+  border: 0;
+  border-radius: 8px;
+  background: #0b74ff;
+  color: #fff;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(11, 116, 255, 0.24);
 }
 
 .empty-state {
