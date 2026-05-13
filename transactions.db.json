@@ -3,79 +3,79 @@
     {
       "id": "TX-OASD7B",
       "type": "adjustment",
-      "username": "demo",
       "amount": -10000,
-      "paymentMethod": null,
-      "bankInfo": null,
       "reason": "Phí xử lý",
       "status": "approved",
-      "rejectedReason": null,
+      "bankInfo": null,
+      "username": "demo",
       "createdAt": 1778668584696,
       "approvedAt": 1778668584696,
+      "approvedBy": "admin",
       "rejectedAt": null,
-      "approvedBy": "admin"
+      "paymentMethod": null,
+      "rejectedReason": null
     },
     {
       "id": "TX-NUNT6L",
       "type": "adjustment",
-      "username": "testui",
       "amount": 200000,
-      "paymentMethod": null,
-      "bankInfo": null,
       "reason": "Thưởng đăng ký",
       "status": "approved",
-      "rejectedReason": null,
+      "bankInfo": null,
+      "username": "testui",
       "createdAt": 1778668584670,
       "approvedAt": 1778668584670,
+      "approvedBy": "admin",
       "rejectedAt": null,
-      "approvedBy": "admin"
+      "paymentMethod": null,
+      "rejectedReason": null
     },
     {
       "id": "TX-93TESK",
       "type": "deposit",
-      "username": "testui",
       "amount": 100000,
-      "paymentMethod": "Chuyển khoản ngân hàng",
-      "bankInfo": null,
       "status": "rejected",
-      "rejectedReason": "Không nhận được tiền chuyển",
+      "bankInfo": null,
+      "username": "testui",
       "createdAt": 1778668066955,
       "approvedAt": null,
+      "approvedBy": null,
       "rejectedAt": 1778668066958,
-      "approvedBy": null
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "rejectedReason": "Không nhận được tiền chuyển"
     },
     {
       "id": "TX-AKJHQ6",
       "type": "withdraw",
-      "username": "testui",
       "amount": 200000,
-      "paymentMethod": null,
+      "status": "approved",
       "bankInfo": {
         "bank": "Vietcombank",
-        "account": "1234567890",
+        "branch": "",
         "holder": "NGUYEN VAN A",
-        "branch": ""
+        "account": "1234567890"
       },
-      "status": "approved",
-      "rejectedReason": null,
+      "username": "testui",
       "createdAt": 1778668066918,
       "approvedAt": 1778668066951,
+      "approvedBy": "admin",
       "rejectedAt": null,
-      "approvedBy": "admin"
+      "paymentMethod": null,
+      "rejectedReason": null
     },
     {
       "id": "TX-3O505N",
       "type": "deposit",
-      "username": "testui",
       "amount": 500000,
-      "paymentMethod": "Chuyển khoản ngân hàng",
-      "bankInfo": null,
       "status": "approved",
-      "rejectedReason": null,
+      "bankInfo": null,
+      "username": "testui",
       "createdAt": 1778668044515,
       "approvedAt": 1778668044526,
+      "approvedBy": "admin",
       "rejectedAt": null,
-      "approvedBy": "admin"
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "rejectedReason": null
     }
   ]
 }

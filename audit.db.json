@@ -71,9 +71,9 @@
       "action": "order-create",
       "target": "ORD-SV3UZM",
       "details": {
-        "productTitle": "TEST_LINK_LOGIC",
         "amount": 1000,
-        "assignedTo": null
+        "assignedTo": null,
+        "productTitle": "TEST_LINK_LOGIC"
       }
     }
   ]

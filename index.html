@@ -2104,13 +2104,21 @@
         });
       });
 
+      const API_BASE = window.location.protocol === "file:" ? "http://127.0.0.1:8000" : "";
+
       async function postJson(url, data) {
-        const response = await fetch(url, {
+        const response = await fetch(`${API_BASE}${url}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-        const payload = await response.json();
+        const text = await response.text();
+        let payload;
+        try {
+          payload = text ? JSON.parse(text) : {};
+        } catch (error) {
+          throw new Error("API đang trả về sai định dạng. Hãy mở web bằng http://127.0.0.1:8000 và thử lại.");
+        }
         if (!response.ok) {
           throw new Error(payload.message || "Có lỗi xảy ra.");
         }

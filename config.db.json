@@ -4,29 +4,29 @@
       "rate": 0.005,
       "refRate": 0.15,
       "dailyCap": 30,
-      "minRange": 0,
-      "maxRange": 10000000
+      "maxRange": 10000000,
+      "minRange": 0
     },
     "VIP2": {
       "rate": 0.008,
       "refRate": 0.18,
       "dailyCap": 50,
-      "minRange": 0,
-      "maxRange": 30000000
+      "maxRange": 30000000,
+      "minRange": 0
     },
     "VIP3": {
       "rate": 0.012,
       "refRate": 0.22,
       "dailyCap": 80,
-      "minRange": 0,
-      "maxRange": 50000000
+      "maxRange": 50000000,
+      "minRange": 0
     },
     "VIP4": {
       "rate": 0.015,
       "refRate": 0.25,
       "dailyCap": 100,
-      "minRange": 0,
-      "maxRange": 100000000
+      "maxRange": 100000000,
+      "minRange": 0
     }
   },
   "adminPasswordHash": "f3cb2ad419e8c4565915472fdf14053d192f69a1581bc4bfd9f72429295a8a9f",

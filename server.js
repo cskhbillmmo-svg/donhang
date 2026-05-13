@@ -68,7 +68,13 @@ function localReadStore(key) {
 function localWriteStore(key, value) {
   const filePath = STORE_FILES[key];
   if (filePath) {
-    fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+    try {
+      fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+    } catch (error) {
+      if (!process.env.VERCEL) {
+        throw error;
+      }
+    }
   }
 }
 
@@ -243,6 +249,9 @@ function sendJson(response, status, payload) {
   const body = JSON.stringify(payload);
   response.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Content-Length": Buffer.byteLength(body),
   });
   response.end(body);
@@ -250,6 +259,16 @@ function sendJson(response, status, payload) {
 
 function readJson(request) {
   return new Promise((resolve, reject) => {
+    // Vercel @vercel/node pre-parses JSON body into request.body
+    if (request.body && typeof request.body === "object") {
+      resolve(request.body);
+      return;
+    }
+    if (typeof request.body === "string") {
+      try { resolve(request.body ? JSON.parse(request.body) : {}); }
+      catch (e) { reject(e); }
+      return;
+    }
     request.setEncoding("utf8");
     let body = "";
     request.on("data", (chunk) => {
@@ -1368,12 +1387,31 @@ function serveStatic(request, response) {
   });
 }
 
-const server = http.createServer((request, response) => {
+function appHandler(request, response) {
   const fullUrl = request.url || "";
   const url = fullUrl.split("?")[0];
   const method = request.method || "GET";
 
+  if (method === "OPTIONS") {
+    response.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    });
+    response.end();
+    return;
+  }
+
   // Auth
+  if (method === "GET" && url === "/api/health") {
+    return sendJson(response, 200, {
+      ok: true,
+      storage: USE_SUPABASE ? "supabase" : "local",
+      table: SUPABASE_TABLE,
+      node: process.version,
+      vercel: !!process.env.VERCEL,
+    });
+  }
   if (method === "POST" && url === "/api/register") return handleRegister(request, response);
   if (method === "POST" && url === "/api/login") return handleLogin(request, response);
 
@@ -1436,18 +1474,42 @@ const server = http.createServer((request, response) => {
   if (method === "GET") return serveStatic(request, response);
 
   sendJson(response, 404, { ok: false, message: "Không tìm thấy API." });
-});
+}
 
-initStorage()
-  .then(() => {
-    server.listen(port, host, () => {
+let storageReady = null;
+
+function ensureStorageReady() {
+  if (!storageReady) {
+    storageReady = initStorage();
+  }
+  return storageReady;
+}
+
+async function vercelHandler(request, response) {
+  try {
+    await ensureStorageReady();
+    return appHandler(request, response);
+  } catch (error) {
+    console.error("[storage] init failed:", error.message);
+    return sendJson(response, 500, { ok: false, message: "KhÃ´ng thá»ƒ káº¿t ná»‘i database." });
+  }
+}
+
+if (require.main === module) {
+  ensureStorageReady()
+    .then(() => {
+      const server = http.createServer(appHandler);
+      server.listen(port, host, () => {
       console.log(`Server running at http://${host}:${port}`);
       console.log(`Storage: ${USE_SUPABASE ? `Supabase ${SUPABASE_TABLE}` : "local JSON"}`);
       console.log(`Initial admin password (if first run): ${INITIAL_ADMIN_PASSWORD}`);
     });
-  })
-  .catch((error) => {
-    console.error("[storage] Supabase init failed:", error.message);
-    console.error("[storage] Create the app_store table in Supabase, or set USE_SUPABASE=0 to use local JSON.");
-    process.exit(1);
-  });
+    })
+    .catch((error) => {
+      console.error("[storage] Supabase init failed:", error.message);
+      console.error("[storage] Create the app_store table in Supabase, or set USE_SUPABASE=0 to use local JSON.");
+      process.exit(1);
+    });
+}
+
+module.exports = vercelHandler;
