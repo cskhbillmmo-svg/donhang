@@ -2047,18 +2047,32 @@
         voucherStrong[2].textContent = "+" + formatCurrency(order.commission || Math.round(Number(order.amount || 0) * CURRENT_VIP.rate));
       }
 
+      let EMPTY_POOL_STREAK = 0;
+      const EMPTY_POOL_THRESHOLD = 3;
+
       async function fetchPoolCount() {
         try {
           const username = getCurrentUsername() || "";
           const r = await fetch(`/api/orders/pool?username=${encodeURIComponent(username)}`);
           if (!r.ok) return null;
           const d = await r.json();
-          NEXT_POOL_ORDER = d.next || null;
-          updateGrabOrderPreview(NEXT_POOL_ORDER);
+          const nextOrder = d.next || null;
+          if (nextOrder) {
+            EMPTY_POOL_STREAK = 0;
+            const changed = !NEXT_POOL_ORDER || NEXT_POOL_ORDER.id !== nextOrder.id;
+            NEXT_POOL_ORDER = nextOrder;
+            if (changed) updateGrabOrderPreview(nextOrder);
+          } else {
+            EMPTY_POOL_STREAK += 1;
+            if (NEXT_POOL_ORDER === null) {
+              if (EMPTY_POOL_STREAK === 1) updateGrabOrderPreview(null);
+            } else if (EMPTY_POOL_STREAK >= EMPTY_POOL_THRESHOLD) {
+              NEXT_POOL_ORDER = null;
+              updateGrabOrderPreview(null);
+            }
+          }
           return d.available;
         } catch (e) {
-          NEXT_POOL_ORDER = null;
-          updateGrabOrderPreview(null);
           return null;
         }
       }

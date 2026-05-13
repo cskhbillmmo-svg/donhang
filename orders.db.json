@@ -1,6 +1,38 @@
 {
   "orders": [
     {
+      "id": "ORD-DN0BGJ",
+      "status": "approved",
+      "productTitle": "Quạt Mini Để Bàn USB",
+      "productImg": "https://images.unsplash.com/photo-1565374395542-0ce18882c857?auto=format&fit=crop&w=520&q=80",
+      "amount": 159000,
+      "commissionRate": 0.005,
+      "commission": 795,
+      "assignedTo": "demo",
+      "claimedBy": "demo",
+      "claimedAt": 1778688184799,
+      "approvedAt": 1778688213578,
+      "rejectedAt": null,
+      "rejectedReason": null,
+      "createdAt": 1778688050838
+    },
+    {
+      "id": "ORD-UDNZHW",
+      "status": "approved",
+      "productTitle": "Spin Curved Screen 1080P 27Inch",
+      "productImg": "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=520&q=80",
+      "amount": 4290000,
+      "commissionRate": 0.005,
+      "commission": 21450,
+      "assignedTo": null,
+      "claimedBy": "demo",
+      "claimedAt": 1778684586757,
+      "approvedAt": 1778685097102,
+      "rejectedAt": null,
+      "rejectedReason": null,
+      "createdAt": 1778684582427
+    },
+    {
       "id": "ORD-YTZFFX",
       "amount": 89000,
       "status": "approved",
@@ -24,7 +56,7 @@
       "claimedBy": null,
       "createdAt": 1778667497606,
       "approvedAt": null,
-      "assignedTo": "testui",
+      "assignedTo": null,
       "commission": 6450,
       "productImg": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=520",
       "rejectedAt": null,

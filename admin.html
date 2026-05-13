@@ -766,6 +766,19 @@
       </div>
     </div>
 
+    <div class="modal-backdrop" id="assignUserModal" style="display:none">
+      <div class="modal-card-large" style="max-width: 460px;">
+        <div class="modal-head">
+          <h2>Gán đơn cho user</h2>
+          <button class="btn-ghost" id="assignClose" aria-label="Đóng">✕</button>
+        </div>
+        <div class="modal-body">
+          <input type="search" id="assignSearch" placeholder="Tìm theo username hoặc tên..." style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;margin-bottom:12px;" />
+          <div id="assignUserList" style="display:grid;gap:6px;max-height:50vh;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+
     <script>
       const PRODUCT_PRESETS = [
         { title: "Combo 10 Đôi Tất Uni cổ ngắn chất cotton", img: "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=520&q=80", amount: 89000 },
@@ -815,6 +828,70 @@
         const d = await r.json();
         if (!r.ok) throw new Error(d.message || "Lỗi");
         return d;
+      }
+
+      function pickUserModal() {
+        return new Promise((resolve) => {
+          const modal = document.querySelector("#assignUserModal");
+          const list = document.querySelector("#assignUserList");
+          const search = document.querySelector("#assignSearch");
+          const closeBtn = document.querySelector("#assignClose");
+          if (!modal || !list || !search) { resolve(null); return; }
+
+          const renderList = (filter) => {
+            const q = (filter || "").trim().toLowerCase();
+            const filtered = q
+              ? cachedUsers.filter((u) =>
+                  (u.username || "").toLowerCase().includes(q) ||
+                  (u.fullName || "").toLowerCase().includes(q) ||
+                  (u.phone || "").toLowerCase().includes(q))
+              : cachedUsers;
+            if (filtered.length === 0) {
+              list.innerHTML = `<div style="padding:14px;text-align:center;color:#94a3b8;font-size:13px;">Không tìm thấy user</div>`;
+              return;
+            }
+            list.innerHTML = filtered.map((u) => `
+              <button type="button" class="assign-user-row" data-username="${u.username}"
+                style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;background:#f8fafc;border:1px solid var(--line);border-radius:8px;font-size:13px;cursor:pointer;text-align:left;">
+                <div>
+                  <strong style="display:block;color:#0f172a;">@${u.username}</strong>
+                  <small style="color:#64748b;">${u.fullName || ""}${u.phone ? " • " + u.phone : ""}</small>
+                </div>
+                <span class="pill" style="background:#e0e7ff;color:#3730a3;">${u.vipLevel || "VIP1"}</span>
+              </button>
+            `).join("");
+          };
+
+          const cleanup = (value) => {
+            modal.style.display = "none";
+            search.value = "";
+            search.removeEventListener("input", onInput);
+            list.removeEventListener("click", onClick);
+            closeBtn.removeEventListener("click", onCancel);
+            modal.removeEventListener("click", onBackdrop);
+            document.removeEventListener("keydown", onKey);
+            resolve(value);
+          };
+          const onInput = () => renderList(search.value);
+          const onClick = (e) => {
+            const row = e.target.closest(".assign-user-row");
+            if (!row) return;
+            cleanup(row.dataset.username);
+          };
+          const onCancel = () => cleanup(null);
+          const onBackdrop = (e) => { if (e.target === modal) cleanup(null); };
+          const onKey = (e) => { if (e.key === "Escape") cleanup(null); };
+
+          search.addEventListener("input", onInput);
+          list.addEventListener("click", onClick);
+          closeBtn.addEventListener("click", onCancel);
+          modal.addEventListener("click", onBackdrop);
+          document.addEventListener("keydown", onKey);
+
+          renderList("");
+          modal.style.display = "flex";
+          setTimeout(() => search.focus(), 50);
+        });
       }
 
       function enterApp() {
@@ -1550,11 +1627,9 @@
                 await api(`/api/admin/orders/${id}/delete`);
               } else if (act === "assign") {
                 if (cachedUsers.length === 0) { showToast("Chưa có user nào"); return; }
-                const choices = cachedUsers.map((u, i) => `${i + 1}. @${u.username} (${u.fullName})`).join("\n");
-                const pick = prompt(`Chọn user (nhập số thứ tự):\n${choices}`);
-                const idx = Number(pick) - 1;
-                if (!cachedUsers[idx]) return;
-                await api(`/api/admin/orders/${id}/assign`, { assignedTo: cachedUsers[idx].username });
+                const picked = await pickUserModal();
+                if (!picked) return;
+                await api(`/api/admin/orders/${id}/assign`, { assignedTo: picked });
               } else if (act === "unassign") {
                 await api(`/api/admin/orders/${id}/unassign`);
               }
