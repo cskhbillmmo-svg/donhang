@@ -5,7 +5,12 @@
       "salt": "34926412b34cef999b03beb2bb3fdbde",
       "phone": "0900000000",
       "blocked": false,
-      "bankInfo": null,
+      "bankInfo": {
+        "bank": "",
+        "branch": "",
+        "holder": "",
+        "account": "57474"
+      },
       "fullName": "Demo Tiki",
       "username": "demo",
       "vipLevel": "VIP1",
@@ -98,9 +103,10 @@
       "blocked": false,
       "fullName": "bùi văn ngọc",
       "username": "buingoc109",
-      "vipLevel": "VIP2",
+      "vipLevel": "VIP1",
       "createdAt": "2026-05-13T14:02:31.861Z",
-      "passwordHash": "197884751ed103f96217a39c35a003cf95ba59d06a08ab2947a13dc023696746"
+      "passwordHash": "197884751ed103f96217a39c35a003cf95ba59d06a08ab2947a13dc023696746",
+      "referralCode": "852156"
     },
     {
       "id": "93eea134-c36c-4836-ac88-cdbf018c8448",

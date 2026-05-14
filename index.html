@@ -925,6 +925,25 @@
       </div>
     </div>
 
+    <div class="confirm-overlay" id="withdrawPwPromptModal" aria-hidden="true">
+      <div class="confirm-card pw-prompt-card" role="dialog" aria-modal="true">
+        <div class="confirm-icon is-prompt" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="11" width="14" height="9" rx="2" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+          </svg>
+        </div>
+        <h3>Mật khẩu rút tiền</h3>
+        <p>Vui lòng nhập mật khẩu rút tiền để xác nhận giao dịch.</p>
+        <input type="password" id="withdrawPwPromptInput" class="pw-prompt-input" placeholder="Nhập mật khẩu rút tiền" maxlength="32" autocomplete="off" />
+        <p class="pw-prompt-err" id="withdrawPwPromptErr">Mật khẩu không đúng</p>
+        <div class="pw-prompt-actions">
+          <button type="button" class="pw-prompt-cancel" id="withdrawPwPromptCancel">Hủy</button>
+          <button type="button" id="withdrawPwPromptOk">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
     <div class="confirm-overlay" id="messageModal" aria-hidden="true">
       <div class="confirm-card" role="dialog" aria-labelledby="messageTitle" aria-modal="true">
         <div class="confirm-icon" id="messageIcon" aria-hidden="true">
@@ -1049,6 +1068,7 @@
         const art = document.querySelector("#voucherArt");
         const label = document.querySelector("#voucherProductLabel");
         const name = document.querySelector("#voucherProductName");
+        const ribbon = document.querySelector(".voucher-ribbon");
         if (!product) {
           art.innerHTML = `
             <span class="voucher-title">SIÊU<br />VOUCHER</span>
@@ -1057,9 +1077,12 @@
           `;
           art.style.backgroundImage = "";
           label.textContent = "Thành viên áp dụng";
-          name.textContent = "VIP1";
+          name.textContent = (typeof CURRENT_VIP !== "undefined" && CURRENT_VIP.level) ? CURRENT_VIP.level : "VIP1";
+          if (typeof applyVipLogoArt === "function") applyVipLogoArt(name.textContent);
           return;
         }
+        art.classList.remove("has-vip-logo");
+        if (ribbon) ribbon.classList.remove("is-hidden-by-logo");
         art.innerHTML = "";
         art.style.backgroundImage = `url("${product.img}")`;
         art.style.backgroundSize = "cover";
@@ -1365,18 +1388,28 @@
         const groups = { pending: [], done: [], processed: [] };
         orders.forEach((o) => { (groups[o.status] || groups.pending).push(o); });
 
-        ["pending", "done", "processed"].forEach((key) => {
-          const list = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}`);
-          const empty = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}Empty`);
-          if (!list || !empty) return;
-          if (groups[key].length === 0) {
-            list.innerHTML = "";
-            empty.classList.remove("is-hidden");
-          } else {
-            list.innerHTML = groups[key].map(orderCardHtml).join("");
-            empty.classList.add("is-hidden");
-          }
+        const sig = (o) => [o.id, o.status, o.serverStatus || "", o.amount, o.commission, o.title || "", o.subtitle || "", o.productImg || "", o.ts || 0];
+        const fullSig = JSON.stringify({
+          a: AVAILABLE_BALANCE,
+          pending: groups.pending.map(sig),
+          processed: groups.processed.map(sig),
+          done: groups.done.map(sig)
         });
+        if (fullSig !== window.__lastUserOrdersHash) {
+          window.__lastUserOrdersHash = fullSig;
+          ["pending", "done", "processed"].forEach((key) => {
+            const list = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}`);
+            const empty = document.querySelector(`#orders${key.charAt(0).toUpperCase() + key.slice(1)}Empty`);
+            if (!list || !empty) return;
+            if (groups[key].length === 0) {
+              list.innerHTML = "";
+              empty.classList.remove("is-hidden");
+            } else {
+              list.innerHTML = groups[key].map(orderCardHtml).join("");
+              empty.classList.add("is-hidden");
+            }
+          });
+        }
 
         // Update tab badge "Chờ xử lý"
         const pendingBadge = document.querySelector('.tab[data-tab="pending"] .tab-badge');
@@ -1837,6 +1870,7 @@
 
       // Security: withdraw password
       const PW_KEY = "tiki.withdrawPw";
+      const PW_VALUE_KEY = "tiki.withdrawPwValue";
       const pwForm = document.querySelector("#withdrawPwForm");
       const pwInput1 = document.querySelector("#pwInput1");
       const pwInput2 = document.querySelector("#pwInput2");
@@ -1890,7 +1924,10 @@
         pwForm.addEventListener("submit", (e) => {
           e.preventDefault();
           if (!validatePwInputs()) return;
-          try { localStorage.setItem(PW_KEY, "set"); } catch (e) {}
+          try {
+            localStorage.setItem(PW_KEY, "set");
+            localStorage.setItem(PW_VALUE_KEY, pwInput1.value);
+          } catch (e) {}
           pwForm.reset();
           validatePwInputs();
           refreshSecurity();
@@ -1899,14 +1936,20 @@
       }
 
       if (pwChangeBtn) pwChangeBtn.addEventListener("click", () => {
-        try { localStorage.removeItem(PW_KEY); } catch (e) {}
+        try {
+          localStorage.removeItem(PW_KEY);
+          localStorage.removeItem(PW_VALUE_KEY);
+        } catch (e) {}
         refreshSecurity();
         setTimeout(() => pwInput1?.focus(), 100);
       });
 
       if (pwClearBtn) pwClearBtn.addEventListener("click", () => {
         if (!confirm("Xóa mật khẩu rút tiền? Bạn sẽ không cần nhập mật khẩu khi rút tiền.")) return;
-        try { localStorage.removeItem(PW_KEY); } catch (e) {}
+        try {
+          localStorage.removeItem(PW_KEY);
+          localStorage.removeItem(PW_VALUE_KEY);
+        } catch (e) {}
         refreshSecurity();
         showToast("Đã xóa mật khẩu rút tiền");
       });
@@ -1932,6 +1975,12 @@
       });
 
       function refreshSecurity() {
+        // Migrate legacy state: had "set" flag but no actual password value → reset
+        try {
+          if (localStorage.getItem(PW_KEY) === "set" && !localStorage.getItem(PW_VALUE_KEY)) {
+            localStorage.removeItem(PW_KEY);
+          }
+        } catch (e) {}
         const set = localStorage.getItem(PW_KEY) === "set";
         const el = document.querySelector("#securityStatusText");
         const card = document.querySelector("#securityStatus");
@@ -1962,12 +2011,18 @@
         } catch (e) { return null; }
       }
 
+      let _fetchMyOrdersSeq = 0;
+      let _fetchMyOrdersInFlight = false;
       async function fetchMyOrders() {
+        if (_fetchMyOrdersInFlight) return;
         const username = getCurrentUsername();
         if (!username) return;
+        _fetchMyOrdersInFlight = true;
+        const seq = ++_fetchMyOrdersSeq;
         try {
           const r = await fetch(`/api/orders/mine/${encodeURIComponent(username)}`);
           if (!r.ok) return;
+          if (seq !== _fetchMyOrdersSeq) return;
           const d = await r.json();
           const submittedIds = loadSubmittedOrderIds();
           const serverOrders = (d.orders || []).map((o) => {
@@ -2008,15 +2063,24 @@
           saveOrders(serverOrders);
           renderOrders();
           renderProfileStats();
-        } catch (e) {}
+        } catch (e) {
+        } finally {
+          _fetchMyOrdersInFlight = false;
+        }
       }
 
+      let _fetchMyTxSeq = 0;
+      let _fetchMyTxInFlight = false;
       async function fetchMyTransactions() {
+        if (_fetchMyTxInFlight) return;
         const username = getCurrentUsername();
         if (!username) return;
+        _fetchMyTxInFlight = true;
+        const seq = ++_fetchMyTxSeq;
         try {
           const r = await fetch(`/api/transactions/mine/${encodeURIComponent(username)}`);
           if (!r.ok) return;
+          if (seq !== _fetchMyTxSeq) return;
           const d = await r.json();
           // Update balance constants
           if (d.balance) {
@@ -2024,6 +2088,8 @@
             TOTAL_BALANCE = d.balance.total;
             FROZEN_BALANCE = d.balance.frozen;
             updateBalanceDisplay();
+            // Balance changed → re-render orders so "Gửi đơn" reflects new affordability
+            renderOrders();
           }
           if (d.vip) {
             CURRENT_VIP = d.vip;
@@ -2056,7 +2122,36 @@
           }
           saveTxs(serverTxs);
           renderTxs();
-        } catch (e) {}
+        } catch (e) {
+        } finally {
+          _fetchMyTxInFlight = false;
+        }
+      }
+
+      function applyVipLogoArt(level) {
+        const art = document.querySelector("#voucherArt");
+        const ribbon = document.querySelector(".voucher-ribbon");
+        if (!art) return;
+        const m = String(level || "").match(/\d+/);
+        if (!m) return;
+        const src = `vip-logos/vip${m[0]}.png`;
+        art.style.backgroundImage = "";
+        art.innerHTML = `<img class="vip-logo-img" alt="${level}" />`;
+        const img = art.querySelector("img");
+        img.onload = () => {
+          art.classList.add("has-vip-logo");
+          if (ribbon) ribbon.classList.add("is-hidden-by-logo");
+        };
+        img.onerror = () => {
+          art.classList.remove("has-vip-logo");
+          if (ribbon) ribbon.classList.remove("is-hidden-by-logo");
+          art.innerHTML = `
+            <span class="voucher-title">SIÊU<br />VOUCHER</span>
+            <span class="voucher-sub">ƯU ĐÃI HÀNG LỚN CỰC HỜI</span>
+            <span class="voucher-amount">500K</span>
+          `;
+        };
+        img.src = src;
       }
 
       function updateVipDisplay() {
@@ -2072,6 +2167,7 @@
         if (voucherLabel && voucherLabel.textContent === "Thành viên áp dụng") {
           const voucherName = document.querySelector("#voucherProductName");
           if (voucherName) voucherName.textContent = CURRENT_VIP.level;
+          applyVipLogoArt(CURRENT_VIP.level);
         }
         if (voucherInfo[1]) voucherInfo[1].innerHTML = `${CURRENT_VIP.minRange.toLocaleString("vi-VN")} ₫ To<br />${CURRENT_VIP.maxRange.toLocaleString("vi-VN")} ₫`;
         if (voucherInfo[2]) voucherInfo[2].textContent = (CURRENT_VIP.rate * 100).toFixed(1) + "%";
@@ -2117,6 +2213,8 @@
         if (!order) {
           card.classList.remove("has-order");
           card.classList.add("is-empty-order");
+          art.classList.remove("has-vip-logo");
+          if (ribbon) ribbon.classList.remove("is-hidden-by-logo");
           art.innerHTML = `
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 7h12l-1 12H7L6 7Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
@@ -2276,11 +2374,61 @@
         }
       });
 
+      function promptWithdrawPw() {
+        return new Promise((resolve) => {
+          const modal = document.querySelector("#withdrawPwPromptModal");
+          const input = document.querySelector("#withdrawPwPromptInput");
+          const err = document.querySelector("#withdrawPwPromptErr");
+          const okBtn = document.querySelector("#withdrawPwPromptOk");
+          const cancelBtn = document.querySelector("#withdrawPwPromptCancel");
+          const saved = localStorage.getItem(PW_VALUE_KEY) || "";
+          if (!modal || !input || !okBtn || !cancelBtn || !saved) { resolve(true); return; }
+          input.value = "";
+          input.type = "password";
+          err.classList.remove("is-show");
+          modal.classList.add("is-show");
+          modal.setAttribute("aria-hidden", "false");
+          setTimeout(() => input.focus(), 50);
+          const cleanup = (result) => {
+            modal.classList.remove("is-show");
+            modal.setAttribute("aria-hidden", "true");
+            okBtn.removeEventListener("click", onOk);
+            cancelBtn.removeEventListener("click", onCancel);
+            input.removeEventListener("keydown", onKey);
+            input.removeEventListener("input", onInput);
+            resolve(result);
+          };
+          const onOk = () => {
+            if (input.value === saved) {
+              cleanup(true);
+            } else {
+              err.classList.add("is-show");
+              input.value = "";
+              input.focus();
+            }
+          };
+          const onCancel = () => cleanup(false);
+          const onKey = (e) => {
+            if (e.key === "Enter") { e.preventDefault(); onOk(); }
+            else if (e.key === "Escape") onCancel();
+          };
+          const onInput = () => err.classList.remove("is-show");
+          okBtn.addEventListener("click", onOk);
+          cancelBtn.addEventListener("click", onCancel);
+          input.addEventListener("keydown", onKey);
+          input.addEventListener("input", onInput);
+        });
+      }
+
       withdrawConfirm.addEventListener("click", async () => {
         if (withdrawConfirm.disabled) return;
         const username = getCurrentUsername();
         if (!username) { showToast("Bạn cần đăng nhập."); return; }
         if (!currentBank) { showToast("Cần thêm tài khoản ngân hàng trước."); return; }
+        if (localStorage.getItem(PW_KEY) === "set" && localStorage.getItem(PW_VALUE_KEY)) {
+          const ok = await promptWithdrawPw();
+          if (!ok) return;
+        }
         withdrawConfirm.disabled = true;
         try {
           const r = await fetch("/api/withdraw/create", {
@@ -2378,6 +2526,16 @@
         // "Gửi đơn" button (existing flow) — mark order as done locally
         const orderId = btn.dataset.orderId;
         if (!orderId) return;
+        // Pre-check: balance must cover order amount
+        const orderForBtn = loadOrders().find((o) => o.id === orderId);
+        if (orderForBtn && Number(orderForBtn.amount || 0) > AVAILABLE_BALANCE) {
+          showMessage(
+            "Số dư không khả dụng",
+            "Vui lòng nạp thêm tiền để hoàn thành đơn hàng.",
+            "error"
+          );
+          return;
+        }
         btn.disabled = true;
         btn.textContent = "Đang gửi...";
         (async () => {

@@ -1132,6 +1132,23 @@ footer {
   font-size: 18px;
 }
 
+.voucher-art.has-vip-logo {
+  background: #fff;
+  padding: 6px;
+  color: transparent;
+}
+
+.voucher-art .vip-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.voucher-ribbon.is-hidden-by-logo {
+  display: none;
+}
+
 .voucher-card.is-empty-order .voucher-image {
   background: #eef4ff;
 }
@@ -1631,6 +1648,57 @@ footer {
   font-size: 15px;
   font-weight: 900;
   box-shadow: 0 12px 28px rgba(96, 72, 231, 0.26);
+}
+
+.confirm-icon.is-prompt {
+  background: linear-gradient(145deg, #6366f1, #4f46e5);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.28);
+}
+
+.pw-prompt-card .pw-prompt-input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 0 0 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  background: #f8fafc;
+  color: #0f172a;
+  letter-spacing: 0.12em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.pw-prompt-card .pw-prompt-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #ffffff;
+}
+
+.pw-prompt-card .pw-prompt-err {
+  margin: 0 0 14px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 18px;
+  visibility: hidden;
+}
+
+.pw-prompt-card .pw-prompt-err.is-show {
+  visibility: visible;
+}
+
+.pw-prompt-card .pw-prompt-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pw-prompt-card .pw-prompt-actions .pw-prompt-cancel {
+  background: #f1f5f9;
+  color: #475569;
+  box-shadow: none;
+  font-weight: 800;
 }
 
 /* ============ WALLET SUB-SCREENS ============ */

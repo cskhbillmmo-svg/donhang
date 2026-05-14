@@ -20,6 +20,7 @@ const SUPABASE_TABLE = process.env.SUPABASE_TABLE || "app_store";
 const USE_SUPABASE = (process.env.USE_SUPABASE || "1") !== "0";
 
 const localStores = new Map();
+const pendingSupabaseWrites = new Map();
 
 const DEFAULT_VIP_LEVELS = {
   VIP1: { rate: 0.005, refRate: 0.15, dailyCap: 30, minRange: 0, maxRange: 10000000 },
@@ -132,10 +133,37 @@ function writeStore(key, value) {
   localStores.set(key, cloneData(value));
   localWriteStore(key, value);
   if (USE_SUPABASE) {
-    saveStoreToSupabase(key, value).catch((error) => {
+    const prev = pendingSupabaseWrites.get(key);
+    const start = prev ? prev.catch(() => {}) : Promise.resolve();
+    const p = start.then(() => saveStoreToSupabase(key, value)).catch((error) => {
       console.error(`[supabase] save ${key} failed: ${error.message}`);
+    }).finally(() => {
+      if (pendingSupabaseWrites.get(key) === p) {
+        pendingSupabaseWrites.delete(key);
+      }
     });
+    pendingSupabaseWrites.set(key, p);
+    return p;
   }
+  return Promise.resolve();
+}
+
+async function refreshStoreFromSupabase(key) {
+  if (!USE_SUPABASE) return;
+  try {
+    const pending = pendingSupabaseWrites.get(key);
+    if (pending) await pending;
+    const value = await loadStoreFromSupabase(key);
+    localStores.set(key, value);
+  } catch (error) {
+    console.error(`[supabase] refresh ${key} failed: ${error.message}`);
+  }
+}
+
+async function flushPendingWrites(keys) {
+  if (!USE_SUPABASE) return;
+  const list = keys ? (Array.isArray(keys) ? keys : [keys]) : Array.from(pendingSupabaseWrites.keys());
+  await Promise.all(list.map((k) => pendingSupabaseWrites.get(k)).filter(Boolean));
 }
 
 async function initStorage() {
@@ -225,12 +253,19 @@ function computeBalance(username) {
       }
     }
   }
-  // Add commissions from approved orders
+  // Approved orders: add both order value + commission into total, all of it is frozen
+  let taskFrozen = 0;
   for (const ord of o.orders) {
-    if (ord.claimedBy === username && ord.status === "approved") total += (ord.commission || 0);
+    if (ord.claimedBy === username && ord.status === "approved") {
+      const amt = Number(ord.amount || 0);
+      const com = Number(ord.commission || 0);
+      total += amt + com;
+      taskFrozen += amt + com;
+    }
   }
-  const totalFrozen = frozen + referralLocked;
-  return { total, available: total - totalFrozen, frozen: totalFrozen, referralLocked, withdrawFrozen: frozen };
+  const totalFrozen = frozen + referralLocked + taskFrozen;
+  const available = Math.max(0, total - totalFrozen);
+  return { total, available, frozen: totalFrozen, referralLocked, withdrawFrozen: frozen, taskFrozen };
 }
 
 function readDb() {
@@ -530,6 +565,10 @@ async function handleAdminCreateOrder(request, response) {
       commissionRate = Number(data.commissionRate || 0.005);
       commission = Math.round(amount * commissionRate);
     }
+    await Promise.all([
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("accounts"),
+    ]);
     // Validate assignedTo exists if provided
     if (assignedTo) {
       const accountDb = readDb();
@@ -577,6 +616,10 @@ async function handleAdminAssignOrder(request, response, orderId) {
       sendJson(response, 400, { ok: false, message: "Cần chọn user để gán." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("accounts"),
+    ]);
     const accountDb = readDb();
     if (!accountDb.accounts.some((a) => a.username === assignedTo)) {
       sendJson(response, 400, { ok: false, message: `Không tìm thấy user "${assignedTo}".` });
@@ -609,6 +652,7 @@ async function handleAdminUnassignOrder(request, response, orderId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     const idx = db.orders.findIndex((o) => o.id === orderId);
     if (idx === -1) {
@@ -902,6 +946,11 @@ async function handleAdminDashboard(request, response) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     const orderDb = readOrders();
     const txDb = readTx();
@@ -1187,6 +1236,11 @@ async function handleAdminListUsers(request, response) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     const orderDb = readOrders();
     const users = accountDb.accounts.map((a) => {
@@ -1225,6 +1279,7 @@ async function handleAdminListOrders(request, response) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     sendJson(response, 200, { ok: true, orders: db.orders });
   } catch (e) {
@@ -1240,6 +1295,7 @@ async function handleAdminApproveOrder(request, response, orderId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     const idx = db.orders.findIndex((o) => o.id === orderId);
     if (idx === -1) {
@@ -1268,6 +1324,7 @@ async function handleAdminRejectOrder(request, response, orderId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     const idx = db.orders.findIndex((o) => o.id === orderId);
     if (idx === -1) {
@@ -1293,6 +1350,7 @@ async function handleAdminDeleteOrder(request, response, orderId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     db.orders = db.orders.filter((o) => o.id !== orderId);
     writeOrders(db);
@@ -1314,6 +1372,10 @@ async function handleClaimOrder(request, response) {
       sendJson(response, 400, { ok: false, message: "Thiếu username." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("accounts"),
+    ]);
     const accountDb = readDb();
     const account = accountDb.accounts.find((a) => a.username === username);
     const vip = getVipInfo(account ? (account.vipLevel || "VIP1") : "VIP1");
@@ -1372,6 +1434,7 @@ async function handleAdminDistributeOrder(request, response, orderId) {
       sendJson(response, 400, { ok: false, message: "Cần nhập tên sản phẩm và số tiền > 0." });
       return;
     }
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     const idx = db.orders.findIndex((o) => o.id === orderId);
     if (idx === -1) {
@@ -1415,6 +1478,10 @@ async function handleUserSubmitOrder(request, response, orderId) {
       sendJson(response, 400, { ok: false, message: "Thiếu username." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const db = readOrders();
     const idx = db.orders.findIndex((o) => o.id === orderId);
     if (idx === -1) {
@@ -1430,7 +1497,14 @@ async function handleUserSubmitOrder(request, response, orderId) {
       sendJson(response, 400, { ok: false, message: "Đơn không ở trạng thái có thể gửi." });
       return;
     }
+    // Require user balance >= order value
     if (order.status === "claimed") {
+      const bal = computeBalance(username);
+      const need = Number(order.amount || 0);
+      if (bal.available < need) {
+        sendJson(response, 400, { ok: false, message: "Số dư không khả dụng, vui lòng nạp thêm tiền để hoàn thành đơn hàng." });
+        return;
+      }
       order.status = "approved";
       order.approvedAt = Date.now();
       writeOrders(db);
@@ -1445,6 +1519,7 @@ async function handleUserSubmitOrder(request, response, orderId) {
 // User: get my orders (claimed/approved/rejected belonging to me)
 async function handleMyOrders(request, response, username) {
   try {
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     // Include:
     // 1. Orders user has already claimed (claimed/approved/rejected)
@@ -1474,6 +1549,10 @@ async function handleCreateDeposit(request, response) {
       sendJson(response, 400, { ok: false, message: "Thiếu thông tin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     if (!accountDb.accounts.some((a) => a.username === username)) {
       sendJson(response, 400, { ok: false, message: "Không tìm thấy user." });
@@ -1517,6 +1596,11 @@ async function handleCreateWithdraw(request, response) {
       sendJson(response, 400, { ok: false, message: "Thiếu thông tin tài khoản nhận." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("transactions"),
+      refreshStoreFromSupabase("orders"),
+    ]);
     const accountDb = readDb();
     if (!accountDb.accounts.some((a) => a.username === username)) {
       sendJson(response, 400, { ok: false, message: "Không tìm thấy user." });
@@ -1608,6 +1692,12 @@ async function handleReferralInfo(request, response, username) {
 // User: get my transactions + balance + vip
 async function handleMyTransactions(request, response, username) {
   try {
+    await Promise.all([
+      refreshStoreFromSupabase("transactions"),
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("config"),
+    ]);
     const t = readTx();
     const mine = t.txs
       .filter((x) => x.username === username)
@@ -1630,6 +1720,7 @@ async function handleAdminListTx(request, response) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("transactions");
     const t = readTx();
     sendJson(response, 200, { ok: true, txs: t.txs });
   } catch (e) {
@@ -1645,6 +1736,10 @@ async function handleAdminApproveTx(request, response, txId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("transactions"),
+      refreshStoreFromSupabase("orders"),
+    ]);
     const t = readTx();
     const idx = t.txs.findIndex((x) => x.id === txId);
     if (idx === -1) {
@@ -1683,6 +1778,7 @@ async function handleAdminRejectTx(request, response, txId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("transactions");
     const t = readTx();
     const idx = t.txs.findIndex((x) => x.id === txId);
     if (idx === -1) {
@@ -1701,10 +1797,11 @@ async function handleAdminRejectTx(request, response, txId) {
 }
 
 // User: count of orders this user can claim (assigned to them OR unassigned)
-function handlePoolCount(request, response) {
+async function handlePoolCount(request, response) {
   try {
     const url = new URL(request.url, `http://${host}`);
     const username = (url.searchParams.get("username") || "").trim().toLowerCase();
+    await refreshStoreFromSupabase("orders");
     const db = readOrders();
     const eligibleOrders = db.orders.filter((o) => {
       if (o.status !== "available") return false;
@@ -1755,6 +1852,21 @@ function serveStatic(request, response) {
 }
 
 function appHandler(request, response) {
+  // Defer response.end until pending Supabase writes complete, so any read
+  // landing on a different serverless container observes the latest state.
+  if (USE_SUPABASE) {
+    const originalEnd = response.end.bind(response);
+    let endCalled = false;
+    response.end = function (...args) {
+      if (endCalled) return response;
+      endCalled = true;
+      flushPendingWrites()
+        .catch(() => {})
+        .then(() => originalEnd(...args));
+      return response;
+    };
+  }
+
   const fullUrl = request.url || "";
   const url = fullUrl.split("?")[0];
   const method = request.method || "GET";

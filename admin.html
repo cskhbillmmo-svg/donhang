@@ -1253,9 +1253,15 @@
       const topUsersList = document.querySelector("#topUsersList");
       const recentActivityList = document.querySelector("#recentActivityList");
 
+      let _refreshDashSeq = 0;
+      let _refreshDashInFlight = false;
       async function refreshDashboard() {
+        if (_refreshDashInFlight) return;
+        _refreshDashInFlight = true;
+        const seq = ++_refreshDashSeq;
         try {
           const d = await api("/api/admin/dashboard");
+          if (seq !== _refreshDashSeq) return;
           const s = d.stats;
           dashboardStats.innerHTML = `
             <div class="stat-card is-primary">
@@ -1339,7 +1345,10 @@
               `;
             }).join("");
           }
-        } catch (e) {}
+        } catch (e) {
+        } finally {
+          _refreshDashInFlight = false;
+        }
       }
 
       // ============ CONFIG TAB ============
@@ -1641,9 +1650,15 @@
         renderTxs();
       });
 
+      let _refreshTxsSeq = 0;
+      let _refreshTxsInFlight = false;
       async function refreshTxs() {
+        if (_refreshTxsInFlight) return;
+        _refreshTxsInFlight = true;
+        const seq = ++_refreshTxsSeq;
         try {
           const d = await api("/api/admin/transactions/list");
+          if (seq !== _refreshTxsSeq) return;
           cachedTxs = d.txs || [];
           renderTxs();
           const pending = cachedTxs.filter((t) => t.status === "pending").length;
@@ -1654,7 +1669,10 @@
           } else {
             financeBadge.style.display = "none";
           }
-        } catch (e) {}
+        } catch (e) {
+        } finally {
+          _refreshTxsInFlight = false;
+        }
       }
 
       function renderTxs() {
@@ -1674,6 +1692,12 @@
           );
         }
 
+        const hash = JSON.stringify({
+          f: txFilter, s: searchTx,
+          items: filtered.map((t) => [t.id, t.type, t.status, t.amount, t.username, t.createdAt || 0, (t.bankInfo && t.bankInfo.account) || "", t.paymentMethod || "", t.reason || "", t.rejectedReason || ""])
+        });
+        if (hash === window.__lastTxsHash) return;
+        window.__lastTxsHash = hash;
         if (filtered.length === 0) {
           txListAdmin.innerHTML = "";
           txEmptyAdmin.style.display = "";
@@ -2037,13 +2061,22 @@
         });
       });
 
+      let _refreshUsersSeq = 0;
+      let _refreshUsersInFlight = false;
       async function refreshUsers() {
+        if (_refreshUsersInFlight) return;
+        _refreshUsersInFlight = true;
+        const seq = ++_refreshUsersSeq;
         try {
           const d = await api("/api/admin/users/list");
+          if (seq !== _refreshUsersSeq) return;
           cachedUsers = d.users || [];
           renderUsers();
           renderAssignSelect();
-        } catch (e) {}
+        } catch (e) {
+        } finally {
+          _refreshUsersInFlight = false;
+        }
       }
 
       function renderAssignSelect() {
@@ -2061,6 +2094,12 @@
           (u.phone || "").includes(q)
         ) : cachedUsers;
         userCountEl.textContent = q ? `${filtered.length}/${cachedUsers.length}` : cachedUsers.length;
+        const hash = JSON.stringify({
+          q,
+          items: filtered.map((u) => [u.username, u.fullName || "", u.phone || "", u.vipLevel || "", (u.balance && u.balance.available) || 0, (u.balance && u.balance.frozen) || 0, u.blocked ? 1 : 0, u.totalCommission || 0, u.approvedCount || 0, u.orderCount || 0])
+        });
+        if (hash === window.__lastUsersHash) return;
+        window.__lastUsersHash = hash;
         if (filtered.length === 0) {
           userList.innerHTML = "";
           userEmpty.style.display = "";
@@ -2139,6 +2178,12 @@
             (o.assignedTo || "").toLowerCase().includes(q)
           );
         }
+        const hash = JSON.stringify({
+          f: currentFilter, s: searchOrders,
+          items: filtered.map((o) => [o.id, o.status, o.amount, o.commission, o.claimedBy || "", o.assignedTo || "", o.productTitle || "", o.productImg || "", o.claimedAt || 0, o.createdAt || 0, o.rejectedReason || ""])
+        });
+        if (hash === window.__lastOrdersHash) return;
+        window.__lastOrdersHash = hash;
         if (filtered.length === 0) {
           orderList.innerHTML = "";
           orderEmpty.style.display = "";
@@ -2211,9 +2256,15 @@
         });
       }
 
+      let _refreshSeq = 0;
+      let _refreshInFlight = false;
       async function refresh() {
+        if (_refreshInFlight) return;
+        _refreshInFlight = true;
+        const seq = ++_refreshSeq;
         try {
           const list = await api("/api/admin/orders/list");
+          if (seq !== _refreshSeq) return;
           renderOrders(list.orders);
           const available = list.orders.filter((o) => o.status === "available").length;
           poolCount.textContent = `Pool: ${available}`;
@@ -2241,6 +2292,8 @@
             adminPw = "";
             location.reload();
           }
+        } finally {
+          _refreshInFlight = false;
         }
       }
 

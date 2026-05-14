@@ -1,12 +1,12 @@
 {
   "products": [
     {
-      "id": "P-EOE0BK",
-      "img": "https://example.com/new.png",
-      "title": "_test_prod",
-      "amount": 150000,
+      "id": "P-OQ1Q62",
+      "img": "https://salt.tikicdn.com/cache/750x750/ts/product/36/2b/cc/0b763caadb7cd2713191d9cc9def7a92.jpg.webp",
+      "title": "Chảo chống dính Elmich EL5972",
+      "amount": 195000,
       "enabled": true,
-      "createdAt": 1778747359789
+      "createdAt": 1778762193470
     },
     {
       "id": "P-INIT01",

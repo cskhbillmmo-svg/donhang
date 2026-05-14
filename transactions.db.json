@@ -1,6 +1,72 @@
 {
   "txs": [
     {
+      "id": "TX-KL4W8Y",
+      "type": "withdraw",
+      "amount": 2000000,
+      "status": "pending",
+      "bankInfo": {
+        "bank": "Vietcombank (VCB)",
+        "branch": "QUANG NINH",
+        "holder": "NGUYEN  VAN A",
+        "account": "123456789"
+      },
+      "username": "buingoc109",
+      "createdAt": 1778772352479,
+      "approvedAt": null,
+      "approvedBy": null,
+      "rejectedAt": null,
+      "paymentMethod": null,
+      "rejectedReason": null
+    },
+    {
+      "id": "TX-63NPHX",
+      "type": "withdraw",
+      "amount": 500000,
+      "status": "pending",
+      "bankInfo": {
+        "bank": "Vietcombank (VCB)",
+        "branch": "QUANG NINH",
+        "holder": "NGUYEN  VAN A",
+        "account": "123456789"
+      },
+      "username": "buingoc109",
+      "createdAt": 1778772326726,
+      "approvedAt": null,
+      "approvedBy": null,
+      "rejectedAt": null,
+      "paymentMethod": null,
+      "rejectedReason": null
+    },
+    {
+      "id": "TX-U2O8VT",
+      "type": "deposit",
+      "amount": 5000000,
+      "status": "approved",
+      "bankInfo": null,
+      "username": "buingoc109",
+      "createdAt": 1778771853425,
+      "approvedAt": 1778771956923,
+      "approvedBy": "admin",
+      "rejectedAt": null,
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "rejectedReason": null
+    },
+    {
+      "id": "TX-CFHZ0W",
+      "type": "deposit",
+      "amount": 2000000,
+      "status": "approved",
+      "bankInfo": null,
+      "username": "buingoc109",
+      "createdAt": 1778761392755,
+      "approvedAt": 1778763806071,
+      "approvedBy": "admin",
+      "rejectedAt": null,
+      "paymentMethod": "Chuyển khoản ngân hàng",
+      "rejectedReason": null
+    },
+    {
       "id": "TX-N1HTQT",
       "type": "referral-bonus",
       "amount": 100000,
@@ -57,12 +123,12 @@
       "id": "TX-4E6AOV",
       "type": "deposit",
       "amount": 200000,
-      "status": "pending",
+      "status": "approved",
       "bankInfo": null,
       "username": "buingoc109",
       "createdAt": 1778738793475,
-      "approvedAt": null,
-      "approvedBy": null,
+      "approvedAt": 1778755281452,
+      "approvedBy": "admin",
       "rejectedAt": null,
       "paymentMethod": "Chuyển khoản ngân hàng",
       "rejectedReason": null
