@@ -1318,9 +1318,7 @@
         const isClaimedReview = o.status === "processed" && o.serverStatus === "claimed";
         const titleText = isClaimedWaiting
           ? "Đang chờ hệ thống phân phối"
-          : isAdminAssigned
-            ? "Đơn mới từ admin"
-            : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
+          : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
         const subtitle = o.subtitle || "";
         const productName = subtitle || o.productTitle || o.title || "Sản phẩm";
         const productImg = o.productImg ? escapeHtml(o.productImg) : "";
@@ -1348,7 +1346,7 @@
           : "";
         const titleHtml = isClaimedWaiting
           ? `<h3>${escapeHtml(titleText)}<span class="loader-spinner" aria-hidden="true"></span></h3>`
-          : isClaimedReview
+          : (isClaimedReview || isAdminAssigned)
             ? `<h3>${escapeHtml(productName)}</h3>`
             : `<h3>${escapeHtml(titleText)}</h3>
              <p>${escapeHtml(productName)}</p>`;
