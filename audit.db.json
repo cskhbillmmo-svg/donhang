@@ -1,67 +1,356 @@
 {
   "logs": [
     {
-      "id": "AL-1778688293428-7dps",
-      "ts": 1778688293428,
+      "id": "AL-1778748167800-bnmz",
+      "ts": 1778748167800,
+      "action": "order-self-submit",
+      "target": "ORD-EJAKVF",
+      "details": {
+        "user": "demo",
+        "amount": 8490000,
+        "commission": 50000
+      }
+    },
+    {
+      "id": "AL-1778748065220-u4en",
+      "ts": 1778748065220,
+      "action": "order-claim-pending",
+      "target": "ORD-NZ2ZFC",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778747843379-8709",
+      "ts": 1778747843379,
+      "action": "order-distribute",
+      "target": "ORD-EJAKVF",
+      "details": {
+        "amount": 8490000,
+        "claimedBy": "demo",
+        "commission": 50000,
+        "productTitle": "Máy giặt LG Inverter 9kg cửa trước"
+      }
+    },
+    {
+      "id": "AL-1778747691726-q73h",
+      "ts": 1778747691726,
+      "action": "order-claim-pending",
+      "target": "ORD-EJAKVF",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778747437117-1lq5",
+      "ts": 1778747437117,
+      "action": "order-delete",
+      "target": "ORD-HP6QEI",
+      "details": null
+    },
+    {
+      "id": "AL-1778747435380-miy1",
+      "ts": 1778747435380,
+      "action": "order-delete",
+      "target": "ORD-PH7UJU",
+      "details": null
+    },
+    {
+      "id": "AL-1778747433460-z2tg",
+      "ts": 1778747433460,
+      "action": "order-unassign",
+      "target": "ORD-HP6QEI",
+      "details": null
+    },
+    {
+      "id": "AL-1778747431517-d756",
+      "ts": 1778747431517,
+      "action": "order-unassign",
+      "target": "ORD-PH7UJU",
+      "details": null
+    },
+    {
+      "id": "AL-1778747359859-bzyp",
+      "ts": 1778747359859,
+      "action": "product-delete",
+      "target": "P-EOE0BK",
+      "details": null
+    },
+    {
+      "id": "AL-1778747359833-tlrx",
+      "ts": 1778747359833,
+      "action": "product-update",
+      "target": "P-EOE0BK",
+      "details": {
+        "fields": [
+          "amount",
+          "img"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778747359791-upz0",
+      "ts": 1778747359791,
+      "action": "product-create",
+      "target": "P-EOE0BK",
+      "details": {
+        "title": "_test_prod"
+      }
+    },
+    {
+      "id": "AL-1778747018592-6g6u",
+      "ts": 1778747018592,
+      "action": "order-distribute",
+      "target": "ORD-3JRIV3",
+      "details": {
+        "amount": 14990000,
+        "claimedBy": "demo",
+        "commission": 8000,
+        "productTitle": "Robot hút bụi Roborock S8 Pro"
+      }
+    },
+    {
+      "id": "AL-1778746926082-0hvv",
+      "ts": 1778746926082,
+      "action": "order-claim-pending",
+      "target": "ORD-3JRIV3",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778746831883-yuu7",
+      "ts": 1778746831883,
+      "action": "order-delete",
+      "target": "ORD-Z9MYWX",
+      "details": null
+    },
+    {
+      "id": "AL-1778746831616-egar",
+      "ts": 1778746831616,
+      "action": "order-delete",
+      "target": "ORD-7I1X34",
+      "details": null
+    },
+    {
+      "id": "AL-1778746821478-873v",
+      "ts": 1778746821478,
+      "action": "order-claim-pending",
+      "target": "ORD-7I1X34",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778746793959-4tfm",
+      "ts": 1778746793959,
+      "action": "order-distribute",
+      "target": "ORD-Z9MYWX",
+      "details": {
+        "amount": 4290000,
+        "claimedBy": "demo",
+        "commission": 34320,
+        "productTitle": "Spin Curved Screen 27Inch"
+      }
+    },
+    {
+      "id": "AL-1778746783363-mx68",
+      "ts": 1778746783363,
+      "action": "order-claim-pending",
+      "target": "ORD-Z9MYWX",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778746130758-82e5",
+      "ts": 1778746130758,
+      "action": "order-create",
+      "target": "ORD-PH7UJU",
+      "details": {
+        "amount": 500000,
+        "assignedTo": "testui",
+        "productTitle": "Test phân phối cho testui"
+      }
+    },
+    {
+      "id": "AL-1778746093506-a3cz",
+      "ts": 1778746093506,
+      "action": "user-update",
+      "target": "demo",
+      "details": {
+        "fields": [
+          "bankInfo"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778746076771-w8n7",
+      "ts": 1778746076771,
+      "action": "user-update",
+      "target": "demo",
+      "details": {
+        "fields": [
+          "bankInfo"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778746033157-hz4j",
+      "ts": 1778746033157,
+      "action": "order-delete",
+      "target": "ORD-E5GED8",
+      "details": null
+    },
+    {
+      "id": "AL-1778746033115-ep8u",
+      "ts": 1778746033115,
+      "action": "order-create",
+      "target": "ORD-E5GED8",
+      "details": {
+        "amount": 500000,
+        "assignedTo": null,
+        "productTitle": "_test"
+      }
+    },
+    {
+      "id": "AL-1778745633319-rzfn",
+      "ts": 1778745633320,
+      "action": "user-set-vip",
+      "target": "demo",
+      "details": {
+        "vipLevel": "VIP1"
+      }
+    },
+    {
+      "id": "AL-1778745633286-sm70",
+      "ts": 1778745633286,
+      "action": "user-set-vip",
+      "target": "demo",
+      "details": {
+        "vipLevel": "VIP2"
+      }
+    },
+    {
+      "id": "AL-1778745633200-z8px",
+      "ts": 1778745633200,
+      "action": "referral-bonus",
+      "target": "demo",
+      "details": {
+        "from": "demoref6198805357470",
+        "amount": 100000
+      }
+    },
+    {
+      "id": "AL-1778745581428-iz8q",
+      "ts": 1778745581428,
+      "action": "referral-bonus",
+      "target": "testui",
+      "details": {
+        "from": "reftest1125481768000",
+        "amount": 100000
+      }
+    },
+    {
+      "id": "AL-1778738625299-xxc6",
+      "ts": 1778738625299,
+      "action": "order-create",
+      "target": "ORD-HP6QEI",
+      "details": {
+        "amount": 159000,
+        "assignedTo": "buingoc109",
+        "productTitle": "Quạt Mini Để Bàn USB"
+      }
+    },
+    {
+      "id": "AL-1778692365719-lkz4",
+      "ts": 1778692365719,
+      "action": "order-create",
+      "target": "ORD-Q7N0ND",
+      "details": {
+        "amount": 4290000,
+        "assignedTo": "buingoc109",
+        "productTitle": "Spin Curved Screen 1080P 27Inch"
+      }
+    },
+    {
+      "id": "AL-1778692316658-igpo",
+      "ts": 1778692316658,
+      "action": "order-create",
+      "target": "ORD-QXNCQY",
+      "details": {
+        "amount": 89000,
+        "assignedTo": "buingoc109",
+        "productTitle": "Combo 10 Đôi Tất Uni cổ ngắn chất cotton"
+      }
+    },
+    {
+      "id": "AL-1778690383328-is4u",
+      "ts": 1778690383328,
       "action": "order-unassign",
       "target": "ORD-GCCLR0",
       "details": null
     },
     {
-      "id": "AL-1778688213580-zat5",
-      "ts": 1778688213580,
+      "id": "AL-1778690095862-lop6",
+      "ts": 1778690095862,
+      "action": "tx-approve",
+      "target": "TX-4LMP2K",
+      "details": {
+        "type": "deposit",
+        "user": "buingoc109",
+        "amount": 100000
+      }
+    },
+    {
+      "id": "AL-1778688649239-ky9g",
+      "ts": 1778688649239,
+      "action": "order-assign",
+      "target": "ORD-GCCLR0",
+      "details": {
+        "assignedTo": "okbeu"
+      }
+    },
+    {
+      "id": "AL-1778688460888-ksvx",
+      "ts": 1778688460888,
       "action": "order-approve",
-      "target": "ORD-DN0BGJ",
+      "target": "ORD-WYL8CI",
       "details": {
-        "user": "demo",
-        "amount": 159000
+        "user": "buingoc109",
+        "amount": 89000
       }
     },
     {
-      "id": "AL-1778688050839-gw2r",
-      "ts": 1778688050839,
-      "action": "order-create",
-      "target": "ORD-DN0BGJ",
+      "id": "AL-1778688459675-op6n",
+      "ts": 1778688459675,
+      "action": "order-approve",
+      "target": "ORD-32PX95",
       "details": {
-        "productTitle": "Quạt Mini Để Bàn USB",
-        "amount": 159000,
-        "assignedTo": "demo"
+        "user": "buingoc109",
+        "amount": 4290000
       }
     },
     {
-      "id": "AL-1778688047926-6w83",
-      "ts": 1778688047926,
-      "action": "order-delete",
-      "target": "ORD-0G1JOK",
-      "details": null
-    },
-    {
-      "id": "AL-1778688018726-vncx",
-      "ts": 1778688018726,
+      "id": "AL-1778687584323-qhl9",
+      "ts": 1778687584323,
       "action": "order-create",
-      "target": "ORD-0G1JOK",
+      "target": "ORD-32PX95",
       "details": {
-        "productTitle": "Smart Tv Samsung Crystal Uhd Du7000 4K 43 Inch",
-        "amount": 7490000,
-        "assignedTo": null
+        "amount": 4290000,
+        "assignedTo": null,
+        "productTitle": "Spin Curved Screen 1080P 27Inch"
       }
     },
     {
-      "id": "AL-1778688008859-u982",
-      "ts": 1778688008859,
-      "action": "order-delete",
-      "target": "ORD-TQGPZ2",
-      "details": null
-    },
-    {
-      "id": "AL-1778687993477-zj4l",
-      "ts": 1778687993477,
+      "id": "AL-1778687496373-yhf9",
+      "ts": 1778687496373,
       "action": "order-create",
-      "target": "ORD-TQGPZ2",
+      "target": "ORD-WYL8CI",
       "details": {
-        "productTitle": "Xiaomi Tv Google 4K 55 Inch",
-        "amount": 8990000,
-        "assignedTo": null
+        "amount": 89000,
+        "assignedTo": null,
+        "productTitle": "Combo 10 Đôi Tất Uni cổ ngắn chất cotton"
       }
     },
     {
@@ -80,9 +369,9 @@
       "action": "order-create",
       "target": "ORD-UDNZHW",
       "details": {
-        "productTitle": "Spin Curved Screen 1080P 27Inch",
         "amount": 4290000,
-        "assignedTo": null
+        "assignedTo": null,
+        "productTitle": "Spin Curved Screen 1080P 27Inch"
       }
     },
     {

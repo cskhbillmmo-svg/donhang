@@ -73,7 +73,7 @@
               placeholder="••••••••"
               autocomplete="current-password"
             />
-            <button class="icon-button" type="button" aria-label="Hiện mật khẩu">
+            <button class="icon-button" type="button" aria-label="Hiện mật khẩu" data-toggle-pw-target="#password">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M2.5 12s3.3-5 9.5-5 9.5 5 9.5 5-3.3 5-9.5 5-9.5-5-9.5-5Z"
@@ -161,6 +161,14 @@
               />
             </svg>
             <input id="newPassword" name="newPassword" type="password" placeholder="Tạo mật khẩu" autocomplete="new-password" />
+          </div>
+
+          <label for="registerReferralCode">Mã giới thiệu <span style="color:var(--muted);font-weight:500">(không bắt buộc)</span></label>
+          <div class="field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 6a4 4 0 1 1-4-4M8 18a4 4 0 1 1 4 4M14.8 7.2 9.2 16.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+            <input id="registerReferralCode" name="referralCode" type="text" placeholder="Nhập mã giới thiệu nếu có" autocomplete="off" inputmode="numeric" maxlength="10" />
           </div>
 
           <button class="login-button" type="submit">Đăng Ký Tài Khoản</button>
@@ -515,7 +523,7 @@
             </div>
             <form id="bankForm" class="bank-form" autocomplete="off">
               <label>Ngân hàng <span class="req">*</span>
-                <input type="text" name="bank" placeholder="VD: Vietcombank" required />
+                <select name="bank" class="bank-select" required data-bank-select></select>
               </label>
               <label>Số tài khoản <span class="req">*</span>
                 <input type="text" name="account" placeholder="VD: 1234567890" inputmode="numeric" required />
@@ -589,8 +597,8 @@
           <section class="referral-card">
             <div class="referral-text">
               <span>Mã giới thiệu của bạn</span>
-              <strong>695026</strong>
-              <p>Mời bạn bè đăng ký và nhận hoa hồng từ các cấp dưới</p>
+              <strong id="profileRefCode">------</strong>
+              <p>Mời bạn bè đăng ký và nhận <strong>100.000 ₫</strong> mỗi lượt (cần VIP2 để rút)</p>
             </div>
             <div class="referral-actions">
               <button type="button" aria-label="Sao chép">
@@ -709,7 +717,7 @@
           </div>
           <form id="profileBankForm" class="bank-form" autocomplete="off">
             <label>Ngân hàng <span class="req">*</span>
-              <input type="text" name="bank" placeholder="VD: Vietcombank" required />
+              <select name="bank" class="bank-select" required data-bank-select></select>
             </label>
             <label>Số tài khoản <span class="req">*</span>
               <input type="text" name="account" placeholder="VD: 1234567890" inputmode="numeric" required />
@@ -762,19 +770,16 @@
           </article>
           <section class="tier-block">
             <h3>Tổng hoa hồng giới thiệu</h3>
-            <strong class="tier-total">0 ₫</strong>
-            <div class="tier-grid">
-              <div><span>F1</span><strong>0 ₫</strong><small>0 thành viên</small></div>
-              <div><span>F2</span><strong>0 ₫</strong><small>0 thành viên</small></div>
-              <div><span>F3</span><strong>0 ₫</strong><small>0 thành viên</small></div>
-            </div>
+            <strong class="tier-total" id="referralTotalBonus">0 ₫</strong>
+            <div class="bonus-status" id="referralBonusStatus" style="margin-top:8px"></div>
           </section>
           <section>
             <h3 class="section-title">
               <svg viewBox="0 0 24 24" class="inline-icon"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7" /><path d="M2.5 19c.8-3 3.5-4.5 6.5-4.5s5.7 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
-              Mạng lưới của bạn
+              Mạng lưới của bạn (<span id="referralNetCount">0</span>)
             </h3>
-            <div class="empty-state network-empty">
+            <div id="referralNetworkList"></div>
+            <div class="empty-state network-empty is-hidden" id="referralNetworkEmpty">
               <div class="empty-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" /><path d="M3 19c1-3 4-4.5 7-4.5m5-1.5h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
               </div>
@@ -1281,9 +1286,18 @@
       }
 
       function orderCardHtml(o) {
-        const titleText = o.status === "pending"
+        // Sub-types of "pending":
+        //   serverStatus="available"      => admin đã chỉ định sản phẩm → show full info
+        //   serverStatus="claim_pending"  => user vừa nhận, chờ admin phân phối → show generic + loader
+        //   serverStatus="claimed"        => user đã nhận + admin đã phân phối → show product, chờ duyệt
+        const isAdminAssigned = o.status === "pending" && o.serverStatus === "available";
+        const isClaimedWaiting = o.status === "pending" && o.serverStatus === "claim_pending";
+        const isClaimedReview = o.status === "processed" && o.serverStatus === "claimed";
+        const titleText = isClaimedWaiting
           ? "Đang chờ hệ thống phân phối"
-          : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
+          : isAdminAssigned
+            ? "Đơn mới từ admin"
+            : (o.title || (o.status === "done" ? "Hoàn Thành" : "Chờ xử lý"));
         const subtitle = o.subtitle || "";
         const productName = subtitle || o.productTitle || o.title || "Sản phẩm";
         const productImg = o.productImg ? escapeHtml(o.productImg) : "";
@@ -1299,6 +1313,9 @@
         const sendOrderButton = o.status === "processed"
           ? `<div class="send-order-area"><button class="send-order-button" type="button" data-order-id="${escapeHtml(o.id)}">Gửi đơn</button></div>`
           : "";
+        const acceptOrderButton = isAdminAssigned
+          ? `<div class="send-order-area"><button class="send-order-button" type="button" data-accept-order-id="${escapeHtml(o.id)}">Nhận đơn</button></div>`
+          : "";
         const doneBadge = o.status === "done"
           ? `<div class="order-done-badge">
                <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1308,17 +1325,19 @@
                <span>Đã hoàn thành</span>
              </div>`
           : "";
-        const titleHtml = o.status === "pending"
+        const titleHtml = isClaimedWaiting
           ? `<h3>${escapeHtml(titleText)}<span class="loader-spinner" aria-hidden="true"></span></h3>`
-          : `<h3>${escapeHtml(titleText)}</h3>
+          : isClaimedReview
+            ? `<h3>${escapeHtml(productName)}</h3>`
+            : `<h3>${escapeHtml(titleText)}</h3>
              <p>${escapeHtml(productName)}</p>`;
-        const metaRow = o.status !== "pending"
+        const metaRow = !isClaimedWaiting
           ? `<div class="order-product-meta">
                   <span>Giá trị đơn</span>
                   <strong>${formatCurrency(o.amount)}</strong>
                 </div>`
           : "";
-        const orderIdRow = o.status !== "pending"
+        const orderIdRow = !isClaimedWaiting
           ? `<div class="order-id">Mã đơn: ${escapeHtml(o.id)}</div>`
           : "";
         return `
@@ -1336,6 +1355,7 @@
               ${doneBadge}
             </div>
             ${sendOrderButton}
+            ${acceptOrderButton}
           </article>
         `;
       }
@@ -1374,7 +1394,8 @@
         const orders = loadOrders();
         const vip = currentVip();
         const totalOrders = orders.length;
-        const totalCommission = orders.reduce((sum, o) => sum + (o.status === "done" || o.status === "processed" ? (o.commission || 0) : 0), 0);
+        // Chỉ cộng hoa hồng đã thực sự duyệt (server-side approved). Đơn chờ duyệt (claimed) chưa được credit.
+        const totalCommission = orders.reduce((sum, o) => sum + (o.serverStatus === "approved" ? (o.commission || 0) : 0), 0);
         const elCount = document.querySelector("#statOrderCount");
         const elTotal = document.querySelector("#statTotalCommission");
         const elRate = document.querySelector("#statCommissionRate");
@@ -1489,6 +1510,67 @@
 
       const BANK_KEY = "tiki.bank";
       const MIN_WITHDRAW = 100000;
+      const VN_BANKS = [
+        "Vietcombank (VCB)",
+        "VietinBank (CTG)",
+        "BIDV",
+        "Agribank",
+        "Techcombank (TCB)",
+        "MB Bank (MBB)",
+        "ACB",
+        "VPBank",
+        "TPBank",
+        "Sacombank (STB)",
+        "HDBank",
+        "SHB",
+        "VIB",
+        "SeABank",
+        "LienVietPostBank (LPB)",
+        "OCB",
+        "MSB",
+        "Eximbank (EIB)",
+        "ABBank",
+        "Bac A Bank",
+        "Nam A Bank",
+        "Saigonbank (SGB)",
+        "KienlongBank",
+        "Vietbank",
+        "PVcomBank",
+        "NCB",
+        "BaoVietBank",
+        "SCB (Saigon Commercial Bank)",
+        "DongA Bank",
+        "VietABank",
+        "GPBank",
+        "CBBank",
+        "OceanBank",
+        "PublicBank Vietnam",
+        "Indovina Bank (IVB)",
+        "UOB Vietnam",
+        "Shinhan Bank Vietnam",
+        "HSBC Vietnam",
+        "Standard Chartered Vietnam",
+        "Woori Bank Vietnam",
+        "KEB Hana Bank",
+        "CIMB Vietnam",
+        "Cake by VPBank",
+        "Timo",
+        "Ubank by VPBank",
+        "VietCredit",
+        "VRB (Vietnam-Russia Joint Venture Bank)"
+      ];
+
+      function populateBankSelects() {
+        document.querySelectorAll("[data-bank-select]").forEach((sel) => {
+          if (sel.dataset.populated) return;
+          const cur = sel.value;
+          sel.innerHTML = '<option value="" disabled selected>-- Chọn ngân hàng --</option>' +
+            VN_BANKS.map((b) => `<option value="${b}">${b}</option>`).join("");
+          if (cur) sel.value = cur;
+          sel.dataset.populated = "1";
+        });
+      }
+      populateBankSelects();
       let AVAILABLE_BALANCE = 30000;
       let TOTAL_BALANCE = 30000;
       let FROZEN_BALANCE = 0;
@@ -1745,7 +1827,8 @@
       // Top profile referral card copy/share (small icons on profile main)
       const profileMainRef = document.querySelectorAll(".referral-actions button");
       if (profileMainRef[0]) profileMainRef[0].addEventListener("click", async () => {
-        await copyText("695026");
+        const code = (CURRENT_ACCOUNT && CURRENT_ACCOUNT.referralCode) || (document.querySelector("#profileRefCode")?.textContent || "").trim();
+        await copyText(code);
         showToast("Đã sao chép mã giới thiệu");
       });
       if (profileMainRef[1]) profileMainRef[1].addEventListener("click", () => {
@@ -1837,6 +1920,17 @@
         });
       });
 
+      document.querySelectorAll("[data-toggle-pw-target]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = document.querySelector(btn.dataset.togglePwTarget);
+          if (!input) return;
+          const isPw = input.type === "password";
+          input.type = isPw ? "text" : "password";
+          btn.classList.toggle("is-on", isPw);
+          btn.setAttribute("aria-label", isPw ? "Ẩn mật khẩu" : "Hiện mật khẩu");
+        });
+      });
+
       function refreshSecurity() {
         const set = localStorage.getItem(PW_KEY) === "set";
         const el = document.querySelector("#securityStatusText");
@@ -1878,11 +1972,22 @@
           const submittedIds = loadSubmittedOrderIds();
           const serverOrders = (d.orders || []).map((o) => {
             const isSubmitted = submittedIds.has(o.id);
-            const baseStatus = o.status === "claimed" ? "pending"
-              : (o.status === "completed" ? "done" : "processed");
+            // Map server status -> client tab status:
+            //   available + assignedTo  -> pending  (Chờ phân phối — admin đã gửi, user chưa nhận)
+            //   claimed                  -> pending  (Chờ phân phối — user đã nhận, chờ admin duyệt)
+            //   approved                 -> processed (Chờ xử lý — admin đã duyệt, user chưa hoàn tất)
+            //   rejected                 -> processed (Đã từ chối)
+            //   completed/submitted      -> done     (Hoàn Thành)
+            const baseStatus =
+              o.status === "available" ? "pending"
+              : o.status === "claim_pending" ? "pending"
+              : o.status === "completed" ? "done"
+              : "processed";
             const status = isSubmitted && baseStatus === "processed" ? "done" : baseStatus;
             const title = status === "done" ? "Hoàn Thành"
-              : o.status === "claimed" ? "Chờ phân phối"
+              : o.status === "available" ? "Chờ user nhận"
+              : o.status === "claim_pending" ? "Đang chờ hệ thống phân phối"
+              : o.status === "claimed" ? "Chờ admin duyệt"
               : o.status === "approved" ? "Chờ xử lý"
               : o.status === "rejected" ? "Đơn bị từ chối" : o.productTitle;
             return {
@@ -1893,7 +1998,7 @@
               subtitle: o.status === "rejected" ? (o.rejectedReason || "Đã bị từ chối")
                       : (o.productTitle || "").slice(0, 60),
               amount: o.amount,
-              commission: (o.status === "approved" || isSubmitted) ? o.commission : 0,
+              commission: (o.status === "claimed" || o.status === "approved" || isSubmitted) ? o.commission : 0,
               ts: o.claimedAt || o.createdAt,
               productTitle: o.productTitle,
               productImg: o.productImg
@@ -1963,8 +2068,6 @@
         if (elRate) elRate.textContent = Math.round(CURRENT_VIP.refRate * 100) + "%";
         // Grab order voucher card: VIP level, range, rate
         const voucherInfo = document.querySelectorAll(".voucher-info > div strong");
-        // Voucher info has 3 strongs: VIP1, "0₫ To 10M", 0.5%
-        // We only update when not in product-selected mode (ie when label is "Thành viên áp dụng")
         const voucherLabel = document.querySelector("#voucherProductLabel");
         if (voucherLabel && voucherLabel.textContent === "Thành viên áp dụng") {
           const voucherName = document.querySelector("#voucherProductName");
@@ -2059,16 +2162,11 @@
           const nextOrder = d.next || null;
           if (nextOrder) {
             EMPTY_POOL_STREAK = 0;
-            const changed = !NEXT_POOL_ORDER || NEXT_POOL_ORDER.id !== nextOrder.id;
             NEXT_POOL_ORDER = nextOrder;
-            if (changed) updateGrabOrderPreview(nextOrder);
           } else {
             EMPTY_POOL_STREAK += 1;
-            if (NEXT_POOL_ORDER === null) {
-              if (EMPTY_POOL_STREAK === 1) updateGrabOrderPreview(null);
-            } else if (EMPTY_POOL_STREAK >= EMPTY_POOL_THRESHOLD) {
+            if (EMPTY_POOL_STREAK >= EMPTY_POOL_THRESHOLD) {
               NEXT_POOL_ORDER = null;
-              updateGrabOrderPreview(null);
             }
           }
           return d.available;
@@ -2244,20 +2342,73 @@
       document.addEventListener("click", (e) => {
         const btn = e.target.closest(".send-order-button");
         if (!btn) return;
+
+        // "Nhận đơn" button (admin-assigned available order) → call /api/orders/claim
+        const acceptId = btn.dataset.acceptOrderId;
+        if (acceptId) {
+          (async () => {
+            const username = getCurrentUsername();
+            if (!username) { showToast("Bạn cần đăng nhập."); return; }
+            btn.disabled = true;
+            btn.textContent = "Đang nhận...";
+            try {
+              const r = await fetch("/api/orders/claim", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username }),
+              });
+              const d = await r.json();
+              if (!r.ok) {
+                showToast(d.message || "Không nhận được đơn");
+                btn.disabled = false;
+                btn.textContent = "Nhận đơn";
+              } else {
+                showToast(`Đã nhận đơn ${d.order.id}. Chờ admin duyệt.`);
+                await fetchMyOrders();
+              }
+            } catch (err) {
+              showToast("Lỗi mạng");
+              btn.disabled = false;
+              btn.textContent = "Nhận đơn";
+            }
+          })();
+          return;
+        }
+
+        // "Gửi đơn" button (existing flow) — mark order as done locally
         const orderId = btn.dataset.orderId;
         if (!orderId) return;
         btn.disabled = true;
-        markOrderSubmitted(orderId);
-        const orders = loadOrders().map((o) => {
-          if (o.id !== orderId) return o;
-          return { ...o, status: "done", title: "Hoàn Thành" };
-        });
-        saveOrders(orders);
-        renderOrders();
-        renderProfileStats();
-        showToast("Xử lý đơn thành công");
-        const doneTab = document.querySelector('.tab[data-tab="done"]');
-        if (doneTab) doneTab.click();
+        btn.textContent = "Đang gửi...";
+        (async () => {
+          const username = getCurrentUsername();
+          if (!username) { showToast("Bạn cần đăng nhập."); btn.disabled = false; btn.textContent = "Gửi đơn"; return; }
+          try {
+            const r = await fetch(`/api/orders/${encodeURIComponent(orderId)}/submit`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username }),
+            });
+            const d = await r.json();
+            if (!r.ok) {
+              showToast(d.message || "Không thể gửi đơn");
+              btn.disabled = false;
+              btn.textContent = "Gửi đơn";
+              return;
+            }
+            markOrderSubmitted(orderId);
+            showToast("Xử lý đơn thành công");
+            await fetchMyOrders();
+            await fetchMyTransactions();
+            renderProfileStats();
+            const doneTab = document.querySelector('.tab[data-tab="done"]');
+            if (doneTab) doneTab.click();
+          } catch (err) {
+            showToast("Lỗi mạng");
+            btn.disabled = false;
+            btn.textContent = "Gửi đơn";
+          }
+        })();
       });
 
       document.querySelectorAll("[data-show]").forEach((button) => {
@@ -2312,11 +2463,19 @@
         } catch (e) {}
       }
 
+      let CURRENT_ACCOUNT = null;
       function enterApp(account) {
         if (account) {
+          CURRENT_ACCOUNT = account;
           const phone = account.phone || "0862206752";
           document.querySelector("#profilePhone").textContent = phone;
           if (account.vip) { CURRENT_VIP = account.vip; }
+          // Render referral code in 2 places
+          const code = account.referralCode || "------";
+          const refMain = document.querySelector("#profileRefCode");
+          const refPage = document.querySelector("#referralCode");
+          if (refMain) refMain.textContent = code;
+          if (refPage) refPage.textContent = code;
         }
         appShell.classList.add("is-home");
         hero.classList.add("is-hidden");
@@ -2334,20 +2493,81 @@
         renderProfileStats();
         updateVipDisplay();
         refreshSecurity();
+        fetchReferralInfo();
         startOrdersPolling();
         goTo("home");
+      }
+
+      async function fetchReferralInfo() {
+        const username = getCurrentUsername();
+        if (!username) return;
+        try {
+          const r = await fetch(`/api/referral/info/${encodeURIComponent(username)}`);
+          if (!r.ok) return;
+          const d = await r.json();
+          // Update referral codes (in case backend backfilled)
+          const refMain = document.querySelector("#profileRefCode");
+          const refPage = document.querySelector("#referralCode");
+          if (refMain) refMain.textContent = d.referralCode;
+          if (refPage) refPage.textContent = d.referralCode;
+          // Total bonus
+          const total = document.querySelector("#referralTotalBonus");
+          if (total) total.textContent = d.totalBonus.toLocaleString("vi-VN") + " ₫";
+          // Status: locked or unlocked
+          const statusEl = document.querySelector("#referralBonusStatus");
+          if (statusEl) {
+            if (d.totalBonus === 0) {
+              statusEl.innerHTML = `<small style="color:#94a3b8">Mỗi lượt giới thiệu cộng <strong style="color:var(--green)">${d.bonusPerReferral.toLocaleString("vi-VN")} ₫</strong>. Cần đạt <strong>${d.requiredVip}</strong> để rút.</small>`;
+            } else if (d.bonusUnlocked) {
+              statusEl.innerHTML = `<small style="color:var(--green);font-weight:700">✓ Đã mở khóa — bạn có thể rút số tiền này</small>`;
+            } else {
+              statusEl.innerHTML = `<small style="color:#d97706;font-weight:600">🔒 Đang khóa — cần đạt <strong>${d.requiredVip}</strong> để rút (hiện ${d.vipLevel}). Tổng <strong>${d.lockedBonus.toLocaleString("vi-VN")} ₫</strong> đang ở Đóng băng.</small>`;
+            }
+          }
+          // Network list
+          const list = document.querySelector("#referralNetworkList");
+          const empty = document.querySelector("#referralNetworkEmpty");
+          const count = document.querySelector("#referralNetCount");
+          if (count) count.textContent = d.referrals.length;
+          if (d.referrals.length === 0) {
+            if (list) list.innerHTML = "";
+            if (empty) empty.classList.remove("is-hidden");
+          } else {
+            if (empty) empty.classList.add("is-hidden");
+            if (list) {
+              list.innerHTML = d.referrals.map((r) => {
+                const initials = (r.fullName || r.username || "?").trim().charAt(0).toUpperCase();
+                const date = new Date(r.createdAt).toLocaleDateString("vi-VN");
+                return `
+                  <div class="ref-row">
+                    <div class="ref-avatar">${initials}</div>
+                    <div class="ref-info">
+                      <strong>${r.fullName} <small>(@${r.username})</small></strong>
+                      <small>📅 ${date} • <span class="vip-badge-small">${r.vipLevel}</span></small>
+                    </div>
+                    <div class="ref-bonus">+${d.bonusPerReferral.toLocaleString("vi-VN")} ₫</div>
+                  </div>
+                `;
+              }).join("");
+            }
+          }
+        } catch (e) {}
       }
 
       registerForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         try {
+          const refRaw = (document.querySelector("#registerReferralCode")?.value || "").trim();
           const result = await postJson("/api/register", {
             fullName: document.querySelector("#fullname").value,
             phone: document.querySelector("#phone").value,
             username: document.querySelector("#newUsername").value,
             password: document.querySelector("#newPassword").value,
+            referralCode: refRaw,
           });
-          showMessage("Đăng ký thành công", result.message || "Tài khoản của bạn đã được tạo.");
+          let msg = result.message || "Tài khoản của bạn đã được tạo.";
+          if (result.referrer) msg += ` Bạn được giới thiệu bởi @${result.referrer}.`;
+          showMessage("Đăng ký thành công", msg);
           registerForm.reset();
           loginCard.classList.remove("is-hidden");
           registerCard.classList.add("is-hidden");

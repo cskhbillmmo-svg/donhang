@@ -5,11 +5,13 @@
       "salt": "34926412b34cef999b03beb2bb3fdbde",
       "phone": "0900000000",
       "blocked": false,
+      "bankInfo": null,
       "fullName": "Demo Tiki",
       "username": "demo",
       "vipLevel": "VIP1",
       "createdAt": "2026-05-13T08:09:50.211Z",
-      "passwordHash": "e9bcfb56c447f5c1b7d6c454b8a5466f42ac5bc7606e1fff26d216a5609bee79"
+      "passwordHash": "e9bcfb56c447f5c1b7d6c454b8a5466f42ac5bc7606e1fff26d216a5609bee79",
+      "referralCode": "718531"
     },
     {
       "id": "aa4a8fc6-72ab-45b1-9499-61b5f7ae5726",
@@ -20,7 +22,8 @@
       "username": "testui",
       "vipLevel": "VIP3",
       "createdAt": "2026-05-13T08:24:07.624Z",
-      "passwordHash": "5c4cc20a3d48883feff2f2723c97ab346f4a00483d12c2bffbb2098daab6e8a2"
+      "passwordHash": "5c4cc20a3d48883feff2f2723c97ab346f4a00483d12c2bffbb2098daab6e8a2",
+      "referralCode": "744299"
     },
     {
       "id": "b2844ef8-a901-4bc0-a369-4c057d340648",
@@ -95,9 +98,48 @@
       "blocked": false,
       "fullName": "bùi văn ngọc",
       "username": "buingoc109",
-      "vipLevel": "VIP1",
+      "vipLevel": "VIP2",
       "createdAt": "2026-05-13T14:02:31.861Z",
       "passwordHash": "197884751ed103f96217a39c35a003cf95ba59d06a08ab2947a13dc023696746"
+    },
+    {
+      "id": "93eea134-c36c-4836-ac88-cdbf018c8448",
+      "salt": "58e8a70d01762786c7781f43c166f7da",
+      "phone": "0900111222",
+      "blocked": false,
+      "fullName": "Referral Test",
+      "username": "reftest1125481768000",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-14T07:59:41.426Z",
+      "referredBy": "testui",
+      "passwordHash": "d98e5146282a18e52bfc5feda9c5d1491b973c207ea3529186218650eaac06e7",
+      "referralCode": "427978"
+    },
+    {
+      "id": "bcb5b36e-ba2d-4ffd-a97d-7277c9596d8d",
+      "salt": "5374d7b40ab6faede5db6365cd0943de",
+      "phone": "0911222333",
+      "blocked": false,
+      "fullName": "Demo Ref Test",
+      "username": "demoref628915715000",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-14T08:00:07.058Z",
+      "referredBy": null,
+      "passwordHash": "b1c4e89a58830a97b2ec0e7a7566b36294708255365749290ad0262f9d86ab5e",
+      "referralCode": "399487"
+    },
+    {
+      "id": "e1a2ad26-e0d3-4335-b181-d8bbc7ab876d",
+      "salt": "eac524643ff4b7b93222106beff9e925",
+      "phone": "0911222333",
+      "blocked": false,
+      "fullName": "Demo Ref Lock Test",
+      "username": "demoref6198805357470",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-14T08:00:33.198Z",
+      "referredBy": "demo",
+      "passwordHash": "77afbc6b6ae1d600a68909613866eb48a6f7660ece695fa23069b99ddf73447f",
+      "referralCode": "526596"
     }
   ]
 }

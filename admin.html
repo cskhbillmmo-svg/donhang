@@ -65,6 +65,8 @@
         border-radius: 8px;
         font: inherit;
         outline: none;
+        width: 100%;
+        box-sizing: border-box;
       }
       input:focus, select:focus, textarea:focus {
         border-color: var(--brand);
@@ -208,8 +210,11 @@
       }
       .panel { display: none; }
       .panel.is-active { display: grid; gap: 20px; grid-template-columns: 1fr; }
-      @media (min-width: 920px) {
-        .panel.is-active.cols-2 { grid-template-columns: 380px 1fr; }
+      @media (min-width: 1100px) {
+        .panel.is-active.cols-2 { grid-template-columns: 460px 1fr; }
+      }
+      @media (min-width: 1400px) {
+        .panel.is-active.cols-2 { grid-template-columns: 520px 1fr; }
       }
       .user-list { display: grid; gap: 10px; }
       .user-row {
@@ -235,6 +240,39 @@
       .vip-pill.lvl-VIP2 { background: #fef3c7; color: #92400e; }
       .vip-pill.lvl-VIP3 { background: #fae8ff; color: #86198f; }
       .vip-pill.lvl-VIP4 { background: #ffe4e6; color: #9f1239; }
+      .vip-card {
+        display: grid;
+        grid-template-columns: 56px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .vip-card:hover { border-color: var(--brand); background: #f8faff; }
+      .vip-card.is-current { border-color: var(--brand); background: linear-gradient(135deg, #eef2ff, #fff); box-shadow: 0 4px 12px rgba(44, 92, 255, 0.08); }
+      .vip-card .vip-icon {
+        width: 48px; height: 48px;
+        display: grid; place-items: center;
+        border-radius: 50%;
+        font-size: 22px; font-weight: 900;
+        background: #f1f5f9; color: var(--ink);
+      }
+      .vip-card[data-level="VIP1"] .vip-icon { background: #dbeafe; color: #1e40af; }
+      .vip-card[data-level="VIP2"] .vip-icon { background: #fef3c7; color: #92400e; }
+      .vip-card[data-level="VIP3"] .vip-icon { background: #fae8ff; color: #86198f; }
+      .vip-card[data-level="VIP4"] .vip-icon { background: #ffe4e6; color: #9f1239; }
+      .vip-card .vip-meta strong { font-size: 15px; color: var(--ink); display: block; }
+      .vip-card .vip-meta small { font-size: 12px; color: #64748b; }
+      .vip-card .vip-badge-cur {
+        font-size: 10px; font-weight: 800;
+        background: var(--brand); color: #fff;
+        padding: 4px 8px; border-radius: 10px;
+      }
+      .vip-card .vip-arrow { font-size: 20px; color: #94a3b8; }
       .user-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-top: 6px; }
       .user-actions button { padding: 5px 10px; font-size: 11px; }
       .user-avatar {
@@ -257,6 +295,50 @@
       .user-stats { text-align: right; font-size: 12px; color: #475569; }
       .user-stats strong { display: block; color: var(--green); font-size: 14px; }
       select { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font: inherit; outline: none; background: #fff; }
+      .img-upload {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 10px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        background: #fafbff;
+      }
+      .img-upload-preview {
+        width: 100px; height: 100px;
+        border-radius: 10px;
+        background: #f1f5f9 center/cover no-repeat;
+        display: grid; place-items: center;
+        font-size: 11px; color: #94a3b8;
+        text-align: center; padding: 6px;
+        border: 1px solid var(--line);
+      }
+      .img-upload-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .img-upload-btn {
+        margin: 0;
+        cursor: pointer;
+        padding: 8px 12px;
+        background: var(--brand);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .img-upload-btn:hover { filter: brightness(1.08); }
+      .img-upload-clear {
+        padding: 8px 10px;
+        background: #fee2e2;
+        color: #991b1b;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        border: 0;
+        cursor: pointer;
+      }
       .quick-products { margin-bottom: 12px; }
       .quick-products button {
         padding: 6px 8px;
@@ -591,9 +673,10 @@
       <div class="container" style="display:block">
         <div class="nav-tabs">
           <button data-tab="dashboard" class="is-active">📊 Tổng quan</button>
-          <button data-tab="orders">📦 Đơn hàng</button>
+          <button data-tab="orders">📦 Đơn hàng <span class="badge-count" id="ordersBadge" style="display:none">0</span></button>
           <button data-tab="finance">💰 Tài chính <span class="badge-count" id="financeBadge" style="display:none">0</span></button>
           <button data-tab="users">👥 Quản lý user</button>
+          <button data-tab="products">🛍️ Sản phẩm</button>
           <button data-tab="config">⚙️ Cấu hình</button>
         </div>
 
@@ -622,20 +705,25 @@
               <label>Tên sản phẩm
                 <input type="text" name="productTitle" placeholder="VD: Tủ lạnh Casper..." required />
               </label>
-              <label>Ảnh sản phẩm (URL — tùy chọn)
-                <input type="text" name="productImg" placeholder="https://..." />
+              <label>Ảnh sản phẩm (tùy chọn)
+                <div class="img-upload" data-img-upload>
+                  <div class="img-upload-preview" data-preview>Chưa có ảnh<br /><small>(JPG/PNG/WEBP, max 5MB)</small></div>
+                  <div class="img-upload-actions">
+                    <label class="img-upload-btn">
+                      📷 Chọn ảnh
+                      <input type="file" accept="image/*" data-file hidden />
+                    </label>
+                    <button type="button" class="img-upload-clear" data-clear hidden>✕ Xóa</button>
+                  </div>
+                  <input type="hidden" name="productImg" data-value />
+                </div>
               </label>
               <div class="row">
                 <label>Số tiền (₫)
                   <input type="number" name="amount" min="1000" step="1000" placeholder="500000" required />
                 </label>
-                <label>Tỉ lệ hoa hồng
-                  <select name="commissionRate">
-                    <option value="0.005" selected>0.5% (VIP1)</option>
-                    <option value="0.008">0.8% (VIP2)</option>
-                    <option value="0.012">1.2% (VIP3)</option>
-                    <option value="0.02">2.0%</option>
-                  </select>
+                <label>Hoa hồng (₫)
+                  <input type="number" name="commission" min="0" step="1000" placeholder="VD: 50000" required />
                 </label>
               </div>
               <label>Gán cho user (tùy chọn)
@@ -651,11 +739,12 @@
             <h2>Danh sách đơn</h2>
             <input type="search" id="searchOrders" placeholder="🔍 Tìm theo mã đơn / sản phẩm / @username..." class="search-input" />
             <div class="filter-bar" id="filterBar">
-              <button data-filter="all" class="is-active">Tất cả</button>
-              <button data-filter="available">Pool (chờ user)</button>
-              <button data-filter="claimed">Chờ duyệt</button>
-              <button data-filter="approved">Đã duyệt</button>
-              <button data-filter="rejected">Từ chối</button>
+              <button data-filter="all" class="is-active">Tất cả <span class="badge-count" id="cntAll" style="display:none">0</span></button>
+              <button data-filter="claim_pending">Chờ phân phối <span class="badge-count" id="cntClaimPending" style="display:none">0</span></button>
+              <button data-filter="available">Pool (chờ user) <span class="badge-count" id="cntAvailable" style="display:none">0</span></button>
+              <button data-filter="claimed">Chờ duyệt <span class="badge-count" id="cntClaimed" style="display:none">0</span></button>
+              <button data-filter="approved">Đã duyệt <span class="badge-count" id="cntApproved" style="display:none">0</span></button>
+              <button data-filter="rejected">Từ chối <span class="badge-count" id="cntRejected" style="display:none">0</span></button>
             </div>
             <div class="order-list" id="orderList"></div>
             <div class="empty" id="orderEmpty" style="display:none">Chưa có đơn nào.</div>
@@ -703,12 +792,20 @@
           </section>
 
           <section class="card config-panel" data-cfgpanel="products">
-            <h2>Quản lý sản phẩm hiển thị (<span id="productCount">0</span>)</h2>
-            <p style="color:#64748b;font-size:13px;margin-top:0">Sản phẩm được dùng cho admin tạo đơn (preset) và sẽ hiển thị trên trang chủ user.</p>
-            <form id="productForm" style="display:grid;gap:10px;grid-template-columns:1fr 1fr auto;align-items:end;margin-bottom:12px">
-              <label>Tên sản phẩm <input name="title" required placeholder="VD: Tủ lạnh Casper..." /></label>
-              <label>URL ảnh <input name="img" placeholder="https://..." /></label>
-              <button type="submit" class="btn-primary" style="width:auto">+ Thêm</button>
+            <h2>Quản lý sản phẩm (<span id="productCount">0</span>)</h2>
+            <p style="color:#64748b;font-size:13px;margin-top:0">Sản phẩm hiển thị trên trang chủ user và dùng làm preset trong "Tạo đơn mới" / "Phân phối".</p>
+            <form id="productForm" style="display:grid;gap:10px;margin-bottom:12px;padding:12px;border:1px dashed var(--line);border-radius:10px">
+              <div style="display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start">
+                <div id="productFormPreview" style="width:96px;height:96px;border-radius:10px;background:#f1f5f9 center/cover no-repeat;display:grid;place-items:center;color:#94a3b8;font-size:11px;text-align:center;padding:6px;border:1px solid var(--line)">Xem trước ảnh</div>
+                <div style="display:grid;gap:8px">
+                  <label style="margin:0">Tên sản phẩm <input name="title" required placeholder="VD: Tủ lạnh Casper..." /></label>
+                  <label style="margin:0">URL ảnh sản phẩm <input name="img" id="productFormImg" placeholder="https://images.unsplash.com/..." /></label>
+                  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+                    <label style="margin:0">Số tiền (₫) <input name="amount" type="number" min="0" step="1000" placeholder="VD: 500000" /></label>
+                    <button type="submit" class="btn-primary" style="width:auto;min-height:42px">+ Thêm sản phẩm</button>
+                  </div>
+                </div>
+              </div>
             </form>
             <input type="search" id="searchProducts" placeholder="🔍 Tìm sản phẩm..." class="search-input" />
             <div id="productList" class="product-admin-list"></div>
@@ -766,6 +863,133 @@
       </div>
     </div>
 
+    <div class="modal-backdrop" id="productEditModal" style="display:none">
+      <div class="modal-card-large" style="max-width: 560px;">
+        <div class="modal-head">
+          <h2 id="peTitle">Sửa sản phẩm</h2>
+          <button class="btn-ghost" id="peClose" aria-label="Đóng">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="peForm" style="display:grid;gap:12px;">
+            <input type="hidden" name="id" />
+            <div style="display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start">
+              <div id="pePreview" style="width:120px;height:120px;border-radius:10px;background:#f1f5f9 center/cover no-repeat;border:1px solid var(--line);display:grid;place-items:center;color:#94a3b8;font-size:11px;text-align:center;padding:6px"></div>
+              <div style="display:grid;gap:10px">
+                <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Tên sản phẩm <input name="title" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">URL ảnh sản phẩm <input name="img" id="peImg" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Số tiền (₫) <input name="amount" type="number" min="0" step="1000" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button type="button" class="btn-ghost" id="peCancel">Hủy</button>
+              <button type="submit" class="btn-primary">💾 Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="distributeModal" style="display:none">
+      <div class="modal-card-large" style="max-width: 560px;">
+        <div class="modal-head">
+          <h2 id="distTitle">Phân phối sản phẩm</h2>
+          <button class="btn-ghost" id="distClose" aria-label="Đóng">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="distForm" style="display:grid;gap:12px;">
+            <input type="hidden" name="orderId" />
+            <div style="font-size:12px;color:#64748b;background:#f8fafc;padding:10px 12px;border-radius:8px;" id="distContext"></div>
+            <div id="distQuickProducts" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+            <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Tên sản phẩm
+              <input name="productTitle" type="text" placeholder="VD: Spin Curved Screen…" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+            </label>
+            <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Ảnh sản phẩm (tùy chọn)
+              <div class="img-upload" data-img-upload>
+                <div class="img-upload-preview" data-preview>Chưa có ảnh<br /><small>(JPG/PNG/WEBP, max 5MB)</small></div>
+                <div class="img-upload-actions">
+                  <label class="img-upload-btn">
+                    📷 Chọn ảnh
+                    <input type="file" accept="image/*" data-file hidden />
+                  </label>
+                  <button type="button" class="img-upload-clear" data-clear hidden>✕ Xóa</button>
+                </div>
+                <input type="hidden" name="productImg" data-value />
+              </div>
+            </label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Số tiền (₫)
+                <input name="amount" type="number" min="1000" step="1000" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+              </label>
+              <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Hoa hồng (₫)
+                <input name="commission" type="number" min="0" step="1000" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+              </label>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button type="button" class="btn-ghost" id="distCancel">Hủy</button>
+              <button type="submit" class="btn-primary">📦 Phân phối ngay</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="vipPickerModal" style="display:none">
+      <div class="modal-card-large" style="max-width: 520px;">
+        <div class="modal-head">
+          <h2 id="vipPickerTitle">Đổi cấp VIP</h2>
+          <button class="btn-ghost" id="vipPickerClose" aria-label="Đóng">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="vipPickerList" style="display:grid;gap:10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="userEditModal" style="display:none">
+      <div class="modal-card-large" style="max-width: 520px;">
+        <div class="modal-head">
+          <h2 id="ueTitle">Sửa thông tin user</h2>
+          <button class="btn-ghost" id="ueClose" aria-label="Đóng">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="ueForm" style="display:grid;gap:12px;">
+            <input type="hidden" name="origUsername" />
+            <div style="display:grid;gap:6px;">
+              <label style="font-size:12px;color:#64748b">Họ tên</label>
+              <input name="fullName" type="text" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+            </div>
+            <div style="display:grid;gap:6px;">
+              <label style="font-size:12px;color:#64748b">Số điện thoại</label>
+              <input name="phone" type="text" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+            </div>
+            <div style="display:grid;gap:6px;">
+              <label style="font-size:12px;color:#64748b">Tên đăng nhập (chỉ a-z, 0-9, _ . -)</label>
+              <input name="newUsername" type="text" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+            </div>
+            <div style="display:grid;gap:6px;">
+              <label style="font-size:12px;color:#64748b">Mật khẩu mới (để trống nếu không đổi)</label>
+              <input name="password" type="text" autocomplete="new-password" placeholder="Tối thiểu 6 ký tự" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+            </div>
+            <fieldset style="border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:8px;">
+              <legend style="font-size:12px;color:#64748b;padding:0 6px;">Tài khoản ngân hàng</legend>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <input name="bankName" type="text" placeholder="Ngân hàng (VD: Vietcombank)" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+                <input name="bankAccount" type="text" placeholder="Số tài khoản" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <input name="bankHolder" type="text" placeholder="Chủ tài khoản" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+                <input name="bankBranch" type="text" placeholder="Chi nhánh (tùy chọn)" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+              </div>
+            </fieldset>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button type="button" class="btn-ghost" id="ueCancel">Hủy</button>
+              <button type="submit" class="btn-primary">💾 Lưu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="modal-backdrop" id="assignUserModal" style="display:none">
       <div class="modal-card-large" style="max-width: 460px;">
         <div class="modal-head">
@@ -780,15 +1004,68 @@
     </div>
 
     <script>
-      const PRODUCT_PRESETS = [
-        { title: "Combo 10 Đôi Tất Uni cổ ngắn chất cotton", img: "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=520&q=80", amount: 89000 },
+      let PRODUCT_PRESETS = [
+        // Fallback list (used if server has no products). Will be overwritten on load.
+        // Đồ nhỏ < 100k
+        { title: "Khẩu trang y tế 4 lớp hộp 50 cái", img: "https://images.unsplash.com/photo-1586942593568-29ace4796bf6?auto=format&fit=crop&w=520&q=80", amount: 35000 },
+        { title: "Bút bi Thiên Long combo 10 cây", img: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=520&q=80", amount: 45000 },
+        { title: "Dây sạc Type-C nhanh 1m", img: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=520&q=80", amount: 79000 },
+        { title: "Ốp lưng iPhone 15 silicone trong", img: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=520&q=80", amount: 89000 },
+        { title: "Combo 10 đôi tất nam cổ ngắn cotton", img: "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=520&q=80", amount: 89000 },
+        { title: "Khay đá silicone 2 cái 24 viên", img: "https://images.unsplash.com/photo-1551590192-f88a09e1c2c8?auto=format&fit=crop&w=520&q=80", amount: 35000 },
+        { title: "Túi giặt đồ lót combo 3 cái", img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?auto=format&fit=crop&w=520&q=80", amount: 25000 },
+        { title: "Tất cao cổ nữ cotton mềm", img: "https://images.unsplash.com/photo-1589810635657-232948472d98?auto=format&fit=crop&w=520&q=80", amount: 39000 },
+        { title: "Băng đeo cổ tay thể thao", img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=520&q=80", amount: 45000 },
+        { title: "Combo 3 hộp sữa Vinamilk 1L", img: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=520&q=80", amount: 49000 },
+        { title: "Sách \"Đắc Nhân Tâm\" bìa mềm", img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=520&q=80", amount: 65000 },
+        { title: "Móc treo quần áo combo 20 cái", img: "https://images.unsplash.com/photo-1558211583-d26f610c1eb1?auto=format&fit=crop&w=520&q=80", amount: 89000 },
+        { title: "Máy ép cam cầm tay thủ công", img: "https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=520&q=80", amount: 99000 },
+        { title: "Bình nước thể thao Lock&Lock 750ml", img: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=520&q=80", amount: 119000 },
+        { title: "Mặt nạ giấy Mediheal hộp 10 miếng", img: "https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?auto=format&fit=crop&w=520&q=80", amount: 159000 },
+        { title: "Quạt mini để bàn USB 3 cánh", img: "https://images.unsplash.com/photo-1565374395542-0ce18882c857?auto=format&fit=crop&w=520&q=80", amount: 159000 },
+        { title: "Đèn ngủ LED cảm ứng để bàn", img: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=520&q=80", amount: 159000 },
+        { title: "Áo thun Uniqlo Cotton 100% nam", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=520&q=80", amount: 199000 },
+        // 200k - 500k
+        { title: "Cốc giữ nhiệt Lock&Lock inox 500ml", img: "https://images.unsplash.com/photo-1572119865084-43c285814d63?auto=format&fit=crop&w=520&q=80", amount: 220000 },
+        { title: "Túi xách nữ Tote canvas Hàn Quốc", img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=520&q=80", amount: 250000 },
+        { title: "Quần short kaki nam basic", img: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=520&q=80", amount: 250000 },
+        { title: "Serum The Ordinary Niacinamide 10%", img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=520&q=80", amount: 250000 },
+        { title: "Sữa rửa mặt CeraVe Foaming 236ml", img: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&w=520&q=80", amount: 280000 },
+        { title: "Son môi 3CE Mood Recipe Matte", img: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=520&q=80", amount: 280000 },
+        { title: "Combo dao thớt nhà bếp Lock&Lock", img: "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=520&q=80", amount: 290000 },
+        { title: "Nến thơm Yankee Candle 411g", img: "https://images.unsplash.com/photo-1602874801006-e26c2e3d6b04?auto=format&fit=crop&w=520&q=80", amount: 320000 },
+        { title: "Mũ bucket Nike Heritage", img: "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?auto=format&fit=crop&w=520&q=80", amount: 320000 },
+        { title: "Kệ sách mini gỗ 3 tầng để bàn", img: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=520&q=80", amount: 380000 },
+        { title: "Gương trang điểm có đèn LED", img: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?auto=format&fit=crop&w=520&q=80", amount: 450000 },
+        { title: "Kem chống nắng La Roche-Posay 50ml", img: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=520&q=80", amount: 450000 },
+        // 500k - 2tr
+        { title: "Sạc dự phòng Anker 10000mAh", img: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=520&q=80", amount: 590000 },
+        { title: "Nhiệt kế hồng ngoại Beurer FT-90", img: "https://images.unsplash.com/photo-1584017911543-9f6c4cf32cca?auto=format&fit=crop&w=520&q=80", amount: 590000 },
+        { title: "Dép Crocs Classic Clog unisex", img: "https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&w=520&q=80", amount: 690000 },
+        { title: "Nồi cơm điện UNIE URC818 1.8L", img: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=520&q=80", amount: 690000 },
+        { title: "Balo laptop Mikkor The Lewis", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=520&q=80", amount: 890000 },
+        { title: "Đồ chơi xếp hình LEGO Classic 484pcs", img: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=520&q=80", amount: 990000 },
+        { title: "Đồng hồ nam OP Japan Watch", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=520&q=80", amount: 1290000 },
+        { title: "Máy xay sinh tố Philips HR2118", img: "https://images.unsplash.com/photo-1610855092717-4493ad5c2f60?auto=format&fit=crop&w=520&q=80", amount: 1290000 },
+        { title: "Ví da nam Bellroy Slim Sleeve", img: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=520&q=80", amount: 1290000 },
+        { title: "Bàn phím cơ AKKO 3068B Plus", img: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=520&q=80", amount: 1890000 },
+        { title: "Bàn chải điện Oral-B Pro 3", img: "https://images.unsplash.com/photo-1559591937-abc3a5b51a04?auto=format&fit=crop&w=520&q=80", amount: 1990000 },
+        // 2tr - 10tr
+        { title: "Chuột Logitech MX Master 3S", img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=520&q=80", amount: 2490000 },
+        { title: "Nồi chiên không dầu Philips HD9252", img: "https://images.unsplash.com/photo-1596079890744-c1a0462d0975?auto=format&fit=crop&w=520&q=80", amount: 2790000 },
+        { title: "Giày Adidas Ultraboost Light", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=520&q=80", amount: 4290000 },
         { title: "Spin Curved Screen 1080P 27Inch", img: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=520&q=80", amount: 4290000 },
+        { title: "Máy lọc không khí Xiaomi Smart 4 Pro", img: "https://images.unsplash.com/photo-1610337673044-720471f83677?auto=format&fit=crop&w=520&q=80", amount: 4590000 },
+        { title: "Tai nghe Bluetooth AirPods Pro 2", img: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=520&q=80", amount: 5990000 },
+        { title: "Smart Tv Samsung Crystal UHD 43 Inch", img: "https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=520&q=80", amount: 7490000 },
+        { title: "Máy giặt LG Inverter 9kg cửa trước", img: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=520&q=80", amount: 8490000 },
         { title: "Xiaomi Tv Google 4K 55 Inch", img: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=520&q=80", amount: 8990000 },
-        { title: "Smart Tv Samsung Crystal Uhd Du7000 4K 43 Inch", img: "https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=520&q=80", amount: 7490000 },
-        { title: "Quạt Mini Để Bàn USB", img: "https://images.unsplash.com/photo-1565374395542-0ce18882c857?auto=format&fit=crop&w=520&q=80", amount: 159000 },
-        { title: "Đồng Hồ Nam OP Japan Watch", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=520&q=80", amount: 1290000 },
+        // > 10tr
+        { title: "Máy pha cà phê Delonghi Magnifica S", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=520&q=80", amount: 11990000 },
         { title: "Tủ lạnh Casper Side by Side 462L", img: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=520&q=80", amount: 12990000 },
-        { title: "Nồi cơm điện UNIE URC818 1.8L", img: "https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=520&q=80", amount: 690000 }
+        { title: "Robot hút bụi Roborock S8 Pro", img: "https://images.unsplash.com/photo-1647480776844-46f1afabf723?auto=format&fit=crop&w=520&q=80", amount: 14990000 },
+        { title: "Laptop Asus Vivobook 15 OLED i5", img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=520&q=80", amount: 15990000 },
+        { title: "iPhone 15 Pro Max 256GB", img: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=520&q=80", amount: 32990000 }
       ];
 
       const KEY = "tiki.adminPw";
@@ -815,6 +1092,69 @@
       let cachedUsers = [];
       let cachedTxs = [];
       let txFilter = "pending";
+
+      // ============ IMAGE UPLOAD HELPER ============
+      // Convert a file to a resized JPEG dataURL (max width 800px, quality 0.82)
+      function fileToCompressedDataUrl(file, maxWidth = 800, quality = 0.82) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = () => reject(new Error("Không đọc được file"));
+          reader.onload = () => {
+            const img = new Image();
+            img.onerror = () => reject(new Error("Ảnh không hợp lệ"));
+            img.onload = () => {
+              const ratio = img.width > maxWidth ? maxWidth / img.width : 1;
+              const w = Math.round(img.width * ratio);
+              const h = Math.round(img.height * ratio);
+              const canvas = document.createElement("canvas");
+              canvas.width = w; canvas.height = h;
+              const ctx = canvas.getContext("2d");
+              ctx.fillStyle = "#fff";
+              ctx.fillRect(0, 0, w, h);
+              ctx.drawImage(img, 0, 0, w, h);
+              resolve(canvas.toDataURL("image/jpeg", quality));
+            };
+            img.src = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function setupImgUpload(root) {
+        if (!root || root.dataset.bound) return;
+        root.dataset.bound = "1";
+        const fileInput = root.querySelector("[data-file]");
+        const preview = root.querySelector("[data-preview]");
+        const valueInput = root.querySelector("[data-value]");
+        const clearBtn = root.querySelector("[data-clear]");
+        const setValue = (dataUrl) => {
+          valueInput.value = dataUrl || "";
+          if (dataUrl) {
+            preview.style.backgroundImage = `url('${dataUrl.replace(/'/g, "%27")}')`;
+            preview.innerHTML = "";
+            clearBtn.hidden = false;
+          } else {
+            preview.style.backgroundImage = "";
+            preview.innerHTML = 'Chưa có ảnh<br /><small>(JPG/PNG/WEBP, max 5MB)</small>';
+            clearBtn.hidden = true;
+            fileInput.value = "";
+          }
+        };
+        fileInput.addEventListener("change", async () => {
+          const f = fileInput.files[0];
+          if (!f) return;
+          if (!f.type.startsWith("image/")) { showToast("File phải là ảnh"); return; }
+          if (f.size > 5 * 1024 * 1024) { showToast("Ảnh quá lớn (>5MB)"); return; }
+          try {
+            const url = await fileToCompressedDataUrl(f);
+            setValue(url);
+          } catch (e) { showToast(e.message || "Lỗi đọc ảnh"); }
+        });
+        clearBtn.addEventListener("click", () => setValue(""));
+        // Expose setter so other code (eg. preset click) can set the image
+        root._setImage = setValue;
+      }
+      document.querySelectorAll("[data-img-upload]").forEach(setupImgUpload);
 
       function showToast(msg) {
         toast.textContent = msg;
@@ -902,6 +1242,7 @@
         refreshUsers();
         refreshTxs();
         refreshDashboard();
+        loadProducts();
         setInterval(refresh, 4000);
         setInterval(refreshUsers, 8000);
         setInterval(refreshTxs, 4000);
@@ -1020,11 +1361,13 @@
         VIP3: { rate: 0.012, refRate: 0.22, dailyCap: 80, minRange: 0, maxRange: 50000000 },
         VIP4: { rate: 0.015, refRate: 0.25, dailyCap: 100, minRange: 0, maxRange: 100000000 },
       };
+      let cachedVipLevels = { ...DEFAULT_VIPS };
       async function loadVipConfig() {
         try {
           const r = await fetch("/api/admin/vip/levels");
           const d = await r.json();
-          renderVipTable(d.levels || DEFAULT_VIPS);
+          cachedVipLevels = d.levels || DEFAULT_VIPS;
+          renderVipTable(cachedVipLevels);
         } catch (e) {}
       }
       function renderVipTable(levels) {
@@ -1068,6 +1411,12 @@
           const r = await api("/api/admin/products/list");
           cachedProducts = r.products || [];
           renderProducts();
+          // Sync to "Tạo đơn mới" / "Phân phối" quick presets — only enabled + with amount
+          const enabledWithPrice = cachedProducts.filter((p) => p.enabled !== false && Number(p.amount || 0) > 0);
+          if (enabledWithPrice.length > 0) {
+            PRODUCT_PRESETS = enabledWithPrice.map((p) => ({ title: p.title, img: p.img || "", amount: Number(p.amount) || 0 }));
+            renderQuickProducts();
+          }
         } catch (e) {}
       }
       function renderProducts() {
@@ -1083,51 +1432,104 @@
           return;
         }
         empty.style.display = "none";
-        list.innerHTML = filtered.map((p) => `
-          <div class="product-admin-row${!p.enabled ? ' is-disabled' : ''}">
-            <div class="product-thumb-admin" style="background-image:url('${p.img||''}')"></div>
-            <div>
-              <strong>${p.title}</strong>
-              <small>${p.id} • ${p.enabled ? '✓ Hiển thị' : '⊘ Đã ẩn'} • Tạo ${new Date(p.createdAt).toLocaleDateString("vi-VN")}</small>
+        list.innerHTML = filtered.map((p) => {
+          const amountText = p.amount ? `<strong style="color:var(--brand)">${Number(p.amount).toLocaleString("vi-VN")} ₫</strong>` : '<span style="color:#94a3b8">— chưa đặt giá —</span>';
+          return `
+            <div class="product-admin-row${!p.enabled ? ' is-disabled' : ''}">
+              <div class="product-thumb-admin" style="background-image:url('${p.img||''}')"></div>
+              <div>
+                <strong>${p.title}</strong>
+                <small>${p.id} • ${amountText} • ${p.enabled ? '✓ Hiển thị' : '⊘ Đã ẩn'} • ${new Date(p.createdAt).toLocaleDateString("vi-VN")}</small>
+              </div>
+              <div class="order-actions">
+                <button class="btn-secondary" data-pact="toggle" data-id="${p.id}" data-enabled="${p.enabled}">${p.enabled ? '⊘ Ẩn' : '✓ Hiện'}</button>
+                <button class="btn-secondary" data-pact="edit" data-id="${p.id}">✎ Sửa</button>
+                <button class="btn-danger" data-pact="del" data-id="${p.id}">🗑 Xóa</button>
+              </div>
             </div>
-            <div class="order-actions">
-              <button class="btn-secondary" data-pact="toggle" data-id="${p.id}" data-enabled="${p.enabled}">${p.enabled ? '⊘ Ẩn' : '✓ Hiện'}</button>
-              <button class="btn-secondary" data-pact="edit" data-id="${p.id}">✎ Sửa</button>
-              <button class="btn-danger" data-pact="del" data-id="${p.id}">🗑 Xóa</button>
-            </div>
-          </div>
-        `).join("");
+          `;
+        }).join("");
         list.querySelectorAll("[data-pact]").forEach((btn) => {
           btn.addEventListener("click", () => handleProductAction(btn.dataset.pact, btn.dataset.id, btn.dataset.enabled === "true"));
         });
       }
+
+      const productEditModal = document.querySelector("#productEditModal");
+      const peForm = document.querySelector("#peForm");
+      const pePreview = document.querySelector("#pePreview");
+      const peImg = document.querySelector("#peImg");
+      document.querySelector("#peClose").addEventListener("click", () => { productEditModal.style.display = "none"; });
+      document.querySelector("#peCancel").addEventListener("click", () => { productEditModal.style.display = "none"; });
+      productEditModal.addEventListener("click", (e) => { if (e.target === productEditModal) productEditModal.style.display = "none"; });
+      function updatePePreview() {
+        const url = peImg.value.trim();
+        pePreview.style.backgroundImage = url ? `url('${url.replace(/'/g, "%27")}')` : "";
+        pePreview.textContent = url ? "" : "Xem trước ảnh";
+      }
+      peImg.addEventListener("input", updatePePreview);
+      function openProductEdit(p) {
+        peForm.elements.id.value = p.id;
+        peForm.elements.title.value = p.title || "";
+        peForm.elements.img.value = p.img || "";
+        peForm.elements.amount.value = p.amount || "";
+        updatePePreview();
+        productEditModal.style.display = "flex";
+      }
+      peForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(peForm);
+        const body = {
+          title: fd.get("title"),
+          img: fd.get("img"),
+          amount: Number(fd.get("amount") || 0),
+        };
+        try {
+          await api(`/api/admin/products/${fd.get("id")}/update`, body);
+          showToast("Đã cập nhật sản phẩm");
+          productEditModal.style.display = "none";
+          loadProducts();
+        } catch (e2) { showToast(e2.message); }
+      });
+
       async function handleProductAction(action, id, currentEnabled) {
         try {
           if (action === "toggle") {
             await api(`/api/admin/products/${id}/update`, { enabled: !currentEnabled });
             showToast("Đã cập nhật");
+            loadProducts();
           } else if (action === "edit") {
             const p = cachedProducts.find((x) => x.id === id);
-            const newTitle = prompt("Tên sản phẩm mới:", p.title);
-            if (newTitle == null) return;
-            const newImg = prompt("URL ảnh mới (để trống giữ nguyên):", p.img);
-            if (newImg == null) return;
-            await api(`/api/admin/products/${id}/update`, { title: newTitle, img: newImg });
-            showToast("Đã sửa sản phẩm");
+            if (p) openProductEdit(p);
           } else if (action === "del") {
             if (!confirm("Xóa sản phẩm này?")) return;
             await api(`/api/admin/products/${id}/delete`);
             showToast("Đã xóa");
+            loadProducts();
           }
-          loadProducts();
         } catch (e) { showToast(e.message); }
       }
+
+      // Add-product form image preview
+      const productFormPreview = document.querySelector("#productFormPreview");
+      const productFormImg = document.querySelector("#productFormImg");
+      productFormImg.addEventListener("input", () => {
+        const url = productFormImg.value.trim();
+        productFormPreview.style.backgroundImage = url ? `url('${url.replace(/'/g, "%27")}')` : "";
+        productFormPreview.textContent = url ? "" : "Xem trước ảnh";
+      });
+
       document.querySelector("#productForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const fd = new FormData(e.target);
         try {
-          await api("/api/admin/products/create", { title: fd.get("title"), img: fd.get("img") });
+          await api("/api/admin/products/create", {
+            title: fd.get("title"),
+            img: fd.get("img"),
+            amount: Number(fd.get("amount") || 0),
+          });
           e.target.reset();
+          productFormPreview.style.backgroundImage = "";
+          productFormPreview.textContent = "Xem trước ảnh";
           showToast("Đã thêm sản phẩm");
           loadProducts();
         } catch (e2) { showToast(e2.message); }
@@ -1421,10 +1823,165 @@
         } catch (e) { showToast(e.message); }
       }
 
+      const distributeModal = document.querySelector("#distributeModal");
+      const distForm = document.querySelector("#distForm");
+      const distContext = document.querySelector("#distContext");
+      const distQuickProducts = document.querySelector("#distQuickProducts");
+      document.querySelector("#distClose").addEventListener("click", () => { distributeModal.style.display = "none"; });
+      document.querySelector("#distCancel").addEventListener("click", () => { distributeModal.style.display = "none"; });
+      distributeModal.addEventListener("click", (e) => { if (e.target === distributeModal) distributeModal.style.display = "none"; });
+
+      function openDistributeModal(orderId) {
+        const order = (window.__lastOrders || []).find((o) => o.id === orderId);
+        distForm.reset();
+        distForm.elements.orderId.value = orderId;
+        // Make sure the uploader is bound (in case modal was injected after initial scan)
+        const distUploader = distForm.querySelector("[data-img-upload]");
+        if (distUploader) {
+          setupImgUpload(distUploader);
+          if (distUploader._setImage) distUploader._setImage("");
+        }
+        if (order) {
+          distContext.innerHTML = `Đang phân phối cho <strong>@${order.claimedBy}</strong> • Mã đơn: <code>${order.id}</code>`;
+        } else {
+          distContext.textContent = `Mã đơn: ${orderId}`;
+        }
+        distQuickProducts.innerHTML = PRODUCT_PRESETS.map((p, i) =>
+          `<button type="button" data-dpreset="${i}" style="padding:5px 9px;font-size:11px;background:#f5f7ff;color:var(--brand);border:1px solid #e0e7ff;border-radius:6px;cursor:pointer">${p.title.slice(0, 28)}…</button>`
+        ).join("");
+        distQuickProducts.querySelectorAll("[data-dpreset]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const p = PRODUCT_PRESETS[Number(btn.dataset.dpreset)];
+            distForm.elements.productTitle.value = p.title;
+            distForm.elements.amount.value = p.amount;
+            distForm.elements.commission.value = Math.round(p.amount * 0.005);
+            if (distUploader && distUploader._setImage) distUploader._setImage(p.img || "");
+          });
+        });
+        distributeModal.style.display = "flex";
+      }
+
+      distForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(distForm);
+        const id = fd.get("orderId");
+        const body = {
+          productTitle: fd.get("productTitle"),
+          productImg: fd.get("productImg"),
+          amount: Number(fd.get("amount")),
+          commission: Number(fd.get("commission")),
+        };
+        try {
+          const r = await api(`/api/admin/orders/${id}/distribute`, body);
+          showToast(r.message || "Đã phân phối");
+          distributeModal.style.display = "none";
+          refresh();
+        } catch (err) { showToast(err.message); }
+      });
+
+      const vipPickerModal = document.querySelector("#vipPickerModal");
+      const vipPickerTitle = document.querySelector("#vipPickerTitle");
+      const vipPickerList = document.querySelector("#vipPickerList");
+      document.querySelector("#vipPickerClose").addEventListener("click", () => { vipPickerModal.style.display = "none"; });
+      vipPickerModal.addEventListener("click", (e) => { if (e.target === vipPickerModal) vipPickerModal.style.display = "none"; });
+
+      async function openVipPicker(username) {
+        const u = cachedUsers.find((x) => x.username === username);
+        const cur = (u && u.vipLevel) || "VIP1";
+        vipPickerTitle.textContent = `Đổi cấp VIP — @${username}`;
+        if (!cachedVipLevels || Object.keys(cachedVipLevels).length === 0) {
+          try {
+            const r = await fetch("/api/admin/vip/levels");
+            const d = await r.json();
+            cachedVipLevels = d.levels || DEFAULT_VIPS;
+          } catch (e) { cachedVipLevels = DEFAULT_VIPS; }
+        }
+        vipPickerList.innerHTML = Object.entries(cachedVipLevels).map(([lvl, v]) => {
+          const isCurrent = lvl === cur;
+          return `
+            <div class="vip-card${isCurrent ? ' is-current' : ''}" data-level="${lvl}">
+              <div class="vip-icon">${lvl.replace("VIP", "")}</div>
+              <div class="vip-meta">
+                <strong>${lvl} — ${(v.rate * 100).toFixed(1)}% / đơn</strong>
+                <small>${v.dailyCap} đơn/ngày • Max ${(v.maxRange || 0).toLocaleString("vi-VN")} ₫</small>
+              </div>
+              ${isCurrent ? '<span class="vip-badge-cur">Hiện tại</span>' : '<span class="vip-arrow">›</span>'}
+            </div>
+          `;
+        }).join("");
+        vipPickerList.querySelectorAll(".vip-card").forEach((card) => {
+          card.addEventListener("click", async () => {
+            const newLvl = card.dataset.level;
+            if (newLvl === cur) { vipPickerModal.style.display = "none"; return; }
+            try {
+              const r = await api(`/api/admin/users/${username}/set-vip`, { vipLevel: newLvl });
+              showToast(r.message);
+              vipPickerModal.style.display = "none";
+              refreshUsers();
+              refreshTxs();
+            } catch (err) { showToast(err.message); }
+          });
+        });
+        vipPickerModal.style.display = "flex";
+      }
+
+      const userEditModal = document.querySelector("#userEditModal");
+      const ueForm = document.querySelector("#ueForm");
+      const ueTitle = document.querySelector("#ueTitle");
+      document.querySelector("#ueClose").addEventListener("click", () => { userEditModal.style.display = "none"; });
+      document.querySelector("#ueCancel").addEventListener("click", () => { userEditModal.style.display = "none"; });
+      userEditModal.addEventListener("click", (e) => { if (e.target === userEditModal) userEditModal.style.display = "none"; });
+
+      async function openUserEdit(username) {
+        try {
+          const d = await api(`/api/admin/users/${username}/detail`);
+          const u = d.user;
+          const b = u.bankInfo || {};
+          ueTitle.textContent = `Sửa: ${u.fullName} (@${u.username})`;
+          ueForm.elements.origUsername.value = u.username;
+          ueForm.elements.fullName.value = u.fullName || "";
+          ueForm.elements.phone.value = u.phone || "";
+          ueForm.elements.newUsername.value = u.username || "";
+          ueForm.elements.password.value = "";
+          ueForm.elements.bankName.value = b.bank || "";
+          ueForm.elements.bankAccount.value = b.account || "";
+          ueForm.elements.bankHolder.value = b.holder || "";
+          ueForm.elements.bankBranch.value = b.branch || "";
+          userEditModal.style.display = "flex";
+        } catch (e) { showToast(e.message); }
+      }
+
+      ueForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const orig = ueForm.elements.origUsername.value;
+        const body = {
+          fullName: ueForm.elements.fullName.value.trim(),
+          phone: ueForm.elements.phone.value.trim(),
+          newUsername: ueForm.elements.newUsername.value.trim(),
+          bankInfo: {
+            bank: ueForm.elements.bankName.value.trim(),
+            account: ueForm.elements.bankAccount.value.trim(),
+            holder: ueForm.elements.bankHolder.value.trim(),
+            branch: ueForm.elements.bankBranch.value.trim(),
+          },
+        };
+        const pw = ueForm.elements.password.value;
+        if (pw) body.password = pw;
+        try {
+          const r = await api(`/api/admin/users/${orig}/update`, body);
+          showToast(r.message);
+          userEditModal.style.display = "none";
+          refreshUsers();
+        } catch (err) { showToast(err.message); }
+      });
+
       async function handleUserAction(action, username) {
         try {
           if (action === "detail") {
             return openUserDetail(username);
+          }
+          if (action === "edit") {
+            return openUserEdit(username);
           }
           if (action === "block") {
             const u = cachedUsers.find((x) => x.username === username);
@@ -1456,14 +2013,7 @@
             const r = await api(`/api/admin/users/${username}/adjust-balance`, { amount: sign * amt, reason });
             showToast(r.message);
           } else if (action === "vip") {
-            const cur = (cachedUsers.find((u) => u.username === username) || {}).vipLevel || "VIP1";
-            const choice = prompt(`Chọn cấp VIP cho @${username} (hiện tại ${cur}):\n\n1. VIP1 — 0.5% / 30 đơn/ngày\n2. VIP2 — 0.8% / 50 đơn/ngày\n3. VIP3 — 1.2% / 80 đơn/ngày\n4. VIP4 — 1.5% / 100 đơn/ngày\n\nNhập số (1-4):`, "1");
-            if (choice == null) return;
-            const lvlMap = { "1": "VIP1", "2": "VIP2", "3": "VIP3", "4": "VIP4" };
-            const newLvl = lvlMap[String(choice).trim()];
-            if (!newLvl) { showToast("Lựa chọn không hợp lệ"); return; }
-            const r = await api(`/api/admin/users/${username}/set-vip`, { vipLevel: newLvl });
-            showToast(r.message);
+            return openVipPicker(username);
           }
           refreshUsers();
           refreshTxs();
@@ -1473,6 +2023,15 @@
       // Tab switching
       document.querySelectorAll(".nav-tabs button").forEach((btn) => {
         btn.addEventListener("click", () => {
+          // "Sản phẩm" top tab is a shortcut to Cấu hình > Products sub-tab
+          if (btn.dataset.tab === "products") {
+            document.querySelectorAll(".nav-tabs button").forEach((b) => b.classList.toggle("is-active", b.dataset.tab === "config"));
+            document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("is-active", p.dataset.panel === "config"));
+            document.querySelectorAll(".config-tabs button").forEach((b) => b.classList.toggle("is-active", b.dataset.cfg === "products"));
+            document.querySelectorAll(".config-panel").forEach((p) => p.classList.toggle("is-active", p.dataset.cfgpanel === "products"));
+            loadProducts();
+            return;
+          }
           document.querySelectorAll(".nav-tabs button").forEach((b) => b.classList.toggle("is-active", b === btn));
           document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("is-active", p.dataset.panel === btn.dataset.tab));
         });
@@ -1524,6 +2083,7 @@
                 <small>💰 Số dư: <strong style="color:var(--ink)">${bal.available.toLocaleString("vi-VN")} ₫</strong>${bal.frozen > 0 ? ' • Đóng băng: <strong style="color:#d97706">' + bal.frozen.toLocaleString("vi-VN") + ' ₫</strong>' : ''}</small>
                 <div class="user-actions">
                   <button class="btn-secondary" data-uact="detail" data-username="${u.username}">👁 Chi tiết</button>
+                  <button class="btn-secondary" data-uact="edit" data-username="${u.username}">✏️ Sửa</button>
                   <button class="btn-success" data-uact="add" data-username="${u.username}">+ Cộng tiền</button>
                   <button class="btn-danger" data-uact="sub" data-username="${u.username}">− Trừ tiền</button>
                   <button class="btn-secondary" data-uact="vip" data-username="${u.username}">Đổi VIP</button>
@@ -1551,8 +2111,10 @@
           btn.addEventListener("click", () => {
             const p = PRODUCT_PRESETS[Number(btn.dataset.preset)];
             createForm.elements.productTitle.value = p.title;
-            createForm.elements.productImg.value = p.img;
             createForm.elements.amount.value = p.amount;
+            const uploader = createForm.querySelector("[data-img-upload]");
+            if (uploader && uploader._setImage) uploader._setImage(p.img || "");
+            else if (createForm.elements.productImg) createForm.elements.productImg.value = p.img;
           });
         });
       }
@@ -1566,6 +2128,7 @@
       }
 
       function renderOrders(orders) {
+        window.__lastOrders = orders;
         let filtered = currentFilter === "all" ? orders : orders.filter((o) => o.status === currentFilter);
         if (searchOrders) {
           const q = searchOrders;
@@ -1584,13 +2147,15 @@
         orderEmpty.style.display = "none";
         orderList.innerHTML = filtered.map((o) => {
           const pillCls = `pill-${o.status}`;
-          const pillText = { available: "Trong pool", claimed: "Chờ duyệt", approved: "Đã duyệt", rejected: "Từ chối" }[o.status] || o.status;
+          const pillText = { available: "Trong pool", claimed: "Chờ duyệt", approved: "Đã duyệt", rejected: "Từ chối", claim_pending: "Chờ phân phối" }[o.status] || o.status;
           const assignedPill = o.assignedTo
             ? `<span class="pill" style="background:#fde68a;color:#92400e">→ @${o.assignedTo}</span>`
             : (o.status === "available" ? `<span class="pill" style="background:#dbeafe;color:#1e40af">Pool chung</span>` : "");
           const claimedInfo = o.claimedBy ? `<small>Nhận bởi <strong>@${o.claimedBy}</strong> • ${fmtTime(o.claimedAt)}</small>` : `<small>Tạo ${fmtTime(o.createdAt)}</small>`;
           let actions = "";
-          if (o.status === "available") {
+          if (o.status === "claim_pending") {
+            actions = `<button class="btn-primary" data-act="distribute" data-id="${o.id}">📦 Phân phối</button><button class="btn-danger" data-act="delete" data-id="${o.id}">Xóa</button>`;
+          } else if (o.status === "available") {
             const assignBtn = o.assignedTo
               ? `<button class="btn-secondary" data-act="unassign" data-id="${o.id}">Bỏ gán</button>`
               : `<button class="btn-secondary" data-act="assign" data-id="${o.id}">Gán user</button>`;
@@ -1600,16 +2165,20 @@
           } else {
             actions = `<button class="btn-ghost" data-act="delete" data-id="${o.id}">Xóa</button>`;
           }
+          const displayTitle = o.productTitle || (o.status === "claim_pending" ? "(Chờ admin phân phối sản phẩm)" : "(không tên)");
+          const amountBlock = o.status === "claim_pending"
+            ? `<div class="order-amount" style="color:#94a3b8">—</div>`
+            : `<div class="order-amount">${fmt(o.amount)}<small>+${fmt(o.commission)}</small></div>`;
           return `
             <div class="order-row is-${o.status}">
               <div class="order-thumb" style="background-image:url('${o.productImg || ''}')"></div>
               <div class="order-meta">
-                <strong>${o.productTitle}</strong>
+                <strong>${displayTitle}</strong>
                 <small>Mã: <code>${o.id}</code> <span class="pill ${pillCls}">${pillText}</span> ${assignedPill}</small>
                 ${claimedInfo}
               </div>
               <div>
-                <div class="order-amount">${fmt(o.amount)}<small>+${fmt(o.commission)}</small></div>
+                ${amountBlock}
                 <div class="order-actions" style="margin-top:8px">${actions}</div>
               </div>
             </div>
@@ -1632,6 +2201,8 @@
                 await api(`/api/admin/orders/${id}/assign`, { assignedTo: picked });
               } else if (act === "unassign") {
                 await api(`/api/admin/orders/${id}/unassign`);
+              } else if (act === "distribute") {
+                return openDistributeModal(id);
               }
               showToast("Đã cập nhật");
               refresh();
@@ -1646,6 +2217,24 @@
           renderOrders(list.orders);
           const available = list.orders.filter((o) => o.status === "available").length;
           poolCount.textContent = `Pool: ${available}`;
+          const claimed = list.orders.filter((o) => o.status === "claimed").length;
+          const approved = list.orders.filter((o) => o.status === "approved").length;
+          const rejected = list.orders.filter((o) => o.status === "rejected").length;
+          const claimPending = list.orders.filter((o) => o.status === "claim_pending").length;
+          const total = list.orders.length;
+          const setBadge = (id, n) => {
+            const el = document.querySelector(id);
+            if (!el) return;
+            if (n > 0) { el.textContent = n; el.style.display = ""; }
+            else { el.style.display = "none"; }
+          };
+          setBadge("#cntAll", total);
+          setBadge("#cntClaimPending", claimPending);
+          setBadge("#cntAvailable", available);
+          setBadge("#cntClaimed", claimed);
+          setBadge("#cntApproved", approved);
+          setBadge("#cntRejected", rejected);
+          setBadge("#ordersBadge", claimed + claimPending);
         } catch (e) {
           if (String(e.message).includes("admin")) {
             sessionStorage.removeItem(KEY);
@@ -1667,16 +2256,19 @@
         e.preventDefault();
         const fd = new FormData(createForm);
         const assignedTo = (fd.get("assignedTo") || "").toString().trim();
+        const commission = Number(fd.get("commission") || 0);
+        if (!(commission > 0)) { showToast("Nhập số tiền hoa hồng > 0"); return; }
         try {
           await api("/api/admin/orders/create", {
             productTitle: fd.get("productTitle"),
             productImg: fd.get("productImg"),
             amount: Number(fd.get("amount")),
-            commissionRate: Number(fd.get("commissionRate")),
+            commission,
             assignedTo
           });
           createForm.reset();
-          createForm.elements.commissionRate.value = "0.005";
+          const uploader = createForm.querySelector("[data-img-upload]");
+          if (uploader && uploader._setImage) uploader._setImage("");
           showToast(assignedTo ? `Đã tạo đơn cho @${assignedTo}` : "Đã thêm đơn vào pool chung");
           refresh();
         } catch (e) { showToast(e.message); }
