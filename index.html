@@ -2128,30 +2128,39 @@
         }
       }
 
+      const __vipArtState = { level: null, mode: null };
       function applyVipLogoArt(level) {
         const art = document.querySelector("#voucherArt");
         const ribbon = document.querySelector(".voucher-ribbon");
         if (!art) return;
         const m = String(level || "").match(/\d+/);
         if (!m) return;
+        if (__vipArtState.level === level && __vipArtState.mode !== null) return;
         const src = `vip-logos/vip${m[0]}.png`;
-        art.style.backgroundImage = "";
-        art.innerHTML = `<img class="vip-logo-img" alt="${level}" />`;
-        const img = art.querySelector("img");
-        img.onload = () => {
+        const probe = new Image();
+        probe.onload = () => {
+          if (__vipArtState.level === level && __vipArtState.mode === "logo") return;
+          __vipArtState.level = level;
+          __vipArtState.mode = "logo";
+          art.style.backgroundImage = "";
+          art.innerHTML = `<img class="vip-logo-img" alt="${level}" src="${src}" />`;
           art.classList.add("has-vip-logo");
           if (ribbon) ribbon.classList.add("is-hidden-by-logo");
         };
-        img.onerror = () => {
+        probe.onerror = () => {
+          if (__vipArtState.level === level && __vipArtState.mode === "fallback") return;
+          __vipArtState.level = level;
+          __vipArtState.mode = "fallback";
           art.classList.remove("has-vip-logo");
           if (ribbon) ribbon.classList.remove("is-hidden-by-logo");
+          art.style.backgroundImage = "";
           art.innerHTML = `
             <span class="voucher-title">SIÊU<br />VOUCHER</span>
             <span class="voucher-sub">ƯU ĐÃI HÀNG LỚN CỰC HỜI</span>
             <span class="voucher-amount">500K</span>
           `;
         };
-        img.src = src;
+        probe.src = src;
       }
 
       function updateVipDisplay() {

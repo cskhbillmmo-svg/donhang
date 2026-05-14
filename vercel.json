@@ -24,6 +24,10 @@
     {
       "src": "banners/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "vip-logos/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
