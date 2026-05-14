@@ -681,6 +681,11 @@ async function handleAdminAdjustBalance(request, response, username) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("transactions"),
+      refreshStoreFromSupabase("orders"),
+    ]);
     const accountDb = readDb();
     if (!accountDb.accounts.some((a) => a.username === username)) {
       sendJson(response, 404, { ok: false, message: "Không tìm thấy user." });
@@ -692,11 +697,11 @@ async function handleAdminAdjustBalance(request, response, username) {
       sendJson(response, 400, { ok: false, message: "Số tiền điều chỉnh không hợp lệ." });
       return;
     }
-    // If subtracting, check balance has enough
+    // If subtracting, check available balance (not total) so không trừ vào phần đóng băng.
     if (amount < 0) {
       const bal = computeBalance(username);
-      if (Math.abs(amount) > bal.total) {
-        sendJson(response, 400, { ok: false, message: `Không thể trừ ${Math.abs(amount).toLocaleString("vi-VN")} ₫ — số dư hiện tại chỉ ${bal.total.toLocaleString("vi-VN")} ₫.` });
+      if (Math.abs(amount) > bal.available) {
+        sendJson(response, 400, { ok: false, message: `Không thể trừ ${Math.abs(amount).toLocaleString("vi-VN")} ₫ — số dư khả dụng chỉ ${bal.available.toLocaleString("vi-VN")} ₫.` });
         return;
       }
     }
@@ -740,6 +745,7 @@ async function handleAdminSetVip(request, response, username) {
       sendJson(response, 400, { ok: false, message: `Cấp VIP không hợp lệ. Chấp nhận: ${Object.keys(vipLevels).join(", ")}.` });
       return;
     }
+    await refreshStoreFromSupabase("accounts");
     const accountDb = readDb();
     const idx = accountDb.accounts.findIndex((a) => a.username === username);
     if (idx === -1) {
@@ -768,6 +774,7 @@ async function handleAdminUpdateVipLevels(request, response) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("config");
     const incoming = data.levels || {};
     const validKeys = Object.keys(DEFAULT_VIP_LEVELS);
     const newLevels = {};
@@ -811,6 +818,7 @@ async function handleAdminChangePassword(request, response) {
       sendJson(response, 400, { ok: false, message: "Mật khẩu mới tối thiểu 6 ký tự." });
       return;
     }
+    await refreshStoreFromSupabase("config");
     const { hash, salt } = hashPassword(newPw);
     const c = readConfig();
     c.adminPasswordHash = hash;
@@ -837,10 +845,12 @@ async function handleAdminListProducts(request, response) {
   }
 }
 
-// Public: list products (used by client home)
-function handlePublicListProducts(request, response) {
+// Public: list products (used by client home) — chỉ trả product đang bật
+async function handlePublicListProducts(request, response) {
   try {
-    sendJson(response, 200, { ok: true, products: readProducts().products });
+    await refreshStoreFromSupabase("products");
+    const list = readProducts().products.filter((p) => p.enabled !== false);
+    sendJson(response, 200, { ok: true, products: list });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }
@@ -861,6 +871,7 @@ async function handleAdminCreateProduct(request, response) {
       sendJson(response, 400, { ok: false, message: "Cần nhập tên sản phẩm." });
       return;
     }
+    await refreshStoreFromSupabase("products");
     const p = readProducts();
     const product = {
       id: "P-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
@@ -887,6 +898,7 @@ async function handleAdminUpdateProduct(request, response, productId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("products");
     const p = readProducts();
     const idx = p.products.findIndex((x) => x.id === productId);
     if (idx === -1) {
@@ -913,6 +925,7 @@ async function handleAdminDeleteProduct(request, response, productId) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("products");
     const p = readProducts();
     const before = p.products.length;
     p.products = p.products.filter((x) => x.id !== productId);
@@ -1039,6 +1052,7 @@ async function handleAdminToggleBlock(request, response, username) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await refreshStoreFromSupabase("accounts");
     const accountDb = readDb();
     const idx = accountDb.accounts.findIndex((a) => a.username === username);
     if (idx === -1) {
@@ -1063,6 +1077,11 @@ async function handleAdminDeleteUser(request, response, username) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     const idx = accountDb.accounts.findIndex((a) => a.username === username);
     if (idx === -1) {
@@ -1101,6 +1120,11 @@ async function handleAdminUpdateUser(request, response, username) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     const idx = accountDb.accounts.findIndex((a) => a.username === username);
     if (idx === -1) {
@@ -1199,6 +1223,11 @@ async function handleAdminUserDetail(request, response, username) {
       sendJson(response, 401, { ok: false, message: "Sai mật khẩu admin." });
       return;
     }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
     const accountDb = readDb();
     const account = accountDb.accounts.find((a) => a.username === username);
     if (!account) {
@@ -1336,6 +1365,10 @@ async function handleAdminRejectOrder(request, response, orderId) {
       sendJson(response, 404, { ok: false, message: "Không tìm thấy đơn." });
       return;
     }
+    if (db.orders[idx].status !== "claimed") {
+      sendJson(response, 400, { ok: false, message: "Chỉ có thể từ chối đơn đang chờ duyệt." });
+      return;
+    }
     db.orders[idx].status = "rejected";
     db.orders[idx].rejectedAt = Date.now();
     db.orders[idx].rejectedReason = String(data.reason || "").trim() || "Đã từ chối";
@@ -1383,7 +1416,15 @@ async function handleClaimOrder(request, response) {
     ]);
     const accountDb = readDb();
     const account = accountDb.accounts.find((a) => a.username === username);
-    const vip = getVipInfo(account ? (account.vipLevel || "VIP1") : "VIP1");
+    if (!account) {
+      sendJson(response, 404, { ok: false, message: "Không tìm thấy user." });
+      return;
+    }
+    if (account.blocked) {
+      sendJson(response, 403, { ok: false, message: "Tài khoản đã bị khóa, vui lòng liên hệ CSKH." });
+      return;
+    }
+    const vip = getVipInfo(account.vipLevel || "VIP1");
     const db = readOrders();
     // Check daily cap (today only)
     const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
@@ -1398,7 +1439,23 @@ async function handleClaimOrder(request, response) {
       sendJson(response, 409, { ok: false, message: "Bạn đã có 1 đơn đang chờ hệ thống phân phối. Vui lòng đợi." });
       return;
     }
-    // Create a placeholder claim — admin must distribute a product to fill it
+    // Priority: tiêu thụ đơn admin đã tạo sẵn cho user (assigned riêng trước, rồi đến pool chung).
+    const assignedIdx = db.orders.findIndex((o) => o.status === "available" && o.assignedTo === username);
+    const poolIdx = assignedIdx === -1
+      ? db.orders.findIndex((o) => o.status === "available" && !o.assignedTo)
+      : -1;
+    const consumeIdx = assignedIdx !== -1 ? assignedIdx : poolIdx;
+    if (consumeIdx !== -1) {
+      const existing = db.orders[consumeIdx];
+      existing.status = "claimed";
+      existing.claimedBy = username;
+      existing.claimedAt = Date.now();
+      writeOrders(db);
+      audit("order-claim", existing.id, { username, amount: existing.amount, commission: existing.commission });
+      sendJson(response, 200, { ok: true, message: "Đã nhận đơn, chờ duyệt.", order: existing });
+      return;
+    }
+    // Fallback: chưa có đơn sẵn → tạo placeholder claim_pending để admin phân phối.
     const order = {
       id: "ORD-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
       status: "claim_pending",
@@ -1494,21 +1551,30 @@ async function handleUserSubmitOrder(request, response, orderId) {
       return;
     }
     const order = db.orders[idx];
-    if (order.claimedBy !== username) {
+    // Cho phép submit khi:
+    //   - claimed bởi chính user
+    //   - approved bởi chính user (idempotent)
+    //   - available + assignedTo === user (admin tự tạo đơn cho user) → tự claim + approve trong 1 bước
+    const isAdminAssignedToUser = order.status === "available" && order.assignedTo === username;
+    if (!isAdminAssignedToUser && order.claimedBy !== username) {
       sendJson(response, 403, { ok: false, message: "Đơn này không thuộc tài khoản của bạn." });
       return;
     }
-    if (order.status !== "claimed" && order.status !== "approved") {
+    if (order.status !== "claimed" && order.status !== "approved" && !isAdminAssignedToUser) {
       sendJson(response, 400, { ok: false, message: "Đơn không ở trạng thái có thể gửi." });
       return;
     }
-    // Require user balance >= order value
-    if (order.status === "claimed") {
+    // Require user balance >= order value (chỉ check khi chưa approved)
+    if (order.status !== "approved") {
       const bal = computeBalance(username);
       const need = Number(order.amount || 0);
       if (bal.available < need) {
         sendJson(response, 400, { ok: false, message: "Số dư không khả dụng, vui lòng nạp thêm tiền để hoàn thành đơn hàng." });
         return;
+      }
+      if (isAdminAssignedToUser) {
+        order.claimedBy = username;
+        order.claimedAt = Date.now();
       }
       order.status = "approved";
       order.approvedAt = Date.now();
@@ -1559,8 +1625,13 @@ async function handleCreateDeposit(request, response) {
       refreshStoreFromSupabase("transactions"),
     ]);
     const accountDb = readDb();
-    if (!accountDb.accounts.some((a) => a.username === username)) {
+    const account = accountDb.accounts.find((a) => a.username === username);
+    if (!account) {
       sendJson(response, 400, { ok: false, message: "Không tìm thấy user." });
+      return;
+    }
+    if (account.blocked) {
+      sendJson(response, 403, { ok: false, message: "Tài khoản đã bị khóa, vui lòng liên hệ CSKH." });
       return;
     }
     const t = readTx();
@@ -1607,8 +1678,13 @@ async function handleCreateWithdraw(request, response) {
       refreshStoreFromSupabase("orders"),
     ]);
     const accountDb = readDb();
-    if (!accountDb.accounts.some((a) => a.username === username)) {
+    const account = accountDb.accounts.find((a) => a.username === username);
+    if (!account) {
       sendJson(response, 400, { ok: false, message: "Không tìm thấy user." });
+      return;
+    }
+    if (account.blocked) {
+      sendJson(response, 403, { ok: false, message: "Tài khoản đã bị khóa, vui lòng liên hệ CSKH." });
       return;
     }
     // Check available balance
@@ -1744,6 +1820,7 @@ async function handleAdminApproveTx(request, response, txId) {
     await Promise.all([
       refreshStoreFromSupabase("transactions"),
       refreshStoreFromSupabase("orders"),
+      refreshStoreFromSupabase("accounts"),
     ]);
     const t = readTx();
     const idx = t.txs.findIndex((x) => x.id === txId);
@@ -1849,9 +1926,15 @@ function serveStatic(request, response) {
       return;
     }
 
-    response.writeHead(200, {
-      "Content-Type": mimeTypes[path.extname(filePath)] || "application/octet-stream",
-    });
+    const ext = path.extname(filePath);
+    const headers = {
+      "Content-Type": mimeTypes[ext] || "application/octet-stream",
+    };
+    // Không cache HTML để sửa code là user thấy ngay; ảnh/css/js dùng cache mặc định.
+    if (ext === ".html") {
+      headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+    }
+    response.writeHead(200, headers);
     response.end(content);
   });
 }

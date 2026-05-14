@@ -1309,11 +1309,11 @@
       }
 
       function orderCardHtml(o) {
-        // Sub-types of "pending":
-        //   serverStatus="available"      => admin đã chỉ định sản phẩm → show full info
-        //   serverStatus="claim_pending"  => user vừa nhận, chờ admin phân phối → show generic + loader
-        //   serverStatus="claimed"        => user đã nhận + admin đã phân phối → show product, chờ duyệt
-        const isAdminAssigned = o.status === "pending" && o.serverStatus === "available";
+        // Server status → user-side tab:
+        //   serverStatus="available" + assignedTo => "Chờ xử lý" tab, show "Nhận đơn" button (admin tự tạo)
+        //   serverStatus="claim_pending"          => "Chờ phân phối" tab, hiện loader chờ admin phân phối sản phẩm
+        //   serverStatus="claimed"                 => "Chờ xử lý" tab, user đã nhận, có nút "Gửi đơn"
+        const isAdminAssigned = o.serverStatus === "available";
         const isClaimedWaiting = o.status === "pending" && o.serverStatus === "claim_pending";
         const isClaimedReview = o.status === "processed" && o.serverStatus === "claimed";
         const titleText = isClaimedWaiting
@@ -1333,12 +1333,10 @@
         const commissionRow = o.commission > 0
           ? `<div class="order-commission">Hoa hồng: +${formatCurrency(o.commission)}</div>`
           : "";
-        const sendOrderButton = o.status === "processed"
+        const sendOrderButton = (o.status === "processed" && o.serverStatus !== "approved")
           ? `<div class="send-order-area"><button class="send-order-button" type="button" data-order-id="${escapeHtml(o.id)}">Gửi đơn</button></div>`
           : "";
-        const acceptOrderButton = isAdminAssigned
-          ? `<div class="send-order-area"><button class="send-order-button" type="button" data-accept-order-id="${escapeHtml(o.id)}">Nhận đơn</button></div>`
-          : "";
+        const acceptOrderButton = "";
         const doneBadge = o.status === "done"
           ? `<div class="order-done-badge">
                <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2028,14 +2026,14 @@
           const serverOrders = (d.orders || []).map((o) => {
             const isSubmitted = submittedIds.has(o.id);
             // Map server status -> client tab status:
-            //   available + assignedTo  -> pending  (Chờ phân phối — admin đã gửi, user chưa nhận)
-            //   claimed                  -> pending  (Chờ phân phối — user đã nhận, chờ admin duyệt)
+            //   available + assignedTo  -> processed (Chờ xử lý — admin tự tạo đơn cho user, user bấm "Nhận đơn" để xử lý)
+            //   claim_pending            -> pending  (Chờ phân phối — user bấm "Nhận Ngay", chờ admin phân phối sản phẩm)
+            //   claimed                  -> processed (Chờ xử lý — user đã nhận, chờ admin duyệt)
             //   approved                 -> processed (Chờ xử lý — admin đã duyệt, user chưa hoàn tất)
             //   rejected                 -> processed (Đã từ chối)
             //   completed/submitted      -> done     (Hoàn Thành)
             const baseStatus =
-              o.status === "available" ? "pending"
-              : o.status === "claim_pending" ? "pending"
+              o.status === "claim_pending" ? "pending"
               : o.status === "completed" ? "done"
               : "processed";
             const status = isSubmitted && baseStatus === "processed" ? "done" : baseStatus;

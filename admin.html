@@ -720,10 +720,10 @@
               </label>
               <div class="row">
                 <label>Số tiền (₫)
-                  <input type="number" name="amount" min="1000" step="1000" placeholder="500000" required />
+                  <input type="number" name="amount" min="0" step="any" placeholder="500000" required />
                 </label>
                 <label>Hoa hồng (₫)
-                  <input type="number" name="commission" min="0" step="1000" placeholder="VD: 50000" required />
+                  <input type="number" name="commission" min="0" step="any" placeholder="VD: 50000" required />
                 </label>
               </div>
               <label>Gán cho user (tùy chọn)
@@ -801,7 +801,7 @@
                   <label style="margin:0">Tên sản phẩm <input name="title" required placeholder="VD: Tủ lạnh Casper..." /></label>
                   <label style="margin:0">URL ảnh sản phẩm <input name="img" id="productFormImg" placeholder="https://images.unsplash.com/..." /></label>
                   <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
-                    <label style="margin:0">Số tiền (₫) <input name="amount" type="number" min="0" step="1000" placeholder="VD: 500000" /></label>
+                    <label style="margin:0">Số tiền (₫) <input name="amount" type="number" min="0" step="any" placeholder="VD: 500000" /></label>
                     <button type="submit" class="btn-primary" style="width:auto;min-height:42px">+ Thêm sản phẩm</button>
                   </div>
                 </div>
@@ -877,7 +877,7 @@
               <div style="display:grid;gap:10px">
                 <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Tên sản phẩm <input name="title" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
                 <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">URL ảnh sản phẩm <input name="img" id="peImg" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
-                <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Số tiền (₫) <input name="amount" type="number" min="0" step="1000" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Số tiền (₫) <input name="amount" type="number" min="0" step="any" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
               </div>
             </div>
             <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -918,10 +918,10 @@
             </label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
               <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Số tiền (₫)
-                <input name="amount" type="number" min="1000" step="1000" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+                <input name="amount" type="number" min="0" step="any" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
               </label>
               <label style="font-size:12px;color:#64748b;display:grid;gap:6px;">Hoa hồng (₫)
-                <input name="commission" type="number" min="0" step="1000" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
+                <input name="commission" type="number" min="0" step="any" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;" />
               </label>
             </div>
             <div style="display:flex;gap:8px;justify-content:flex-end;">
@@ -1004,8 +1004,8 @@
     </div>
 
     <script>
-      let PRODUCT_PRESETS = [
-        // Fallback list (used if server has no products). Will be overwritten on load.
+      const BASE_PRODUCT_PRESETS = [
+        // Danh sách mặc định — luôn hiển thị làm mẫu nhanh, kết hợp với sản phẩm admin tự thêm.
         // Đồ nhỏ < 100k
         { title: "Khẩu trang y tế 4 lớp hộp 50 cái", img: "https://images.unsplash.com/photo-1586942593568-29ace4796bf6?auto=format&fit=crop&w=520&q=80", amount: 35000 },
         { title: "Bút bi Thiên Long combo 10 cây", img: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=520&q=80", amount: 45000 },
@@ -1067,6 +1067,8 @@
         { title: "Laptop Asus Vivobook 15 OLED i5", img: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=520&q=80", amount: 15990000 },
         { title: "iPhone 15 Pro Max 256GB", img: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=520&q=80", amount: 32990000 }
       ];
+
+      let PRODUCT_PRESETS = BASE_PRODUCT_PRESETS.slice();
 
       const KEY = "tiki.adminPw";
       let adminPw = sessionStorage.getItem(KEY) || "";
@@ -1420,12 +1422,13 @@
           const r = await api("/api/admin/products/list");
           cachedProducts = r.products || [];
           renderProducts();
-          // Sync to "Tạo đơn mới" / "Phân phối" quick presets — only enabled + with amount
+          // Sync to "Tạo đơn mới" / "Phân phối" quick presets — DB products xếp trước, sau đó là danh sách mặc định.
           const enabledWithPrice = cachedProducts.filter((p) => p.enabled !== false && Number(p.amount || 0) > 0);
-          if (enabledWithPrice.length > 0) {
-            PRODUCT_PRESETS = enabledWithPrice.map((p) => ({ title: p.title, img: p.img || "", amount: Number(p.amount) || 0 }));
-            renderQuickProducts();
-          }
+          const fromDb = enabledWithPrice.map((p) => ({ title: p.title, img: p.img || "", amount: Number(p.amount) || 0 }));
+          const seen = new Set(fromDb.map((p) => p.title.trim().toLowerCase()));
+          const merged = fromDb.concat(BASE_PRODUCT_PRESETS.filter((p) => !seen.has(p.title.trim().toLowerCase())));
+          PRODUCT_PRESETS = merged;
+          renderQuickProducts();
         } catch (e) {}
       }
       function renderProducts() {
