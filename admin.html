@@ -136,6 +136,43 @@
       .order-row.is-submitted { background: #e0f2fe; border-color: #7dd3fc; }
       .order-row.is-approved { background: #ecfdf5; border-color: #bbf7d0; }
       .order-row.is-rejected { background: #fef2f2; border-color: #fecaca; opacity: 0.85; }
+      .order-reject-reason {
+        grid-column: 1 / -1;
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: rgba(220, 38, 38, 0.06);
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #991b1b;
+        line-height: 1.45;
+      }
+      .order-reject-reason small { color: #94a3b8; margin-left: 4px; }
+      .btn-bulk-unfreeze {
+        padding: 9px 16px;
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 6px 14px rgba(14, 165, 233, 0.28);
+        white-space: nowrap;
+      }
+      .btn-bulk-unfreeze:hover { filter: brightness(1.06); }
+      .btn-bulk-unfreeze:disabled { opacity: 0.6; cursor: not-allowed; }
+      .btn-bulk-unfreeze.is-hidden { display: none; }
+      .btn-bulk-unfreeze #bulkUnfreezeCount {
+        display: inline-grid;
+        place-items: center;
+        min-width: 22px; height: 22px;
+        padding: 0 6px;
+        margin-left: 4px;
+        background: rgba(255,255,255,0.28);
+        border-radius: 11px;
+        font-size: 11px;
+        font-weight: 800;
+      }
       .order-thumb {
         width: 56px; height: 56px;
         border-radius: 8px;
@@ -926,7 +963,12 @@
           </section>
 
           <section class="card">
-            <h2>Danh sách đơn</h2>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+              <h2 style="margin:0">Danh sách đơn</h2>
+              <button type="button" id="bulkUnfreezeBtn" class="btn-bulk-unfreeze is-hidden" title="Duyệt dã đông tất cả đơn đang chờ">
+                ❄ Dã đông toàn bộ <span id="bulkUnfreezeCount"></span>
+              </button>
+            </div>
             <input type="search" id="searchOrders" placeholder="🔍 Tìm theo mã đơn / sản phẩm / @username..." class="search-input" />
             <div class="filter-bar" id="filterBar">
               <button data-filter="all" class="is-active">Tất cả <span class="badge-count" id="cntAll" style="display:none">0</span></button>
@@ -2763,6 +2805,9 @@
           const amountBlock = o.status === "claim_pending"
             ? `<div class="order-amount" style="color:#94a3b8">—</div>`
             : `<div class="order-amount">${fmt(o.amount)}<small>+${fmt(o.commission)}</small></div>`;
+          const rejectedBlock = (o.status === "rejected" && o.rejectedReason)
+            ? `<div class="order-reject-reason"><strong>📝 Lý do từ chối:</strong> ${o.rejectedReason}${o.rejectedAt ? ` <small>• ${fmtTime(o.rejectedAt)}</small>` : ''}</div>`
+            : "";
           return `
             <div class="order-row is-${o.status}">
               <div class="order-thumb" style="background-image:url('${o.productImg || ''}')"></div>
@@ -2775,6 +2820,7 @@
                 ${amountBlock}
                 <div class="order-actions" style="margin-top:8px">${actions}</div>
               </div>
+              ${rejectedBlock}
             </div>
           `;
         }).join("");
@@ -2798,7 +2844,24 @@
                 }
                 await api(`/api/admin/orders/${id}/approve`);
               }
-              else if (act === "reject") await api(`/api/admin/orders/${id}/reject`, { reason: "Admin từ chối" });
+              else if (act === "reject") {
+                const ord = (window.__lastOrders || []).find((o) => o.id === id);
+                const ctxLine = ord ? `Đơn ${id}${ord.productTitle ? ' • ' + ord.productTitle : ''} của @${ord.claimedBy || '—'}` : `Đơn ${id}`;
+                const reason = await appPrompt({
+                  title: "Từ chối đơn hàng",
+                  message: ctxLine,
+                  label: "Lý do từ chối (sẽ hiển thị cho user)",
+                  defaultValue: "",
+                  placeholder: "VD: Đơn không hợp lệ, sai thông tin, vi phạm chính sách…",
+                  confirmText: "Từ chối",
+                  confirmStyle: "danger",
+                  icon: "✕",
+                  iconKind: "danger",
+                  validator: (v) => (v && v.trim() ? null : "Vui lòng nhập lý do từ chối")
+                });
+                if (reason == null) return;
+                await api(`/api/admin/orders/${id}/reject`, { reason: reason.trim() });
+              }
               else if (act === "delete") {
                 const ok = await appConfirm({
                   title: "Xoá đơn hàng",
@@ -2858,6 +2921,18 @@
           setBadge("#cntApproved", approved);
           setBadge("#cntRejected", rejected);
           setBadge("#ordersBadge", claimed + claimPending + submitted);
+
+          // Show/hide nút "Dã đông toàn bộ" khi có đơn submitted
+          const bulkBtn = document.querySelector("#bulkUnfreezeBtn");
+          const bulkCount = document.querySelector("#bulkUnfreezeCount");
+          if (bulkBtn) {
+            if (submitted > 0) {
+              bulkBtn.classList.remove("is-hidden");
+              if (bulkCount) bulkCount.textContent = submitted;
+            } else {
+              bulkBtn.classList.add("is-hidden");
+            }
+          }
         } catch (e) {
           if (String(e.message).includes("admin")) {
             sessionStorage.removeItem(KEY);
@@ -2876,6 +2951,43 @@
         filterBar.querySelectorAll("button").forEach((x) => x.classList.toggle("is-active", x === b));
         refresh();
       });
+
+      // Nút "Dã đông toàn bộ" — duyệt mọi đơn submitted trong 1 lần
+      const bulkUnfreezeBtn = document.querySelector("#bulkUnfreezeBtn");
+      if (bulkUnfreezeBtn) {
+        bulkUnfreezeBtn.addEventListener("click", async () => {
+          const submittedOrders = (window.__lastOrders || []).filter((o) => o.status === "submitted");
+          if (submittedOrders.length === 0) { showToast("Không có đơn nào chờ dã đông"); return; }
+          const totalAmount = submittedOrders.reduce((s, o) => s + Number(o.amount || 0), 0);
+          const totalCommission = submittedOrders.reduce((s, o) => s + Number(o.commission || 0), 0);
+          const ok = await appConfirm({
+            title: "Dã đông toàn bộ đơn",
+            message: `Duyệt dã đông ${submittedOrders.length} đơn cùng lúc?\n\nTổng tiền hoàn về user: ${totalAmount.toLocaleString("vi-VN")} ₫\nTổng hoa hồng phát ra: ${totalCommission.toLocaleString("vi-VN")} ₫`,
+            confirmText: "Dã đông tất cả",
+            confirmStyle: "success",
+            icon: "❄",
+            iconKind: "success"
+          });
+          if (!ok) return;
+          bulkUnfreezeBtn.disabled = true;
+          const origText = bulkUnfreezeBtn.innerHTML;
+          bulkUnfreezeBtn.innerHTML = "Đang xử lý…";
+          let succeeded = 0, failed = 0;
+          for (const o of submittedOrders) {
+            try {
+              await api(`/api/admin/orders/${o.id}/approve`);
+              succeeded++;
+            } catch (e) {
+              failed++;
+            }
+          }
+          bulkUnfreezeBtn.disabled = false;
+          bulkUnfreezeBtn.innerHTML = origText;
+          showToast(`✓ Đã dã đông ${succeeded}/${submittedOrders.length} đơn${failed > 0 ? ` (${failed} lỗi)` : ""}`);
+          refresh();
+          if (typeof loadDashboard === "function") loadDashboard();
+        });
+      }
 
       createForm.addEventListener("submit", async (e) => {
         e.preventDefault();
