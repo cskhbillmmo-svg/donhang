@@ -1,19 +1,34 @@
 {
   "txs": [
     {
+      "id": "TX-EAE4LX",
+      "type": "adjustment",
+      "amount": -7897900,
+      "reason": "Sai sót cần điều chỉnh",
+      "status": "approved",
+      "bankInfo": null,
+      "username": "buingoc108",
+      "createdAt": 1778874686003,
+      "approvedAt": 1778874686003,
+      "approvedBy": "admin",
+      "rejectedAt": null,
+      "paymentMethod": null,
+      "rejectedReason": null
+    },
+    {
       "id": "TX-BM4QCR",
       "type": "adjustment",
-      "username": "demoref628915715000",
       "amount": 100000,
-      "paymentMethod": null,
-      "bankInfo": null,
       "reason": "Test thu?ng admin",
       "status": "approved",
-      "rejectedReason": null,
+      "bankInfo": null,
+      "username": "demoref628915715000",
       "createdAt": 1778874595529,
       "approvedAt": 1778874595529,
+      "approvedBy": "admin",
       "rejectedAt": null,
-      "approvedBy": "admin"
+      "paymentMethod": null,
+      "rejectedReason": null
     },
     {
       "id": "TX-04VZT7",

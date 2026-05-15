@@ -1,57 +1,13 @@
 {
   "logs": [
     {
-      "id": "AL-1778874595530-709z",
-      "ts": 1778874595530,
-      "action": "user-add-balance",
-      "target": "demoref628915715000",
+      "id": "AL-1778874686005-lnsc",
+      "ts": 1778874686005,
+      "action": "user-sub-balance",
+      "target": "buingoc108",
       "details": {
-        "amount": 100000,
-        "reason": "Test thu?ng admin"
-      }
-    },
-    {
-      "id": "AL-1778874245255-m0zt",
-      "ts": 1778874245255,
-      "action": "order-create",
-      "target": "ORD-0E1ZUK",
-      "details": {
-        "productTitle": "TEST INSUFFICIENT",
-        "amount": 20000000,
-        "assignedTo": "buingoc108"
-      }
-    },
-    {
-      "id": "AL-1778874230827-78zg",
-      "ts": 1778874230827,
-      "action": "order-approve-direct",
-      "target": "ORD-YPUUV3",
-      "details": {
-        "user": "buingoc108",
-        "amount": 500000,
-        "commission": 25000
-      }
-    },
-    {
-      "id": "AL-1778874220191-pkmg",
-      "ts": 1778874220191,
-      "action": "order-claim",
-      "target": "ORD-YPUUV3",
-      "details": {
-        "username": "buingoc108",
-        "amount": 500000,
-        "commission": 25000
-      }
-    },
-    {
-      "id": "AL-1778874208240-wl0h",
-      "ts": 1778874208240,
-      "action": "order-create",
-      "target": "ORD-YPUUV3",
-      "details": {
-        "productTitle": "TEST CLAIM-APPROVE FLOW",
-        "amount": 500000,
-        "assignedTo": "buingoc108"
+        "amount": -7897900,
+        "reason": "Sai sót cần điều chỉnh"
       }
     },
     {

@@ -1286,10 +1286,22 @@ async function handleAdminListUsers(request, response) {
     ]);
     const accountDb = readDb();
     const orderDb = readOrders();
+    const txDb = readTx();
     const users = accountDb.accounts.map((a) => {
       const myOrders = orderDb.orders.filter((o) => o.claimedBy === a.username);
       const approved = myOrders.filter((o) => o.status === "approved");
       const totalCommission = approved.reduce((s, o) => s + (o.commission || 0), 0);
+      // Tx stats: tổng nạp, tổng rút, tổng hoa hồng giới thiệu
+      const myTxs = txDb.txs.filter((t) => t.username === a.username);
+      const totalDeposit = myTxs
+        .filter((t) => t.type === "deposit" && t.status === "approved")
+        .reduce((s, t) => s + Number(t.amount || 0), 0);
+      const totalWithdraw = myTxs
+        .filter((t) => t.type === "withdraw" && t.status === "approved")
+        .reduce((s, t) => s + Number(t.amount || 0), 0);
+      const totalReferralBonus = myTxs
+        .filter((t) => t.type === "referral-bonus" && t.status === "approved")
+        .reduce((s, t) => s + Number(t.amount || 0), 0);
       const bal = computeBalance(a.username);
       const vipLevel = a.vipLevel || "VIP1";
       return {
@@ -1301,6 +1313,9 @@ async function handleAdminListUsers(request, response) {
         orderCount: myOrders.length,
         approvedCount: approved.length,
         totalCommission,
+        totalDeposit,
+        totalWithdraw,
+        totalReferralBonus,
         balance: bal,
         vipLevel,
         vip: getVipInfo(vipLevel),

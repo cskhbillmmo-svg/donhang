@@ -258,15 +258,48 @@
       .user-list { display: grid; gap: 10px; }
       .user-row {
         display: grid;
-        grid-template-columns: 44px 1fr auto;
+        grid-template-columns: 44px 1fr;
         gap: 12px;
-        align-items: center;
+        align-items: start;
         padding: 12px;
         border: 1px solid var(--line);
         border-radius: 10px;
         background: #fff;
       }
       .user-row.is-blocked { background: #fef2f2; border-color: #fecaca; opacity: 0.85; }
+      .user-finance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 8px;
+        margin: 10px 0 8px;
+      }
+      .ufg-cell {
+        padding: 8px 10px;
+        background: #f8fafc;
+        border: 1px solid #e6eaf2;
+        border-radius: 8px;
+      }
+      .ufg-cell small {
+        display: block;
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .ufg-cell strong {
+        display: block;
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--ink);
+        line-height: 1.2;
+      }
+      .ufg-cell .ufg-sub {
+        display: block;
+        margin-top: 2px;
+        font-size: 10.5px;
+        color: #94a3b8;
+        font-weight: 500;
+      }
       .vip-pill {
         display: inline-block;
         padding: 2px 8px;
@@ -2685,7 +2718,7 @@
         userCountEl.textContent = q ? `${filtered.length}/${cachedUsers.length}` : cachedUsers.length;
         const hash = JSON.stringify({
           q,
-          items: filtered.map((u) => [u.username, u.fullName || "", u.phone || "", u.vipLevel || "", (u.balance && u.balance.available) || 0, (u.balance && u.balance.frozen) || 0, u.blocked ? 1 : 0, u.totalCommission || 0, u.approvedCount || 0, u.orderCount || 0])
+          items: filtered.map((u) => [u.username, u.fullName || "", u.phone || "", u.vipLevel || "", (u.balance && u.balance.available) || 0, (u.balance && u.balance.frozen) || 0, (u.balance && u.balance.total) || 0, u.blocked ? 1 : 0, u.totalCommission || 0, u.totalDeposit || 0, u.totalWithdraw || 0, u.totalReferralBonus || 0, u.approvedCount || 0, u.orderCount || 0])
         });
         if (hash === window.__lastUsersHash) return;
         window.__lastUsersHash = hash;
@@ -2702,13 +2735,22 @@
           const vipLevel = u.vipLevel || "VIP1";
           const vipRate = u.vip ? (u.vip.rate * 100).toFixed(1) : "0.5";
           const blockedCls = u.blocked ? " is-blocked" : "";
+          const fmtMoney = (n) => Number(n || 0).toLocaleString("vi-VN") + " ₫";
           return `
             <div class="user-row${blockedCls}">
               <div class="user-avatar">${initials}</div>
               <div class="user-meta">
                 <strong>${u.fullName} <small style="color:#94a3b8;font-weight:500">(@${u.username})</small> <span class="vip-pill lvl-${vipLevel}">${vipLevel} • ${vipRate}%</span></strong>
                 <small>📞 ${u.phone} • Tham gia ${new Date(u.createdAt).toLocaleDateString("vi-VN")}</small>
-                <small>💰 Số dư: <strong style="color:var(--ink)">${bal.available.toLocaleString("vi-VN")} ₫</strong>${bal.frozen > 0 ? ' • Đóng băng: <strong style="color:#d97706">' + bal.frozen.toLocaleString("vi-VN") + ' ₫</strong>' : ''}</small>
+                <div class="user-finance-grid">
+                  <div class="ufg-cell"><small>💼 Tổng tài sản</small><strong>${fmtMoney(bal.total)}</strong></div>
+                  <div class="ufg-cell"><small>💰 Số dư khả dụng</small><strong style="color:var(--green)">${fmtMoney(bal.available)}</strong></div>
+                  <div class="ufg-cell"><small>❄ Đóng băng</small><strong style="color:#d97706">${fmtMoney(bal.frozen)}</strong></div>
+                  <div class="ufg-cell"><small>🎁 Hoa hồng đơn</small><strong style="color:#2c5cff">${fmtMoney(u.totalCommission)}</strong><span class="ufg-sub">${u.approvedCount}/${u.orderCount} đơn duyệt</span></div>
+                  <div class="ufg-cell"><small>⬇ Tổng nạp</small><strong style="color:var(--green)">${fmtMoney(u.totalDeposit)}</strong></div>
+                  <div class="ufg-cell"><small>⬆ Tổng rút</small><strong style="color:var(--red)">${fmtMoney(u.totalWithdraw)}</strong></div>
+                  <div class="ufg-cell"><small>👥 Tiền giới thiệu</small><strong style="color:#9333ea">${fmtMoney(u.totalReferralBonus)}</strong></div>
+                </div>
                 <div class="user-actions">
                   <button class="btn-secondary" data-uact="detail" data-username="${u.username}">👁 Chi tiết</button>
                   <button class="btn-secondary" data-uact="edit" data-username="${u.username}">✏️ Sửa</button>
@@ -2718,10 +2760,6 @@
                   <button class="${u.blocked ? 'btn-success' : 'btn-secondary'}" data-uact="block" data-username="${u.username}">${u.blocked ? '🔓 Mở khóa' : '🔒 Khóa'}</button>
                   <button class="btn-danger" data-uact="del" data-username="${u.username}">🗑 Xóa</button>
                 </div>
-              </div>
-              <div class="user-stats">
-                <strong>${u.totalCommission.toLocaleString("vi-VN")} ₫</strong>
-                <span>${u.approvedCount}/${u.orderCount} đơn duyệt</span>
               </div>
             </div>
           `;

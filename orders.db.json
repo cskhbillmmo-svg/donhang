@@ -2,19 +2,19 @@
   "orders": [
     {
       "id": "ORD-0E1ZUK",
-      "status": "available",
-      "productTitle": "TEST INSUFFICIENT",
-      "productImg": "",
       "amount": 20000000,
-      "commissionRate": 0.005,
-      "commission": 100000,
-      "assignedTo": "buingoc108",
-      "claimedBy": null,
+      "status": "available",
       "claimedAt": null,
+      "claimedBy": null,
+      "createdAt": 1778874245254,
       "approvedAt": null,
+      "assignedTo": "buingoc108",
+      "commission": 100000,
+      "productImg": "",
       "rejectedAt": null,
-      "rejectedReason": null,
-      "createdAt": 1778874245254
+      "productTitle": "TEST INSUFFICIENT",
+      "commissionRate": 0.005,
+      "rejectedReason": null
     },
     {
       "id": "ORD-YPUUV3",
