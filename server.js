@@ -238,9 +238,6 @@ const VIP_RANK = { VIP1: 1, VIP2: 2, VIP3: 3, VIP4: 4 };
 function computeBalance(username) {
   const t = readTx();
   const o = readOrders();
-  const accountDb = readDb();
-  const account = accountDb.accounts.find((a) => a.username === username);
-  const userVipRank = VIP_RANK[(account && account.vipLevel) || "VIP1"] || 1;
   let total = INITIAL_BALANCE;
   let frozen = 0;
   let referralLocked = 0;
@@ -252,20 +249,28 @@ function computeBalance(username) {
     if (tx.type === "adjustment" && tx.status === "approved") total += tx.amount; // amount may be negative
     if (tx.type === "referral-bonus" && tx.status === "approved") {
       total += tx.amount;
-      const requiredRank = VIP_RANK[tx.lockedUntilVip || "VIP2"] || 2;
-      if (userVipRank < requiredRank) {
-        referralLocked += tx.amount;
-      }
+      // Bonus luôn locked đến khi user claim (chỉ claim được khi đạt 10 lượt giới thiệu)
+      if (!tx.claimedAt) referralLocked += tx.amount;
+    }
+    // Khi user "rút hoa hồng" → tạo tx referral-claim, chờ admin duyệt → đóng băng
+    if (tx.type === "referral-claim" && tx.status === "pending") {
+      frozen += tx.amount;
     }
   }
-  // Approved orders: add both order value + commission into total, all of it is frozen
+  // Orders that affect balance:
+  //   submitted = user đã gửi đơn, đang chờ admin duyệt dã đông
+  //               → khoá amount (từ số dư hiện tại) + cộng commission vào total nhưng cũng khoá
+  //   approved  = admin đã duyệt dã đông → amount quay lại khả dụng + cộng commission khả dụng
   let taskFrozen = 0;
   for (const ord of o.orders) {
-    if (ord.claimedBy === username && ord.status === "approved") {
-      const amt = Number(ord.amount || 0);
-      const com = Number(ord.commission || 0);
-      total += amt + com;
+    if (ord.claimedBy !== username) continue;
+    const amt = Number(ord.amount || 0);
+    const com = Number(ord.commission || 0);
+    if (ord.status === "submitted") {
+      total += com;
       taskFrozen += amt + com;
+    } else if (ord.status === "approved") {
+      total += com;
     }
   }
   const totalFrozen = frozen + referralLocked + taskFrozen;
@@ -392,7 +397,8 @@ function audit(action, target, details) {
 }
 
 const REFERRAL_BONUS = 100000; // 100k VND auto-credit to referrer
-const REFERRAL_UNLOCK_VIP = "VIP2"; // referrer must reach this VIP to withdraw bonus
+const REFERRAL_MIN_COUNT = 10; // Cần giới thiệu đủ số lượng này mới mở khóa rút hoa hồng (10 × 100k = 1.000.000 ₫)
+const REFERRAL_MIN_BONUS = REFERRAL_MIN_COUNT * REFERRAL_BONUS;
 
 function generateReferralCode(seed) {
   // Deterministic 6-digit code derived from account id (or random if seed empty)
@@ -463,7 +469,7 @@ async function handleRegister(request, response) {
     db.accounts.push(newAccount);
     writeDb(db);
 
-    // Credit referral bonus to referrer (locked until they reach VIP2)
+    // Credit referral bonus to referrer (locked until they referred >= REFERRAL_MIN_COUNT people AND claimed)
     if (referrer) {
       const t = readTx();
       t.txs.unshift({
@@ -475,7 +481,7 @@ async function handleRegister(request, response) {
         bankInfo: null,
         reason: `Hoa hồng giới thiệu @${username}`,
         referredUser: username,
-        lockedUntilVip: REFERRAL_UNLOCK_VIP,
+        claimedAt: null,
         status: "approved",
         rejectedReason: null,
         createdAt: Date.now(),
@@ -983,11 +989,14 @@ async function handleAdminDashboard(request, response) {
     accountDb.accounts.forEach((a) => { usersByVip[a.vipLevel || "VIP1"] = (usersByVip[a.vipLevel || "VIP1"] || 0) + 1; });
 
     const orders = orderDb.orders;
-    const ordersByStatus = { available: 0, claimed: 0, approved: 0, rejected: 0 };
+    const ordersByStatus = { available: 0, claim_pending: 0, claimed: 0, submitted: 0, approved: 0, rejected: 0 };
     orders.forEach((o) => { ordersByStatus[o.status] = (ordersByStatus[o.status] || 0) + 1; });
     const ordersToday = orders.filter((o) => o.createdAt >= startOfDay.getTime()).length;
     const totalOrderAmount = orders.filter((o) => o.status === "approved").reduce((s, o) => s + o.amount, 0);
     const totalCommissionPaid = orders.filter((o) => o.status === "approved").reduce((s, o) => s + (o.commission || 0), 0);
+    // Tổng tiền đang đóng băng = sum(amount + commission) các đơn submitted
+    const submittedOrders = orders.filter((o) => o.status === "submitted");
+    const totalFrozenAmount = submittedOrders.reduce((s, o) => s + Number(o.amount || 0) + Number(o.commission || 0), 0);
 
     const txs = txDb.txs;
     const txByStatus = { pending: 0, approved: 0, rejected: 0 };
@@ -1033,7 +1042,7 @@ async function handleAdminDashboard(request, response) {
       ok: true,
       stats: {
         totalUsers, blockedUsers, usersByVip,
-        ordersByStatus, ordersToday, totalOrderAmount, totalCommissionPaid,
+        ordersByStatus, ordersToday, totalOrderAmount, totalCommissionPaid, totalFrozenAmount,
         txByStatus, totalDeposited, totalWithdrawn, pendingDeposit, pendingWithdraw, adjustmentTotal,
       },
       topUsers,
@@ -1336,15 +1345,18 @@ async function handleAdminApproveOrder(request, response, orderId) {
       sendJson(response, 404, { ok: false, message: "Không tìm thấy đơn." });
       return;
     }
-    if (db.orders[idx].status !== "claimed") {
+    const prevStatus = db.orders[idx].status;
+    if (prevStatus !== "claimed" && prevStatus !== "submitted") {
       sendJson(response, 400, { ok: false, message: "Đơn không ở trạng thái chờ duyệt." });
       return;
     }
     db.orders[idx].status = "approved";
     db.orders[idx].approvedAt = Date.now();
     writeOrders(db);
-    audit("order-approve", orderId, { user: db.orders[idx].claimedBy, amount: db.orders[idx].amount });
-    sendJson(response, 200, { ok: true, message: "Đã duyệt đơn.", order: db.orders[idx] });
+    const auditAction = prevStatus === "submitted" ? "order-unfreeze" : "order-approve";
+    audit(auditAction, orderId, { user: db.orders[idx].claimedBy, amount: db.orders[idx].amount, commission: db.orders[idx].commission });
+    const msg = prevStatus === "submitted" ? "Đã duyệt dã đông, tiền đã hoàn về số dư khả dụng." : "Đã duyệt đơn.";
+    sendJson(response, 200, { ok: true, message: msg, order: db.orders[idx] });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }
@@ -1365,7 +1377,7 @@ async function handleAdminRejectOrder(request, response, orderId) {
       sendJson(response, 404, { ok: false, message: "Không tìm thấy đơn." });
       return;
     }
-    if (db.orders[idx].status !== "claimed") {
+    if (db.orders[idx].status !== "claimed" && db.orders[idx].status !== "submitted") {
       sendJson(response, 400, { ok: false, message: "Chỉ có thể từ chối đơn đang chờ duyệt." });
       return;
     }
@@ -1552,36 +1564,43 @@ async function handleUserSubmitOrder(request, response, orderId) {
     }
     const order = db.orders[idx];
     // Cho phép submit khi:
-    //   - claimed bởi chính user
-    //   - approved bởi chính user (idempotent)
-    //   - available + assignedTo === user (admin tự tạo đơn cho user) → tự claim + approve trong 1 bước
+    //   - claimed bởi chính user → submitted (chờ admin duyệt dã đông)
+    //   - submitted bởi chính user (idempotent)
+    //   - approved bởi chính user (idempotent — admin đã duyệt rồi)
+    //   - available + assignedTo === user (admin tự tạo đơn) → tự claim + submitted trong 1 bước
     const isAdminAssignedToUser = order.status === "available" && order.assignedTo === username;
     if (!isAdminAssignedToUser && order.claimedBy !== username) {
       sendJson(response, 403, { ok: false, message: "Đơn này không thuộc tài khoản của bạn." });
       return;
     }
-    if (order.status !== "claimed" && order.status !== "approved" && !isAdminAssignedToUser) {
+    if (order.status === "approved") {
+      sendJson(response, 200, { ok: true, message: "Đơn đã được duyệt.", order });
+      return;
+    }
+    if (order.status === "submitted") {
+      sendJson(response, 200, { ok: true, message: "Đơn đã gửi, đang chờ admin duyệt dã đông.", order });
+      return;
+    }
+    if (order.status !== "claimed" && !isAdminAssignedToUser) {
       sendJson(response, 400, { ok: false, message: "Đơn không ở trạng thái có thể gửi." });
       return;
     }
-    // Require user balance >= order value (chỉ check khi chưa approved)
-    if (order.status !== "approved") {
-      const bal = computeBalance(username);
-      const need = Number(order.amount || 0);
-      if (bal.available < need) {
-        sendJson(response, 400, { ok: false, message: "Số dư không khả dụng, vui lòng nạp thêm tiền để hoàn thành đơn hàng." });
-        return;
-      }
-      if (isAdminAssignedToUser) {
-        order.claimedBy = username;
-        order.claimedAt = Date.now();
-      }
-      order.status = "approved";
-      order.approvedAt = Date.now();
-      writeOrders(db);
-      audit("order-self-submit", orderId, { user: username, amount: order.amount, commission: order.commission });
+    // Require user balance >= order value
+    const bal = computeBalance(username);
+    const need = Number(order.amount || 0);
+    if (bal.available < need) {
+      sendJson(response, 400, { ok: false, message: "Số dư không khả dụng, vui lòng nạp thêm tiền để hoàn thành đơn hàng." });
+      return;
     }
-    sendJson(response, 200, { ok: true, message: "Đã gửi đơn thành công.", order });
+    if (isAdminAssignedToUser) {
+      order.claimedBy = username;
+      order.claimedAt = Date.now();
+    }
+    order.status = "submitted";
+    order.submittedAt = Date.now();
+    writeOrders(db);
+    audit("order-submit", orderId, { user: username, amount: order.amount, commission: order.commission });
+    sendJson(response, 200, { ok: true, message: "Đã gửi đơn, đang chờ admin duyệt dã đông.", order });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }
@@ -1740,30 +1759,115 @@ async function handleReferralInfo(request, response, username) {
         createdAt: a.createdAt,
       }))
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const referralCount = referrals.length;
     const t = readTx();
     const bonusTxs = t.txs
       .filter((x) => x.username === username && x.type === "referral-bonus" && x.status === "approved")
       .sort((a, b) => b.createdAt - a.createdAt);
     const totalBonus = bonusTxs.reduce((s, x) => s + x.amount, 0);
-    const myVipRank = VIP_RANK[me.vipLevel || "VIP1"] || 1;
-    const requiredRank = VIP_RANK[REFERRAL_UNLOCK_VIP] || 2;
-    const unlocked = myVipRank >= requiredRank;
+    const unclaimedBonus = bonusTxs
+      .filter((x) => !x.claimedAt)
+      .reduce((s, x) => s + x.amount, 0);
+    // Tìm claim đang pending
+    const pendingClaim = t.txs.find((x) => x.username === username && x.type === "referral-claim" && x.status === "pending");
+    const unlocked = referralCount >= REFERRAL_MIN_COUNT;
     sendJson(response, 200, {
       ok: true,
       referralCode: me.referralCode,
       vipLevel: me.vipLevel || "VIP1",
-      bonusUnlocked: unlocked,
-      requiredVip: REFERRAL_UNLOCK_VIP,
       bonusPerReferral: REFERRAL_BONUS,
+      requiredCount: REFERRAL_MIN_COUNT,
+      requiredAmount: REFERRAL_MIN_BONUS,
+      referralCount,
       totalBonus,
-      lockedBonus: unlocked ? 0 : totalBonus,
+      unclaimedBonus,
+      lockedBonus: unclaimedBonus,
+      bonusUnlocked: unlocked,
+      canClaim: unlocked && unclaimedBonus > 0 && !pendingClaim,
+      pendingClaim: pendingClaim ? { id: pendingClaim.id, amount: pendingClaim.amount, createdAt: pendingClaim.createdAt } : null,
       referrals,
       bonusHistory: bonusTxs.map((x) => ({
         id: x.id,
         amount: x.amount,
         referredUser: x.referredUser,
+        claimedAt: x.claimedAt || null,
         createdAt: x.createdAt,
       })),
+    });
+  } catch (e) {
+    sendJson(response, 400, { ok: false, message: "Lỗi." });
+  }
+}
+
+// User: yêu cầu rút hoa hồng giới thiệu (đủ 10 lượt mới được claim)
+async function handleReferralClaim(request, response) {
+  try {
+    const data = await readJson(request);
+    const username = String(data.username || "").trim().toLowerCase();
+    if (!username) {
+      sendJson(response, 400, { ok: false, message: "Thiếu username." });
+      return;
+    }
+    await Promise.all([
+      refreshStoreFromSupabase("accounts"),
+      refreshStoreFromSupabase("transactions"),
+    ]);
+    const accountDb = readDb();
+    const account = accountDb.accounts.find((a) => a.username === username);
+    if (!account) {
+      sendJson(response, 404, { ok: false, message: "Không tìm thấy user." });
+      return;
+    }
+    if (account.blocked) {
+      sendJson(response, 403, { ok: false, message: "Tài khoản đã bị khóa." });
+      return;
+    }
+    const referralCount = accountDb.accounts.filter((a) => a.referredBy === username).length;
+    if (referralCount < REFERRAL_MIN_COUNT) {
+      sendJson(response, 400, { ok: false, message: `Cần đủ ${REFERRAL_MIN_COUNT} lượt giới thiệu (hiện có ${referralCount}).` });
+      return;
+    }
+    const t = readTx();
+    // Đảm bảo không có claim pending nào trước đó
+    const existingPending = t.txs.find((x) => x.username === username && x.type === "referral-claim" && x.status === "pending");
+    if (existingPending) {
+      sendJson(response, 409, { ok: false, message: "Bạn đã có 1 yêu cầu rút hoa hồng đang chờ duyệt." });
+      return;
+    }
+    // Lấy tất cả bonus chưa claim
+    const unclaimedBonuses = t.txs.filter((x) => x.username === username && x.type === "referral-bonus" && x.status === "approved" && !x.claimedAt);
+    if (unclaimedBonuses.length === 0) {
+      sendJson(response, 400, { ok: false, message: "Không có hoa hồng nào để rút." });
+      return;
+    }
+    const totalAmount = unclaimedBonuses.reduce((s, x) => s + x.amount, 0);
+    const now = Date.now();
+    // Mark bonuses as claimed
+    unclaimedBonuses.forEach((x) => { x.claimedAt = now; });
+    // Tạo claim tx pending
+    const claimTx = {
+      id: "TX-" + Math.random().toString(36).slice(2, 8).toUpperCase(),
+      type: "referral-claim",
+      username,
+      amount: totalAmount,
+      paymentMethod: null,
+      bankInfo: null,
+      reason: `Rút hoa hồng giới thiệu (${unclaimedBonuses.length} lượt)`,
+      status: "pending",
+      rejectedReason: null,
+      createdAt: now,
+      approvedAt: null,
+      rejectedAt: null,
+      approvedBy: null,
+      relatedBonusIds: unclaimedBonuses.map((x) => x.id),
+    };
+    t.txs.unshift(claimTx);
+    writeTx(t);
+    audit("referral-claim", username, { amount: totalAmount, count: unclaimedBonuses.length });
+    sendJson(response, 201, {
+      ok: true,
+      message: `Đã tạo yêu cầu rút ${totalAmount.toLocaleString("vi-VN")} ₫, đang chờ admin duyệt dã đông.`,
+      tx: claimTx,
     });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
@@ -1870,6 +1974,13 @@ async function handleAdminRejectTx(request, response, txId) {
     t.txs[idx].status = "rejected";
     t.txs[idx].rejectedAt = Date.now();
     t.txs[idx].rejectedReason = String(data.reason || "Admin từ chối").trim();
+    // Nếu là referral-claim bị từ chối → rollback claimedAt để user có thể claim lại
+    if (t.txs[idx].type === "referral-claim" && Array.isArray(t.txs[idx].relatedBonusIds)) {
+      const ids = new Set(t.txs[idx].relatedBonusIds);
+      t.txs.forEach((x) => {
+        if (ids.has(x.id) && x.type === "referral-bonus") x.claimedAt = null;
+      });
+    }
     writeTx(t);
     audit("tx-reject", txId, { type: t.txs[idx].type, reason: t.txs[idx].rejectedReason, user: t.txs[idx].username });
     sendJson(response, 200, { ok: true, message: "Đã từ chối giao dịch.", tx: t.txs[idx] });
@@ -2038,6 +2149,7 @@ function appHandler(request, response) {
   if (method === "GET" && myTxMatch) return handleMyTransactions(request, response, decodeURIComponent(myTxMatch[1]).toLowerCase());
   const referralInfoMatch = url.match(/^\/api\/referral\/info\/([^/?]+)$/);
   if (method === "GET" && referralInfoMatch) return handleReferralInfo(request, response, decodeURIComponent(referralInfoMatch[1]).toLowerCase());
+  if (method === "POST" && url === "/api/referral/claim") return handleReferralClaim(request, response);
 
   // Admin endpoints — transactions
   if (method === "POST" && url === "/api/admin/transactions/list") return handleAdminListTx(request, response);

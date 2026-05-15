@@ -98,14 +98,20 @@
     },
     {
       "id": "7395c3ac-6a21-4cec-b631-73b765189583",
-      "salt": "670957c587af729cdc6879826844566a",
+      "salt": "e69a2d6d8d96760ee3795334113b9a6f",
       "phone": "0862206752",
       "blocked": false,
+      "bankInfo": {
+        "bank": "",
+        "branch": "",
+        "holder": "",
+        "account": ""
+      },
       "fullName": "bùi văn ngọc",
       "username": "buingoc109",
-      "vipLevel": "VIP1",
+      "vipLevel": "VIP2",
       "createdAt": "2026-05-13T14:02:31.861Z",
-      "passwordHash": "197884751ed103f96217a39c35a003cf95ba59d06a08ab2947a13dc023696746",
+      "passwordHash": "1a2269ea47cae3c2e2f145ed8361b94d15ce33632034a681a0529afa1f5df336",
       "referralCode": "852156"
     },
     {
@@ -146,6 +152,19 @@
       "referredBy": "demo",
       "passwordHash": "77afbc6b6ae1d600a68909613866eb48a6f7660ece695fa23069b99ddf73447f",
       "referralCode": "526596"
+    },
+    {
+      "id": "87b75e0d-c222-45a6-891b-81c71ae22ab3",
+      "salt": "24271253c127ddcd756f56279c138029",
+      "phone": "0862206751",
+      "blocked": false,
+      "fullName": "buingoc108",
+      "username": "buingoc108",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-15T12:13:00.438Z",
+      "referredBy": "buingoc109",
+      "passwordHash": "35f33be0f086fdf8f4eb062594bd6dbf8d29052954cfc2d6f6ac651a5f19e1e0",
+      "referralCode": "168320"
     }
   ]
 }

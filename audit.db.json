@@ -1,6 +1,687 @@
 {
   "logs": [
     {
+      "id": "AL-1778866549005-onb5",
+      "ts": 1778866549005,
+      "action": "tx-approve",
+      "target": "TX-SSYGCC",
+      "details": {
+        "type": "deposit",
+        "user": "buingoc109",
+        "amount": 5000000
+      }
+    },
+    {
+      "id": "AL-1778866085896-hsmn",
+      "ts": 1778866085896,
+      "action": "product-create",
+      "target": "P-L5BLBD",
+      "details": {
+        "title": "Son dưỡng có màu hiệu chỉnh sắc môi Lipice Sheer Color"
+      }
+    },
+    {
+      "id": "AL-1778866044674-bz7l",
+      "ts": 1778866044674,
+      "action": "product-create",
+      "target": "P-LRNIAB",
+      "details": {
+        "title": "Tai nghe bluetooth Rock Retro nghe nhạc liên tục 12h - Hàng chính hãng bảo hành 1 năm"
+      }
+    },
+    {
+      "id": "AL-1778866020622-ymzq",
+      "ts": 1778866020622,
+      "action": "product-create",
+      "target": "P-KLC3J9",
+      "details": {
+        "title": "Tai nghe Bluetooth truyền âm thanh qua xương Shokz OPENCOMM2/OPENCOMM2 UC - Hàng Chính Hãng"
+      }
+    },
+    {
+      "id": "AL-1778865941807-w71u",
+      "ts": 1778865941807,
+      "action": "product-create",
+      "target": "P-Y61A40",
+      "details": {
+        "title": "Tai nghe Soundmax AH330- Hàng chính hãng"
+      }
+    },
+    {
+      "id": "AL-1778862190474-0izr",
+      "ts": 1778862190474,
+      "action": "product-create",
+      "target": "P-0LDMSU",
+      "details": {
+        "title": "[Chỉ giao HCM] So African Smoothies Bowl - 500ml"
+      }
+    },
+    {
+      "id": "AL-1778861753991-wnry",
+      "ts": 1778861753991,
+      "action": "product-create",
+      "target": "P-6G7WOA",
+      "details": {
+        "title": "Tinh dầu nước hoa xoa dịu trị liệu DHERBAL độc quyền DAMODE chai 5ml tinh dầu nước hoa giảm stress chính hãng"
+      }
+    },
+    {
+      "id": "AL-1778861677066-7yqa",
+      "ts": 1778861677066,
+      "action": "product-create",
+      "target": "P-8J9N2O",
+      "details": {
+        "title": "Xịt khử mùi chiết xuất thiên nhiên Refre Natural Rosa Magnolia Hồng Mộc Lan 30ml"
+      }
+    },
+    {
+      "id": "AL-1778861507353-je4t",
+      "ts": 1778861507353,
+      "action": "product-create",
+      "target": "P-3YSLXS",
+      "details": {
+        "title": "Flashcard Kỹ Năng Bán Hàng – 52 Tình Huống Thực Chiến Để Trở Thành “Sát Thủ Doanh Số”"
+      }
+    },
+    {
+      "id": "AL-1778861473424-ksy9",
+      "ts": 1778861473424,
+      "action": "product-delete",
+      "target": "P-7KISWQ",
+      "details": null
+    },
+    {
+      "id": "AL-1778861426159-i5h4",
+      "ts": 1778861426159,
+      "action": "product-create",
+      "target": "P-7KISWQ",
+      "details": {
+        "title": "Sách Tên Của Cô Ấy"
+      }
+    },
+    {
+      "id": "AL-1778861015175-j142",
+      "ts": 1778861015175,
+      "action": "product-create",
+      "target": "P-GKQJNI",
+      "details": {
+        "title": "Vỏ Bọc Hộ Chiếu PVC Bao Passport Cover Chống Bụi Bẩn Trong Suốt Có Ngăn Đựng Thẻ Tiện Lợi"
+      }
+    },
+    {
+      "id": "AL-1778860962110-t9l8",
+      "ts": 1778860962110,
+      "action": "product-create",
+      "target": "P-A7SB2U",
+      "details": {
+        "title": "Túi xách túi chống sốc cho laptop 14inh -15,6 inh và 16.1 inh cao cấp phong cách mới"
+      }
+    },
+    {
+      "id": "AL-1778860662656-5ipy",
+      "ts": 1778860662656,
+      "action": "product-update",
+      "target": "P-INIT11",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860632591-24r5",
+      "ts": 1778860632591,
+      "action": "product-update",
+      "target": "P-INIT10",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860622249-8zl8",
+      "ts": 1778860622249,
+      "action": "product-update",
+      "target": "P-INIT09",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860612712-nf3c",
+      "ts": 1778860612712,
+      "action": "product-update",
+      "target": "P-INIT08",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860537798-zbsc",
+      "ts": 1778860537798,
+      "action": "product-update",
+      "target": "P-INIT05",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860436149-jev1",
+      "ts": 1778860436149,
+      "action": "product-update",
+      "target": "P-GEIR3B",
+      "details": {
+        "fields": [
+          "enabled"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860433642-qjjj",
+      "ts": 1778860433642,
+      "action": "product-update",
+      "target": "P-GEIR3B",
+      "details": {
+        "fields": [
+          "enabled"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778860430883-t72g",
+      "ts": 1778860430883,
+      "action": "product-update",
+      "target": "P-SXE096",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778859637135-55c0",
+      "ts": 1778859637135,
+      "action": "user-set-vip",
+      "target": "buingoc109",
+      "details": {
+        "vipLevel": "VIP1"
+      }
+    },
+    {
+      "id": "AL-1778859200921-8533",
+      "ts": 1778859200921,
+      "action": "product-create",
+      "target": "P-7K286G",
+      "details": {
+        "title": "Bình pha Trà cà phê Cold Brew 1000ml"
+      }
+    },
+    {
+      "id": "AL-1778851109195-untk",
+      "ts": 1778851109195,
+      "action": "user-sub-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": -4000000,
+        "reason": "Trừ phí"
+      }
+    },
+    {
+      "id": "AL-1778850866067-z0sr",
+      "ts": 1778850866067,
+      "action": "user-add-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": 4000000,
+        "reason": "Thưởng từ admin"
+      }
+    },
+    {
+      "id": "AL-1778850713483-rrxv",
+      "ts": 1778850713483,
+      "action": "tx-approve",
+      "target": "TX-2F8ISQ",
+      "details": {
+        "type": "deposit",
+        "user": "buingoc109",
+        "amount": 500000
+      }
+    },
+    {
+      "id": "AL-1778850705930-t5ie",
+      "ts": 1778850705930,
+      "action": "tx-approve",
+      "target": "TX-MFOZKJ",
+      "details": {
+        "type": "deposit",
+        "user": "buingoc109",
+        "amount": 5000000
+      }
+    },
+    {
+      "id": "AL-1778850677160-779n",
+      "ts": 1778850677160,
+      "action": "tx-approve",
+      "target": "TX-ZO48BP",
+      "details": {
+        "type": "withdraw",
+        "user": "buingoc109",
+        "amount": 100000
+      }
+    },
+    {
+      "id": "AL-1778850662193-a48s",
+      "ts": 1778850662193,
+      "action": "tx-approve",
+      "target": "TX-5L44WY",
+      "details": {
+        "type": "withdraw",
+        "user": "buingoc109",
+        "amount": 22000000
+      }
+    },
+    {
+      "id": "AL-1778849954588-z33w",
+      "ts": 1778849954588,
+      "action": "user-add-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": 4000000,
+        "reason": "Thưởng từ admin"
+      }
+    },
+    {
+      "id": "AL-1778849863718-sd7e",
+      "ts": 1778849863718,
+      "action": "user-add-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": 5000000,
+        "reason": "tài khoản đại lý may mắn"
+      }
+    },
+    {
+      "id": "AL-1778849437107-uw1y",
+      "ts": 1778849437107,
+      "action": "user-sub-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": -9000000,
+        "reason": "Trừ phí"
+      }
+    },
+    {
+      "id": "AL-1778845732219-wo31",
+      "ts": 1778845732219,
+      "action": "vip-config-update",
+      "target": null,
+      "details": {
+        "levels": [
+          "VIP1",
+          "VIP2",
+          "VIP3",
+          "VIP4"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778844504882-va7t",
+      "ts": 1778844504882,
+      "action": "user-set-vip",
+      "target": "buingoc109",
+      "details": {
+        "vipLevel": "VIP2"
+      }
+    },
+    {
+      "id": "AL-1778842549263-d3c7",
+      "ts": 1778842549263,
+      "action": "order-claim-pending",
+      "target": "ORD-Q6PU3Q",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778842496502-bjt6",
+      "ts": 1778842496502,
+      "action": "order-reject",
+      "target": "ORD-79I5K0",
+      "details": {
+        "user": "buingoc109",
+        "reason": "Admin từ chối"
+      }
+    },
+    {
+      "id": "AL-1778842379244-djgr",
+      "ts": 1778842379244,
+      "action": "order-approve",
+      "target": "ORD-PT5NKC",
+      "details": {
+        "user": "buingoc109",
+        "amount": 12990000
+      }
+    },
+    {
+      "id": "AL-1778842314075-3aoo",
+      "ts": 1778842314075,
+      "action": "order-claim-pending",
+      "target": "ORD-PT5NKC",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778842245122-pz9w",
+      "ts": 1778842245122,
+      "action": "order-distribute",
+      "target": "ORD-YOXJGC",
+      "details": {
+        "amount": 49000,
+        "claimedBy": "buingoc109",
+        "commission": 245,
+        "productTitle": "Combo 3 hộp sữa Vinamilk 1L"
+      }
+    },
+    {
+      "id": "AL-1778842122991-zhsn",
+      "ts": 1778842122991,
+      "action": "order-claim-pending",
+      "target": "ORD-9FQ7I8",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778841082844-bmv3",
+      "ts": 1778841082844,
+      "action": "order-claim",
+      "target": "ORD-NGL10S",
+      "details": {
+        "amount": 4590000,
+        "username": "buingoc109",
+        "commission": 500000
+      }
+    },
+    {
+      "id": "AL-1778840928457-j5vn",
+      "ts": 1778840928457,
+      "action": "order-claim",
+      "target": "ORD-YEWLOM",
+      "details": {
+        "amount": 10000,
+        "username": "demo",
+        "commission": 11000
+      }
+    },
+    {
+      "id": "AL-1778840913392-eb9o",
+      "ts": 1778840913392,
+      "action": "order-claim",
+      "target": "ORD-YVQCMS",
+      "details": {
+        "amount": 74900,
+        "username": "demo",
+        "commission": 4140
+      }
+    },
+    {
+      "id": "AL-1778837391117-2oa3",
+      "ts": 1778837391117,
+      "action": "order-create",
+      "target": "ORD-WJPNQL",
+      "details": {
+        "amount": 5000000,
+        "assignedTo": "demo",
+        "productTitle": "Balo laptop Mikkor The Lewis"
+      }
+    },
+    {
+      "id": "AL-1778822769837-ytu2",
+      "ts": 1778822769837,
+      "action": "product-delete",
+      "target": "P-OQ1Q62",
+      "details": null
+    },
+    {
+      "id": "AL-1778820804457-32zx",
+      "ts": 1778820804457,
+      "action": "order-self-submit",
+      "target": "ORD-LJK9K4",
+      "details": {
+        "user": "buingoc109",
+        "amount": 3000000,
+        "commission": 500000
+      }
+    },
+    {
+      "id": "AL-1778820261683-xmcj",
+      "ts": 1778820261683,
+      "action": "order-self-submit",
+      "target": "ORD-IVJ8EA",
+      "details": {
+        "user": "buingoc109",
+        "amount": 195000,
+        "commission": 500000
+      }
+    },
+    {
+      "id": "AL-1778784012756-0my3",
+      "ts": 1778784012756,
+      "action": "order-create",
+      "target": "ORD-YVQCMS",
+      "details": {
+        "amount": 74900,
+        "assignedTo": "demo",
+        "productTitle": "Smart Tv Samsung Crystal UHD 43 Inch"
+      }
+    },
+    {
+      "id": "AL-1778783108640-64fg",
+      "ts": 1778783108640,
+      "action": "order-create",
+      "target": "ORD-YEWLOM",
+      "details": {
+        "amount": 10000,
+        "assignedTo": "demo",
+        "productTitle": "Máy pha cà phê Delonghi Magnifica S"
+      }
+    },
+    {
+      "id": "AL-1778782275414-c05g",
+      "ts": 1778782275414,
+      "action": "product-update",
+      "target": "P-INIT07",
+      "details": {
+        "fields": [
+          "enabled"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778782272495-s8nz",
+      "ts": 1778782272495,
+      "action": "product-update",
+      "target": "P-INIT07",
+      "details": {
+        "fields": [
+          "enabled"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778782258041-m7cd",
+      "ts": 1778782258041,
+      "action": "product-update",
+      "target": "P-OQ1Q62",
+      "details": {
+        "fields": [
+          "enabled"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778781327644-zvve",
+      "ts": 1778781327644,
+      "action": "order-self-submit",
+      "target": "ORD-BJ1GVD",
+      "details": {
+        "user": "buingoc109",
+        "amount": 195000,
+        "commission": 97000
+      }
+    },
+    {
+      "id": "AL-1778781307329-zijs",
+      "ts": 1778781307329,
+      "action": "order-delete",
+      "target": "ORD-4CE7AW",
+      "details": null
+    },
+    {
+      "id": "AL-1778781119711-lm3e",
+      "ts": 1778781119711,
+      "action": "order-unassign",
+      "target": "ORD-4CE7AW",
+      "details": null
+    },
+    {
+      "id": "AL-1778781098822-5kn0",
+      "ts": 1778781098822,
+      "action": "order-claim-pending",
+      "target": "ORD-N332U7",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778781091342-x5qz",
+      "ts": 1778781091342,
+      "action": "order-distribute",
+      "target": "ORD-BJ1GVD",
+      "details": {
+        "amount": 195000,
+        "claimedBy": "buingoc109",
+        "commission": 97000,
+        "productTitle": "Chảo chống dính Elmich EL5972"
+      }
+    },
+    {
+      "id": "AL-1778780559564-nfno",
+      "ts": 1778780559564,
+      "action": "order-claim-pending",
+      "target": "ORD-OUMV3C",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778780368028-861s",
+      "ts": 1778780368028,
+      "action": "order-distribute",
+      "target": "ORD-2E5MYV",
+      "details": {
+        "amount": 12000000,
+        "claimedBy": "buingoc109",
+        "commission": 400000,
+        "productTitle": "Chảo chống dính Elmich EL5972"
+      }
+    },
+    {
+      "id": "AL-1778780273804-fnpy",
+      "ts": 1778780273804,
+      "action": "order-distribute",
+      "target": "ORD-01ZD13",
+      "details": {
+        "amount": 5000000,
+        "claimedBy": "buingoc109",
+        "commission": 100000,
+        "productTitle": "Xiaomi Tv Google 4K 55 Inch"
+      }
+    },
+    {
+      "id": "AL-1778780078765-0nlz",
+      "ts": 1778780078765,
+      "action": "order-claim-pending",
+      "target": "ORD-VNEVGU",
+      "details": {
+        "username": "demo"
+      }
+    },
+    {
+      "id": "AL-1778778603772-4fke",
+      "ts": 1778778603772,
+      "action": "tx-approve",
+      "target": "TX-63NPHX",
+      "details": {
+        "type": "withdraw",
+        "user": "buingoc109",
+        "amount": 500000
+      }
+    },
+    {
+      "id": "AL-1778778598409-ypop",
+      "ts": 1778778598409,
+      "action": "tx-approve",
+      "target": "TX-KL4W8Y",
+      "details": {
+        "type": "withdraw",
+        "user": "buingoc109",
+        "amount": 2000000
+      }
+    },
+    {
+      "id": "AL-1778777881855-0ahf",
+      "ts": 1778777881855,
+      "action": "order-claim-pending",
+      "target": "ORD-9QYSZ7",
+      "details": {
+        "username": "buingoc109"
+      }
+    },
+    {
+      "id": "AL-1778777761414-e0n6",
+      "ts": 1778777761414,
+      "action": "order-distribute",
+      "target": "ORD-526R1Y",
+      "details": {
+        "amount": 195000,
+        "claimedBy": "buingoc109",
+        "commission": 600000,
+        "productTitle": "Chảo chống dính Elmich EL5972"
+      }
+    },
+    {
+      "id": "AL-1778776841404-94w2",
+      "ts": 1778776841404,
+      "action": "tx-approve",
+      "target": "TX-3I5Z3N",
+      "details": {
+        "type": "withdraw",
+        "user": "demo",
+        "amount": 100000
+      }
+    },
+    {
       "id": "AL-1778772114503-j278",
       "ts": 1778772114503,
       "action": "order-approve",

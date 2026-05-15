@@ -3,28 +3,28 @@
     "VIP1": {
       "rate": 0.005,
       "refRate": 0.15,
-      "dailyCap": 30,
+      "dailyCap": 10,
       "maxRange": 10000000,
       "minRange": 0
     },
     "VIP2": {
       "rate": 0.008,
       "refRate": 0.18,
-      "dailyCap": 50,
+      "dailyCap": 13,
       "maxRange": 30000000,
       "minRange": 0
     },
     "VIP3": {
       "rate": 0.012,
       "refRate": 0.22,
-      "dailyCap": 80,
+      "dailyCap": 17,
       "maxRange": 50000000,
       "minRange": 0
     },
     "VIP4": {
       "rate": 0.015,
       "refRate": 0.25,
-      "dailyCap": 100,
+      "dailyCap": 25,
       "maxRange": 100000000,
       "minRange": 0
     }

@@ -133,6 +133,7 @@
         background: #fff;
       }
       .order-row.is-claimed { background: #fef3c7; border-color: #fde68a; }
+      .order-row.is-submitted { background: #e0f2fe; border-color: #7dd3fc; }
       .order-row.is-approved { background: #ecfdf5; border-color: #bbf7d0; }
       .order-row.is-rejected { background: #fef2f2; border-color: #fecaca; opacity: 0.85; }
       .order-thumb {
@@ -177,6 +178,7 @@
       }
       .pill-available { background: #e0e7ff; color: var(--brand); }
       .pill-claimed { background: #fef3c7; color: #92400e; }
+      .pill-submitted { background: #bae6fd; color: #075985; }
       .pill-approved { background: #d1fae5; color: #065f46; }
       .pill-rejected { background: #fee2e2; color: #991b1b; }
       .empty { padding: 24px; text-align: center; color: #94a3b8; font-size: 13px; }
@@ -647,6 +649,194 @@
       .ud-list-row .ud-amount.up { color: var(--green); }
       .ud-list-row .ud-amount.down { color: var(--red); }
       .toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+      /* === Custom dialog system === */
+      .app-dialog-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(15,23,42,0.55);
+        z-index: 300;
+        display: none;
+        align-items: center; justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.18s ease;
+        backdrop-filter: blur(2px);
+      }
+      .app-dialog-backdrop.is-show { display: flex; opacity: 1; }
+      .app-dialog-card {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%; max-width: 440px;
+        box-shadow: 0 24px 60px rgba(15,23,42,0.32);
+        overflow: hidden;
+        transform: translateY(10px) scale(0.98);
+        transition: transform 0.18s ease;
+      }
+      .app-dialog-backdrop.is-show .app-dialog-card { transform: none; }
+      .app-dialog-head {
+        padding: 20px 22px 6px;
+        display: flex; align-items: center; gap: 12px;
+      }
+      .app-dialog-icon {
+        width: 40px; height: 40px;
+        display: grid; place-items: center;
+        border-radius: 12px;
+        font-size: 20px;
+        font-weight: 800;
+        background: #eef2ff; color: var(--brand);
+        flex-shrink: 0;
+      }
+      .app-dialog-icon.is-warn { background: #fef3c7; color: #92400e; }
+      .app-dialog-icon.is-danger { background: #fee2e2; color: #991b1b; }
+      .app-dialog-icon.is-success { background: #dcfce7; color: #166534; }
+      .app-dialog-icon.is-info { background: #dbeafe; color: #1e40af; }
+      .app-dialog-title { margin: 0; font-size: 16px; font-weight: 800; color: var(--ink); }
+      .app-dialog-body { padding: 6px 22px 14px; font-size: 13.5px; color: #475569; line-height: 1.55; }
+      .app-dialog-msg { margin: 0; white-space: pre-line; }
+      .app-dialog-field { margin-top: 12px; }
+      .app-dialog-field label {
+        display: block; font-size: 12px; font-weight: 700;
+        color: #64748b; margin-bottom: 6px;
+      }
+      .app-dialog-field input,
+      .app-dialog-field textarea {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font: inherit;
+        outline: none;
+        background: #f8fafc;
+        transition: all 0.12s;
+        box-sizing: border-box;
+      }
+      .app-dialog-field input:focus,
+      .app-dialog-field textarea:focus {
+        border-color: var(--brand);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(44,92,255,0.14);
+      }
+      .app-dialog-error {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #b91c1c;
+        font-weight: 600;
+        display: none;
+      }
+      .app-dialog-error.is-show { display: block; }
+      .app-dialog-foot {
+        padding: 12px 18px 16px;
+        display: flex; justify-content: flex-end; gap: 8px;
+        background: #fbfcfe;
+        border-top: 1px solid #f1f5f9;
+      }
+      .app-dialog-foot button {
+        min-width: 96px;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 10px;
+      }
+      .app-dialog-foot .btn-cancel {
+        background: #fff;
+        color: #475569;
+        border: 1px solid var(--line);
+      }
+      .app-dialog-foot .btn-cancel:hover { background: #f8fafc; }
+      .app-dialog-foot .btn-confirm {
+        background: linear-gradient(135deg, #2c5cff, #6366f1);
+        color: #fff;
+        box-shadow: 0 6px 14px rgba(44,92,255,0.25);
+        border: 0;
+      }
+      .app-dialog-foot .btn-confirm:hover { filter: brightness(1.05); }
+      .app-dialog-foot .btn-confirm.is-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 6px 14px rgba(239,68,68,0.25);
+      }
+      .app-dialog-foot .btn-confirm.is-success {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        box-shadow: 0 6px 14px rgba(34,197,94,0.25);
+      }
+      /* === Adjust balance modal === */
+      .adjust-balance-card { max-width: 480px; }
+      .adjust-balance-banner {
+        padding: 18px 22px;
+        color: #fff;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        display: flex; align-items: center; gap: 12px;
+      }
+      .adjust-balance-banner.is-sub {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+      .adjust-balance-banner .ab-icon {
+        width: 44px; height: 44px;
+        background: rgba(255,255,255,0.22);
+        border-radius: 12px;
+        display: grid; place-items: center;
+        font-size: 22px; font-weight: 800;
+        flex-shrink: 0;
+      }
+      .adjust-balance-banner h2 {
+        margin: 0; font-size: 17px; font-weight: 800;
+      }
+      .adjust-balance-banner small {
+        display: block; margin-top: 2px; font-size: 12px; opacity: 0.9;
+      }
+      .adjust-balance-amount {
+        display: flex; align-items: baseline;
+        gap: 8px; padding: 8px 14px 4px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: all 0.12s;
+      }
+      .adjust-balance-amount:focus-within {
+        border-color: var(--brand);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(44,92,255,0.14);
+      }
+      .adjust-balance-amount input {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        font-size: 26px;
+        font-weight: 800;
+        padding: 6px 0;
+        outline: none;
+        color: var(--ink);
+        min-width: 0;
+      }
+      .adjust-balance-amount .currency {
+        font-size: 17px; font-weight: 700; color: #64748b;
+      }
+      .adjust-balance-quick {
+        display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+      }
+      .adjust-balance-quick button {
+        padding: 6px 12px;
+        font-size: 12px;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .adjust-balance-quick button:hover { background: #e0e7ff; color: var(--brand); border-color: #c7d2fe; }
+      .adjust-balance-quick button.is-clear { color: #b91c1c; }
+      .adjust-balance-reasons {
+        display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+      }
+      .adjust-balance-reasons button {
+        padding: 5px 10px;
+        font-size: 11px;
+        background: #eef2ff;
+        color: var(--brand);
+        border: 1px solid #e0e7ff;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .adjust-balance-reasons button:hover { background: #e0e7ff; }
     </style>
   </head>
   <body>
@@ -743,6 +933,7 @@
               <button data-filter="claim_pending">Chờ phân phối <span class="badge-count" id="cntClaimPending" style="display:none">0</span></button>
               <button data-filter="available">Pool (chờ user) <span class="badge-count" id="cntAvailable" style="display:none">0</span></button>
               <button data-filter="claimed">Chờ duyệt <span class="badge-count" id="cntClaimed" style="display:none">0</span></button>
+              <button data-filter="submitted">❄ Chờ dã đông <span class="badge-count" id="cntSubmitted" style="display:none">0</span></button>
               <button data-filter="approved">Đã duyệt <span class="badge-count" id="cntApproved" style="display:none">0</span></button>
               <button data-filter="rejected">Từ chối <span class="badge-count" id="cntRejected" style="display:none">0</span></button>
             </div>
@@ -1003,6 +1194,65 @@
       </div>
     </div>
 
+    <div class="app-dialog-backdrop" id="appDialog">
+      <div class="app-dialog-card">
+        <div class="app-dialog-head">
+          <div class="app-dialog-icon" id="appDialogIcon">i</div>
+          <h2 class="app-dialog-title" id="appDialogTitle">Xác nhận</h2>
+        </div>
+        <div class="app-dialog-body">
+          <p class="app-dialog-msg" id="appDialogMsg"></p>
+          <div class="app-dialog-field" id="appDialogField" style="display:none">
+            <label id="appDialogFieldLabel"></label>
+            <input id="appDialogInput" autocomplete="off" />
+            <div class="app-dialog-error" id="appDialogError"></div>
+          </div>
+        </div>
+        <div class="app-dialog-foot">
+          <button type="button" class="btn-cancel" id="appDialogCancel">Huỷ</button>
+          <button type="button" class="btn-confirm" id="appDialogConfirm">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-dialog-backdrop" id="adjustBalanceDialog">
+      <div class="app-dialog-card adjust-balance-card">
+        <div class="adjust-balance-banner" id="abBanner">
+          <div class="ab-icon" id="abIcon">+</div>
+          <div>
+            <h2 id="abTitle">Cộng tiền</h2>
+            <small id="abSubtitle">Cập nhật số dư cho user</small>
+          </div>
+        </div>
+        <div class="app-dialog-body">
+          <div class="app-dialog-field">
+            <label>Số tiền (₫)</label>
+            <div class="adjust-balance-amount">
+              <input id="abAmount" type="text" inputmode="numeric" placeholder="0" autocomplete="off" />
+              <span class="currency">₫</span>
+            </div>
+            <div class="adjust-balance-quick" id="abQuick">
+              <button type="button" data-amt="50000">+50K</button>
+              <button type="button" data-amt="100000">+100K</button>
+              <button type="button" data-amt="500000">+500K</button>
+              <button type="button" data-amt="1000000">+1Tr</button>
+              <button type="button" data-amt="0" class="is-clear">Xoá</button>
+            </div>
+            <div class="app-dialog-error" id="abError"></div>
+          </div>
+          <div class="app-dialog-field">
+            <label>Lý do (hiện trong lịch sử user)</label>
+            <input id="abReason" type="text" placeholder="VD: Thưởng từ admin" autocomplete="off" />
+            <div class="adjust-balance-reasons" id="abReasonChips"></div>
+          </div>
+        </div>
+        <div class="app-dialog-foot">
+          <button type="button" class="btn-cancel" id="abCancel">Huỷ</button>
+          <button type="button" class="btn-confirm" id="abConfirm">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
     <script>
       const BASE_PRODUCT_PRESETS = [
         // Danh sách mặc định — luôn hiển thị làm mẫu nhanh, kết hợp với sản phẩm admin tự thêm.
@@ -1165,6 +1415,232 @@
         showToast._t = setTimeout(() => toast.classList.remove("is-show"), 1800);
       }
 
+      // ============ APP DIALOG (alert / confirm / prompt) ============
+      const _appDlg = document.querySelector("#appDialog");
+      const _appDlgIcon = document.querySelector("#appDialogIcon");
+      const _appDlgTitle = document.querySelector("#appDialogTitle");
+      const _appDlgMsg = document.querySelector("#appDialogMsg");
+      const _appDlgField = document.querySelector("#appDialogField");
+      const _appDlgFieldLabel = document.querySelector("#appDialogFieldLabel");
+      const _appDlgInput = document.querySelector("#appDialogInput");
+      const _appDlgError = document.querySelector("#appDialogError");
+      const _appDlgCancel = document.querySelector("#appDialogCancel");
+      const _appDlgConfirm = document.querySelector("#appDialogConfirm");
+      let _appDlgResolver = null;
+
+      function _appDlgCloseValue(cancelled) {
+        return _appDlg.dataset.mode === "prompt" ? null : !cancelled;
+      }
+      function _appDlgClose(value) {
+        _appDlg.classList.remove("is-show");
+        document.removeEventListener("keydown", _appDlgKey);
+        const r = _appDlgResolver; _appDlgResolver = null;
+        if (r) r(value);
+      }
+      function _appDlgKey(e) {
+        if (e.key === "Escape") { e.preventDefault(); _appDlgClose(_appDlgCloseValue(true)); }
+        else if (e.key === "Enter" && _appDlg.dataset.mode === "prompt") {
+          e.preventDefault(); _appDlgConfirm.click();
+        }
+      }
+      _appDlgCancel.addEventListener("click", () => _appDlgClose(_appDlgCloseValue(true)));
+      _appDlg.addEventListener("click", (e) => {
+        if (e.target === _appDlg) _appDlgClose(_appDlgCloseValue(true));
+      });
+      _appDlgConfirm.addEventListener("click", () => {
+        if (_appDlg.dataset.mode === "prompt") {
+          const v = _appDlgInput.value;
+          const validator = _appDlg._validator;
+          if (validator) {
+            const err = validator(v);
+            if (err) {
+              _appDlgError.textContent = err;
+              _appDlgError.classList.add("is-show");
+              _appDlgInput.focus();
+              return;
+            }
+          }
+          _appDlgClose(v);
+        } else {
+          _appDlgClose(true);
+        }
+      });
+
+      function _showAppDialog(opts) {
+        const {
+          mode, title, message, icon, iconKind,
+          confirmText, cancelText, confirmStyle, showCancel,
+          fieldLabel, defaultValue, placeholder, inputType, validator
+        } = opts;
+        _appDlg.dataset.mode = mode;
+        const defaultIconByKind = { danger: "!", warn: "?", success: "✓", info: "i" };
+        _appDlgIcon.textContent = icon || defaultIconByKind[iconKind] || "i";
+        _appDlgIcon.className = "app-dialog-icon" + (iconKind ? " is-" + iconKind : "");
+        _appDlgTitle.textContent = title || "";
+        _appDlgMsg.textContent = message || "";
+        _appDlgMsg.style.display = message ? "" : "none";
+        if (mode === "prompt") {
+          _appDlgField.style.display = "";
+          _appDlgFieldLabel.textContent = fieldLabel || "";
+          _appDlgFieldLabel.style.display = fieldLabel ? "" : "none";
+          _appDlgInput.value = defaultValue == null ? "" : defaultValue;
+          _appDlgInput.placeholder = placeholder || "";
+          _appDlgInput.type = inputType || "text";
+          _appDlg._validator = validator || null;
+          _appDlgError.classList.remove("is-show");
+          _appDlgError.textContent = "";
+          setTimeout(() => { _appDlgInput.focus(); _appDlgInput.select(); }, 40);
+        } else {
+          _appDlgField.style.display = "none";
+          _appDlg._validator = null;
+          setTimeout(() => _appDlgConfirm.focus(), 40);
+        }
+        _appDlgCancel.style.display = showCancel === false ? "none" : "";
+        _appDlgCancel.textContent = cancelText || "Huỷ";
+        _appDlgConfirm.textContent = confirmText || "Xác nhận";
+        _appDlgConfirm.className = "btn-confirm" + (confirmStyle ? " is-" + confirmStyle : "");
+        _appDlg.classList.add("is-show");
+        document.addEventListener("keydown", _appDlgKey);
+        return new Promise((res) => { _appDlgResolver = res; });
+      }
+
+      function appAlert(opts) {
+        if (typeof opts === "string") opts = { message: opts };
+        return _showAppDialog({
+          mode: "alert", showCancel: false,
+          icon: opts.icon, iconKind: opts.iconKind || "info",
+          title: opts.title || "Thông báo",
+          message: opts.message || "",
+          confirmText: opts.confirmText || "Đã hiểu",
+          confirmStyle: opts.confirmStyle
+        });
+      }
+      function appConfirm(opts) {
+        if (typeof opts === "string") opts = { message: opts };
+        return _showAppDialog({
+          mode: "confirm", showCancel: true,
+          icon: opts.icon, iconKind: opts.iconKind || (opts.danger ? "danger" : "warn"),
+          title: opts.title || "Xác nhận",
+          message: opts.message || "",
+          confirmText: opts.confirmText || "Đồng ý",
+          cancelText: opts.cancelText || "Huỷ",
+          confirmStyle: opts.confirmStyle || (opts.danger ? "danger" : null)
+        });
+      }
+      function appPrompt(opts) {
+        opts = opts || {};
+        return _showAppDialog({
+          mode: "prompt", showCancel: true,
+          icon: opts.icon || "✎", iconKind: opts.iconKind || "info",
+          title: opts.title || "Nhập thông tin",
+          message: opts.message || "",
+          fieldLabel: opts.label,
+          defaultValue: opts.defaultValue,
+          placeholder: opts.placeholder,
+          inputType: opts.inputType,
+          validator: opts.validator,
+          confirmText: opts.confirmText || "Xác nhận",
+          cancelText: opts.cancelText || "Huỷ",
+          confirmStyle: opts.confirmStyle
+        });
+      }
+
+      // ============ ADJUST BALANCE DIALOG (cộng / trừ tiền) ============
+      const _abDlg = document.querySelector("#adjustBalanceDialog");
+      const _abBanner = document.querySelector("#abBanner");
+      const _abIcon = document.querySelector("#abIcon");
+      const _abTitle = document.querySelector("#abTitle");
+      const _abSubtitle = document.querySelector("#abSubtitle");
+      const _abAmount = document.querySelector("#abAmount");
+      const _abReason = document.querySelector("#abReason");
+      const _abReasonChips = document.querySelector("#abReasonChips");
+      const _abQuick = document.querySelector("#abQuick");
+      const _abError = document.querySelector("#abError");
+      const _abConfirm = document.querySelector("#abConfirm");
+      const _abCancel = document.querySelector("#abCancel");
+      let _abResolver = null;
+
+      function _abParse(s) {
+        return Math.abs(Number(String(s || "").replace(/[^0-9]/g, "")) || 0);
+      }
+      function _abFormat(n) {
+        return n ? Number(n).toLocaleString("vi-VN") : "";
+      }
+      function _abClose(value) {
+        _abDlg.classList.remove("is-show");
+        document.removeEventListener("keydown", _abKey);
+        const r = _abResolver; _abResolver = null;
+        if (r) r(value);
+      }
+      function _abKey(e) {
+        if (e.key === "Escape") { e.preventDefault(); _abClose(null); }
+        else if (e.key === "Enter" && (document.activeElement === _abAmount || document.activeElement === _abReason)) {
+          e.preventDefault(); _abConfirm.click();
+        }
+      }
+      _abAmount.addEventListener("input", () => {
+        const n = _abParse(_abAmount.value);
+        const newV = _abFormat(n);
+        if (newV !== _abAmount.value) _abAmount.value = newV;
+        _abError.classList.remove("is-show");
+      });
+      _abQuick.addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-amt]");
+        if (!b) return;
+        const add = Number(b.dataset.amt);
+        if (add === 0) _abAmount.value = "";
+        else _abAmount.value = _abFormat(_abParse(_abAmount.value) + add);
+        _abError.classList.remove("is-show");
+        _abAmount.focus();
+      });
+      _abReasonChips.addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-reason]");
+        if (!b) return;
+        _abReason.value = b.dataset.reason;
+        _abError.classList.remove("is-show");
+        _abReason.focus();
+      });
+      _abCancel.addEventListener("click", () => _abClose(null));
+      _abDlg.addEventListener("click", (e) => { if (e.target === _abDlg) _abClose(null); });
+      _abConfirm.addEventListener("click", () => {
+        const amt = _abParse(_abAmount.value);
+        if (!amt || amt <= 0) {
+          _abError.textContent = "Số tiền không hợp lệ";
+          _abError.classList.add("is-show");
+          _abAmount.focus();
+          return;
+        }
+        const reason = _abReason.value.trim();
+        if (!reason) {
+          _abError.textContent = "Vui lòng nhập lý do";
+          _abError.classList.add("is-show");
+          _abReason.focus();
+          return;
+        }
+        _abClose({ amount: amt, reason });
+      });
+
+      function openAdjustBalanceDialog({ username, fullName, action }) {
+        const isAdd = action === "add";
+        _abTitle.textContent = (isAdd ? "+ Cộng tiền cho " : "− Trừ tiền của ") + "@" + username;
+        _abSubtitle.textContent = fullName ? "Cập nhật số dư của " + fullName : "Cập nhật số dư user";
+        _abIcon.textContent = isAdd ? "+" : "−";
+        _abBanner.classList.toggle("is-sub", !isAdd);
+        _abAmount.value = "";
+        _abReason.value = "";
+        _abError.classList.remove("is-show");
+        _abConfirm.textContent = isAdd ? "Cộng tiền" : "Trừ tiền";
+        _abConfirm.className = "btn-confirm " + (isAdd ? "is-success" : "is-danger");
+        const reasons = isAdd
+          ? ["Thưởng từ admin", "Hoàn tiền hỗ trợ", "Nạp bù", "Khuyến mãi"]
+          : ["Trừ phí", "Sai sót cần điều chỉnh", "Hoàn trả thưởng", "Vi phạm"];
+        _abReasonChips.innerHTML = reasons.map((r) => `<button type="button" data-reason="${r}">${r}</button>`).join("");
+        _abDlg.classList.add("is-show");
+        document.addEventListener("keydown", _abKey);
+        setTimeout(() => _abAmount.focus(), 40);
+        return new Promise((res) => { _abResolver = res; });
+      }
+
       async function api(url, body = {}) {
         const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, adminPassword: adminPw }) });
         const d = await r.json();
@@ -1281,6 +1757,11 @@
               <div class="stat-value">${(s.ordersByStatus.claimed||0) + (s.txByStatus.pending||0)}</div>
               <div class="stat-sub">${s.ordersByStatus.claimed||0} đơn • ${s.txByStatus.pending||0} giao dịch tài chính</div>
             </div>
+            <div class="stat-card" data-jump-filter="submitted" style="background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:0;cursor:pointer">
+              <div class="stat-label">❄ Chờ dã đông</div>
+              <div class="stat-value">${s.ordersByStatus.submitted||0}</div>
+              <div class="stat-sub">${(s.totalFrozenAmount||0).toLocaleString("vi-VN")} ₫ đang đóng băng${(s.ordersByStatus.submitted||0)>0?' • Bấm để duyệt':''}</div>
+            </div>
             <div class="stat-card is-danger">
               <div class="stat-label">Hoa hồng đã trả</div>
               <div class="stat-value">${s.totalCommissionPaid.toLocaleString("vi-VN")} ₫</div>
@@ -1307,6 +1788,16 @@
               <div class="stat-sub">Tạo trong 24h qua</div>
             </div>
           `;
+
+          // Click on stat card with data-jump-filter → switch to Orders tab + apply filter
+          dashboardStats.querySelectorAll("[data-jump-filter]").forEach((card) => {
+            card.addEventListener("click", () => {
+              const filterKey = card.dataset.jumpFilter;
+              document.querySelector('.nav-tabs button[data-tab="orders"]').click();
+              const targetBtn = document.querySelector(`#filterBar button[data-filter="${filterKey}"]`);
+              if (targetBtn) targetBtn.click();
+            });
+          });
 
           // Top users
           if (d.topUsers.length === 0) {
@@ -1394,8 +1885,15 @@
           </tr>
         `).join("");
       }
-      document.querySelector("#vipResetBtn").addEventListener("click", () => {
-        if (!confirm("Đặt lại về cấu hình mặc định?")) return;
+      document.querySelector("#vipResetBtn").addEventListener("click", async () => {
+        const ok = await appConfirm({
+          title: "Đặt lại cấu hình VIP",
+          message: "Khôi phục về cấu hình mặc định? Bạn vẫn cần bấm Lưu để áp dụng thay đổi.",
+          confirmText: "Đặt lại",
+          icon: "↺",
+          iconKind: "warn"
+        });
+        if (!ok) return;
         renderVipTable(DEFAULT_VIPS);
         showToast("Đã đặt lại — bấm Lưu để áp dụng");
       });
@@ -1513,7 +2011,15 @@
             const p = cachedProducts.find((x) => x.id === id);
             if (p) openProductEdit(p);
           } else if (action === "del") {
-            if (!confirm("Xóa sản phẩm này?")) return;
+            const p = cachedProducts.find((x) => x.id === id);
+            const ok = await appConfirm({
+              title: "Xoá sản phẩm",
+              message: p ? `Xoá "${p.title}" khỏi danh sách sản phẩm?` : "Xoá sản phẩm này khỏi danh sách?",
+              confirmText: "Xoá",
+              danger: true,
+              icon: "🗑"
+            });
+            if (!ok) return;
             await api(`/api/admin/products/${id}/delete`);
             showToast("Đã xóa");
             loadProducts();
@@ -1754,12 +2260,30 @@
             const act = b.dataset.txact;
             try {
               if (act === "approve") {
-                if (!confirm("Duyệt giao dịch này? Số dư user sẽ được cập nhật.")) return;
+                const ok = await appConfirm({
+                  title: "Duyệt giao dịch",
+                  message: "Duyệt giao dịch này? Số dư của user sẽ được cập nhật ngay sau khi xác nhận.",
+                  confirmText: "Duyệt",
+                  confirmStyle: "success",
+                  icon: "✓",
+                  iconKind: "success"
+                });
+                if (!ok) return;
                 await api(`/api/admin/transactions/${id}/approve`);
               } else if (act === "reject") {
-                const reason = prompt("Lý do từ chối:", "Không hợp lệ");
+                const reason = await appPrompt({
+                  title: "Từ chối giao dịch",
+                  label: "Lý do từ chối (hiển thị cho user)",
+                  defaultValue: "Không hợp lệ",
+                  placeholder: "VD: Sai thông tin chuyển khoản",
+                  confirmText: "Từ chối",
+                  confirmStyle: "danger",
+                  icon: "✕",
+                  iconKind: "danger",
+                  validator: (v) => (v && v.trim() ? null : "Vui lòng nhập lý do")
+                });
                 if (reason == null) return;
-                await api(`/api/admin/transactions/${id}/reject`, { reason });
+                await api(`/api/admin/transactions/${id}/reject`, { reason: reason.trim() });
               }
               showToast("Đã cập nhật");
               refreshTxs();
@@ -2012,15 +2536,32 @@
           }
           if (action === "block") {
             const u = cachedUsers.find((x) => x.username === username);
-            const verb = u && u.blocked ? "mở khóa" : "khóa";
-            if (!confirm(`Bạn có chắc muốn ${verb} @${username}?`)) return;
+            const isBlocking = !(u && u.blocked);
+            const ok = await appConfirm({
+              title: isBlocking ? "Khoá user" : "Mở khoá user",
+              message: isBlocking
+                ? `Khoá tài khoản @${username}? User sẽ không thể đăng nhập hoặc nhận đơn cho tới khi được mở khoá.`
+                : `Mở khoá tài khoản @${username}? User sẽ có thể đăng nhập trở lại.`,
+              confirmText: isBlocking ? "Khoá" : "Mở khoá",
+              danger: isBlocking,
+              icon: isBlocking ? "🔒" : "🔓",
+              iconKind: isBlocking ? "danger" : "success"
+            });
+            if (!ok) return;
             const r = await api(`/api/admin/users/${username}/toggle-block`);
             showToast(r.message);
             refreshUsers();
             return;
           }
           if (action === "del") {
-            if (!confirm(`Xóa vĩnh viễn @${username}?\n\nMọi đơn hàng và giao dịch của user này cũng sẽ bị xóa. Hành động không thể hoàn tác.`)) return;
+            const ok = await appConfirm({
+              title: "Xoá user vĩnh viễn",
+              message: `Xoá vĩnh viễn @${username}?\n\nMọi đơn hàng và giao dịch của user này cũng sẽ bị xoá. Hành động này KHÔNG thể hoàn tác.`,
+              confirmText: "Xoá vĩnh viễn",
+              danger: true,
+              icon: "⚠"
+            });
+            if (!ok) return;
             const r = await api(`/api/admin/users/${username}/delete`);
             showToast(`${r.message} (đã xóa ${r.removedOrders} đơn, ${r.removedTxs} giao dịch)`);
             refreshUsers();
@@ -2029,15 +2570,18 @@
             return;
           }
           if (action === "add" || action === "sub") {
+            const u = cachedUsers.find((x) => x.username === username);
+            const result = await openAdjustBalanceDialog({
+              username,
+              fullName: u && u.fullName,
+              action
+            });
+            if (!result) return;
             const sign = action === "add" ? 1 : -1;
-            const sLabel = action === "add" ? "cộng" : "trừ";
-            const amtStr = prompt(`Nhập số tiền cần ${sLabel} cho @${username} (₫):`, "100000");
-            if (amtStr == null) return;
-            const amt = Math.abs(Number(String(amtStr).replace(/[^0-9]/g, "")));
-            if (!amt || amt <= 0) { showToast("Số tiền không hợp lệ"); return; }
-            const reason = prompt(`Lý do (sẽ hiện trong lịch sử của user):`, action === "add" ? "Thưởng từ admin" : "Trừ phí");
-            if (reason == null) return;
-            const r = await api(`/api/admin/users/${username}/adjust-balance`, { amount: sign * amt, reason });
+            const r = await api(`/api/admin/users/${username}/adjust-balance`, {
+              amount: sign * result.amount,
+              reason: result.reason
+            });
             showToast(r.message);
           } else if (action === "vip") {
             return openVipPicker(username);
@@ -2195,7 +2739,7 @@
         orderEmpty.style.display = "none";
         orderList.innerHTML = filtered.map((o) => {
           const pillCls = `pill-${o.status}`;
-          const pillText = { available: "Trong pool", claimed: "Chờ duyệt", approved: "Đã duyệt", rejected: "Từ chối", claim_pending: "Chờ phân phối" }[o.status] || o.status;
+          const pillText = { available: "Trong pool", claimed: "Chờ duyệt", submitted: "❄ Chờ dã đông", approved: "Đã duyệt", rejected: "Từ chối", claim_pending: "Chờ phân phối" }[o.status] || o.status;
           const assignedPill = o.assignedTo
             ? `<span class="pill" style="background:#fde68a;color:#92400e">→ @${o.assignedTo}</span>`
             : (o.status === "available" ? `<span class="pill" style="background:#dbeafe;color:#1e40af">Pool chung</span>` : "");
@@ -2210,6 +2754,8 @@
             actions = `${assignBtn}<button class="btn-danger" data-act="delete" data-id="${o.id}">Xóa</button>`;
           } else if (o.status === "claimed") {
             actions = `<button class="btn-success" data-act="approve" data-id="${o.id}">Duyệt</button><button class="btn-danger" data-act="reject" data-id="${o.id}">Từ chối</button>`;
+          } else if (o.status === "submitted") {
+            actions = `<button class="btn-success" data-act="approve" data-id="${o.id}">❄ Duyệt dã đông</button><button class="btn-danger" data-act="reject" data-id="${o.id}">Từ chối</button>`;
           } else {
             actions = `<button class="btn-ghost" data-act="delete" data-id="${o.id}">Xóa</button>`;
           }
@@ -2237,10 +2783,31 @@
             const id = b.dataset.id;
             const act = b.dataset.act;
             try {
-              if (act === "approve") await api(`/api/admin/orders/${id}/approve`);
+              if (act === "approve") {
+                const ord = (window.__lastOrders || []).find((o) => o.id === id);
+                if (ord && ord.status === "submitted") {
+                  const ok = await appConfirm({
+                    title: "Duyệt dã đông đơn",
+                    message: `Giải đông đơn ${id}?\n\nSố tiền ${Number(ord.amount||0).toLocaleString("vi-VN")} ₫ sẽ hoàn về số dư khả dụng của @${ord.claimedBy}, cộng thêm hoa hồng ${Number(ord.commission||0).toLocaleString("vi-VN")} ₫.`,
+                    confirmText: "Duyệt dã đông",
+                    confirmStyle: "success",
+                    icon: "❄",
+                    iconKind: "success"
+                  });
+                  if (!ok) return;
+                }
+                await api(`/api/admin/orders/${id}/approve`);
+              }
               else if (act === "reject") await api(`/api/admin/orders/${id}/reject`, { reason: "Admin từ chối" });
               else if (act === "delete") {
-                if (!confirm("Xóa đơn này?")) return;
+                const ok = await appConfirm({
+                  title: "Xoá đơn hàng",
+                  message: "Xoá đơn hàng này khỏi hệ thống? Hành động không thể hoàn tác.",
+                  confirmText: "Xoá",
+                  danger: true,
+                  icon: "🗑"
+                });
+                if (!ok) return;
                 await api(`/api/admin/orders/${id}/delete`);
               } else if (act === "assign") {
                 if (cachedUsers.length === 0) { showToast("Chưa có user nào"); return; }
@@ -2272,6 +2839,7 @@
           const available = list.orders.filter((o) => o.status === "available").length;
           poolCount.textContent = `Pool: ${available}`;
           const claimed = list.orders.filter((o) => o.status === "claimed").length;
+          const submitted = list.orders.filter((o) => o.status === "submitted").length;
           const approved = list.orders.filter((o) => o.status === "approved").length;
           const rejected = list.orders.filter((o) => o.status === "rejected").length;
           const claimPending = list.orders.filter((o) => o.status === "claim_pending").length;
@@ -2286,9 +2854,10 @@
           setBadge("#cntClaimPending", claimPending);
           setBadge("#cntAvailable", available);
           setBadge("#cntClaimed", claimed);
+          setBadge("#cntSubmitted", submitted);
           setBadge("#cntApproved", approved);
           setBadge("#cntRejected", rejected);
-          setBadge("#ordersBadge", claimed + claimPending);
+          setBadge("#ordersBadge", claimed + claimPending + submitted);
         } catch (e) {
           if (String(e.message).includes("admin")) {
             sessionStorage.removeItem(KEY);

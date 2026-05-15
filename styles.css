@@ -361,12 +361,249 @@ footer {
   background: linear-gradient(#2398f2 0 610px, #ffffff 610px);
 }
 
+.tiki-brand-bar {
+  background: #ffffff;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.site-footer {
+  margin: 28px 0 0;
+  padding: 8px 0 18px;
+  background: #f5f7fb;
+  border-top: 1px solid #e6eaf2;
+  color: #475569;
+  font-size: 14px;
+}
+
+.site-footer-cols {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer-col {
+  border-bottom: 1px solid #e6eaf2;
+}
+
+.site-footer-col:last-child {
+  border-bottom: 0;
+}
+
+.site-footer-col h3 {
+  margin: 0;
+  padding: 16px 18px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f1729;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.site-footer-col h3::after {
+  content: "▾";
+  color: #94a3b8;
+  font-size: 14px;
+  transition: transform 0.18s;
+}
+
+.site-footer-col.is-collapsed h3::after {
+  transform: rotate(-90deg);
+}
+
+.site-footer-col-body {
+  padding: 0 18px 14px;
+  display: block;
+}
+
+.site-footer-col.is-collapsed .site-footer-col-body {
+  display: none;
+}
+
+.site-footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.site-footer-col li {
+  line-height: 1.4;
+}
+
+.site-footer-col a {
+  color: #475569;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.site-footer-col a:active {
+  color: #1a94ff;
+}
+
+.footer-hotline {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e6eaf2;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.footer-hotline strong {
+  color: #0f1729;
+}
+
+.footer-hotline a {
+  color: #1a94ff;
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.footer-hotline small {
+  color: #94a3b8;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+.footer-badges {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.footer-badges img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.footer-badge-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-badge-seal svg {
+  width: 44px;
+  height: 44px;
+  display: block;
+}
+
+.footer-badge-text {
+  display: inline-block;
+  padding: 8px 12px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.site-footer-bottom {
+  margin-top: 18px;
+  padding: 14px 18px 0;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* Referral progress + claim button */
+.referral-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.referral-progress-bar span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.btn-claim-referral {
+  width: 100%;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.28);
+  transition: transform 0.12s, filter 0.12s;
+}
+.btn-claim-referral:hover { filter: brightness(1.05); }
+.btn-claim-referral:active { transform: scale(0.98); }
+.btn-claim-referral:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-claim-referral.is-pending {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.28);
+}
+
+/* Referral bonus history list */
+.referral-history-list {
+  display: grid;
+  gap: 8px;
+}
+.ref-hist-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e6eaf2;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.ref-hist-row strong { display: block; color: #0f1729; font-size: 13px; }
+.ref-hist-row small { color: #64748b; font-size: 11px; display: block; margin-top: 2px; }
+.ref-hist-amount { font-weight: 800; color: #22c55e; font-size: 14px; }
+.ref-hist-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+.ref-hist-status.is-locked { background: #fef3c7; color: #92400e; }
+.ref-hist-status.is-claimed { background: #dbeafe; color: #1e40af; }
+
+.tiki-brand-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
 .sale-heading {
   display: flex;
   align-items: end;
   justify-content: space-between;
   gap: 10px;
-  padding: 56px 14px 8px;
+  padding: 18px 14px 8px;
   color: #ffffff;
   background: linear-gradient(180deg, #1565f4 0%, #0d63f5 100%);
 }
