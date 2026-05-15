@@ -1,6 +1,235 @@
 {
   "logs": [
     {
+      "id": "AL-1778874595530-709z",
+      "ts": 1778874595530,
+      "action": "user-add-balance",
+      "target": "demoref628915715000",
+      "details": {
+        "amount": 100000,
+        "reason": "Test thu?ng admin"
+      }
+    },
+    {
+      "id": "AL-1778874245255-m0zt",
+      "ts": 1778874245255,
+      "action": "order-create",
+      "target": "ORD-0E1ZUK",
+      "details": {
+        "productTitle": "TEST INSUFFICIENT",
+        "amount": 20000000,
+        "assignedTo": "buingoc108"
+      }
+    },
+    {
+      "id": "AL-1778874230827-78zg",
+      "ts": 1778874230827,
+      "action": "order-approve-direct",
+      "target": "ORD-YPUUV3",
+      "details": {
+        "user": "buingoc108",
+        "amount": 500000,
+        "commission": 25000
+      }
+    },
+    {
+      "id": "AL-1778874220191-pkmg",
+      "ts": 1778874220191,
+      "action": "order-claim",
+      "target": "ORD-YPUUV3",
+      "details": {
+        "username": "buingoc108",
+        "amount": 500000,
+        "commission": 25000
+      }
+    },
+    {
+      "id": "AL-1778874208240-wl0h",
+      "ts": 1778874208240,
+      "action": "order-create",
+      "target": "ORD-YPUUV3",
+      "details": {
+        "productTitle": "TEST CLAIM-APPROVE FLOW",
+        "amount": 500000,
+        "assignedTo": "buingoc108"
+      }
+    },
+    {
+      "id": "AL-1778873999742-x8pd",
+      "ts": 1778873999742,
+      "action": "user-add-balance",
+      "target": "buingoc108",
+      "details": {
+        "amount": 500000,
+        "reason": "Hoàn tiền hỗ trợ"
+      }
+    },
+    {
+      "id": "AL-1778873449336-m408",
+      "ts": 1778873449336,
+      "action": "order-delete",
+      "target": "ORD-A9HUED",
+      "details": null
+    },
+    {
+      "id": "AL-1778872855161-szme",
+      "ts": 1778872855161,
+      "action": "order-submit",
+      "target": "ORD-0ARHMB",
+      "details": {
+        "user": "buingoc108",
+        "amount": 2000000,
+        "commission": 500000
+      }
+    },
+    {
+      "id": "AL-1778872770130-m7f4",
+      "ts": 1778872770130,
+      "action": "order-distribute",
+      "target": "ORD-0ARHMB",
+      "details": {
+        "amount": 2000000,
+        "claimedBy": "buingoc108",
+        "commission": 500000,
+        "productTitle": "Tủ lạnh Casper Side by Side 462L"
+      }
+    },
+    {
+      "id": "AL-1778872757198-fjvz",
+      "ts": 1778872757198,
+      "action": "order-claim-pending",
+      "target": "ORD-0ARHMB",
+      "details": {
+        "username": "buingoc108"
+      }
+    },
+    {
+      "id": "AL-1778872736645-sryw",
+      "ts": 1778872736645,
+      "action": "order-approve",
+      "target": "ORD-9JHX72",
+      "details": {
+        "user": "buingoc108",
+        "amount": 15990000,
+        "commission": 79950
+      }
+    },
+    {
+      "id": "AL-1778872628618-3p15",
+      "ts": 1778872628618,
+      "action": "order-claim-pending",
+      "target": "ORD-9JHX72",
+      "details": {
+        "username": "buingoc108"
+      }
+    },
+    {
+      "id": "AL-1778871828560-fdsa",
+      "ts": 1778871828560,
+      "action": "order-reject",
+      "target": "ORD-DNCE4K",
+      "details": {
+        "user": "buingoc108",
+        "reason": "Admin từ chối"
+      }
+    },
+    {
+      "id": "AL-1778871547585-bvp7",
+      "ts": 1778871547585,
+      "action": "order-reject",
+      "target": "ORD-6PJ5MV",
+      "details": {
+        "user": "buingoc108",
+        "reason": "Admin từ chối"
+      }
+    },
+    {
+      "id": "AL-1778871488386-x888",
+      "ts": 1778871488386,
+      "action": "order-distribute",
+      "target": "ORD-6PJ5MV",
+      "details": {
+        "amount": 1000000,
+        "claimedBy": "buingoc108",
+        "commission": 100000,
+        "productTitle": "Laptop Asus Vivobook 15 OLED i5"
+      }
+    },
+    {
+      "id": "AL-1778871386782-ah2l",
+      "ts": 1778871386782,
+      "action": "order-submit",
+      "target": "ORD-ZSXUCT",
+      "details": {
+        "user": "buingoc108",
+        "amount": 1000000,
+        "commission": 100000
+      }
+    },
+    {
+      "id": "AL-1778870294839-ltqz",
+      "ts": 1778870294839,
+      "action": "tx-reject",
+      "target": "TX-TI7K2E",
+      "details": {
+        "type": "withdraw",
+        "user": "buingoc108",
+        "reason": "Không hợp lệ"
+      }
+    },
+    {
+      "id": "AL-1778869652284-pnyv",
+      "ts": 1778869652284,
+      "action": "tx-approve",
+      "target": "TX-ZL9CIF",
+      "details": {
+        "type": "deposit",
+        "user": "buingoc108",
+        "amount": 5000000
+      }
+    },
+    {
+      "id": "AL-1778869146497-ducn",
+      "ts": 1778869146497,
+      "action": "order-reject",
+      "target": "ORD-GQH04R",
+      "details": {
+        "user": "buingoc108",
+        "reason": "Admin từ chối"
+      }
+    },
+    {
+      "id": "AL-1778869096440-nl90",
+      "ts": 1778869096440,
+      "action": "order-distribute",
+      "target": "ORD-GQH04R",
+      "details": {
+        "amount": 319000,
+        "claimedBy": "buingoc108",
+        "commission": 15950,
+        "productTitle": "Xe đạp Thống Nhất thể thao GN700C  - Hàng chính hãng (Phù hợp với người cao từ 1m60 trở lên)"
+      }
+    },
+    {
+      "id": "AL-1778869076460-cu0i",
+      "ts": 1778869076460,
+      "action": "order-claim-pending",
+      "target": "ORD-GQH04R",
+      "details": {
+        "username": "buingoc108"
+      }
+    },
+    {
+      "id": "AL-1778868615451-llic",
+      "ts": 1778868615451,
+      "action": "user-add-balance",
+      "target": "buingoc109",
+      "details": {
+        "amount": 2000000,
+        "reason": "Thưởng từ admin"
+      }
+    },
+    {
       "id": "AL-1778866549005-onb5",
       "ts": 1778866549005,
       "action": "tx-approve",

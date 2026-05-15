@@ -1716,6 +1716,16 @@ footer {
   color: #92400e;
 }
 
+.tx-status.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tx-status.approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
 /* ============ MODALS ============ */
 .modal-overlay {
   position: fixed;

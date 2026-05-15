@@ -1345,18 +1345,37 @@ async function handleAdminApproveOrder(request, response, orderId) {
       sendJson(response, 404, { ok: false, message: "Không tìm thấy đơn." });
       return;
     }
-    const prevStatus = db.orders[idx].status;
+    const order = db.orders[idx];
+    const prevStatus = order.status;
     if (prevStatus !== "claimed" && prevStatus !== "submitted") {
       sendJson(response, 400, { ok: false, message: "Đơn không ở trạng thái chờ duyệt." });
       return;
     }
-    db.orders[idx].status = "approved";
-    db.orders[idx].approvedAt = Date.now();
+    // Nếu đơn ở claimed (user chưa submit), admin duyệt thì cần thực hiện cả 2 step:
+    //   1) "submit" giả lập: kiểm tra balance available >= amount
+    //   2) approve: chuyển sang approved (luồng tính tiền giống user submit + admin duyệt)
+    // Cả 2 step đều cho cùng kết quả cuối: total += commission.
+    if (prevStatus === "claimed") {
+      const amt = Number(order.amount || 0);
+      const bal = computeBalance(order.claimedBy);
+      if (bal.available < amt) {
+        sendJson(response, 400, {
+          ok: false,
+          message: `Số dư khả dụng của @${order.claimedBy} không đủ (cần ${amt.toLocaleString("vi-VN")} ₫, hiện có ${bal.available.toLocaleString("vi-VN")} ₫). Yêu cầu user nạp thêm tiền hoặc để user tự gửi đơn khi đủ.`,
+        });
+        return;
+      }
+      order.submittedAt = Date.now();
+    }
+    order.status = "approved";
+    order.approvedAt = Date.now();
     writeOrders(db);
-    const auditAction = prevStatus === "submitted" ? "order-unfreeze" : "order-approve";
-    audit(auditAction, orderId, { user: db.orders[idx].claimedBy, amount: db.orders[idx].amount, commission: db.orders[idx].commission });
-    const msg = prevStatus === "submitted" ? "Đã duyệt dã đông, tiền đã hoàn về số dư khả dụng." : "Đã duyệt đơn.";
-    sendJson(response, 200, { ok: true, message: msg, order: db.orders[idx] });
+    const auditAction = prevStatus === "submitted" ? "order-unfreeze" : "order-approve-direct";
+    audit(auditAction, orderId, { user: order.claimedBy, amount: order.amount, commission: order.commission });
+    const msg = prevStatus === "submitted"
+      ? "Đã duyệt dã đông, tiền đã hoàn về số dư khả dụng."
+      : `Đã duyệt đơn. User @${order.claimedBy} nhận được hoa hồng ${Number(order.commission || 0).toLocaleString("vi-VN")} ₫.`;
+    sendJson(response, 200, { ok: true, message: msg, order });
   } catch (e) {
     sendJson(response, 400, { ok: false, message: "Lỗi." });
   }

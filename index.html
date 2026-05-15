@@ -1598,19 +1598,27 @@
       }
 
       function txItemHtml(tx, opts = {}) {
-        const isDeposit = tx.type === "deposit";
-        const sign = isDeposit ? "+" : "-";
-        const amountClass = isDeposit ? "up" : "down";
-        const iconPath = isDeposit
+        const amt = Number(tx.amount || 0);
+        const absAmt = Math.abs(amt);
+        // Xác định "money in" (xanh +) hay "money out" (đỏ −) theo type và sign
+        let isIn;
+        if (tx.type === "deposit" || tx.type === "referral-bonus") isIn = true;
+        else if (tx.type === "withdraw" || tx.type === "referral-claim") isIn = false;
+        else if (tx.type === "adjustment") isIn = amt >= 0;
+        else isIn = amt >= 0;
+        const sign = isIn ? "+" : "−";
+        const amountClass = isIn ? "up" : "down";
+        const iconPath = isIn
           ? '<path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />'
           : '<path d="M17 7 7 17m0 0h8m-8 0v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />';
-        const note = tx.note || (isDeposit
-          ? `Nạp tiền ${tx.amount.toLocaleString("vi-VN")} ₫ qua ${tx.source || "ngân hàng"}`
-          : `Rút tiền ${tx.amount.toLocaleString("vi-VN")} ₫ về ${tx.source || "ngân hàng"}`);
+        const note = tx.note || `${tx.type} ${absAmt.toLocaleString("vi-VN")} ₫`;
         const right = opts.includeSource
-          ? `<div class="tx-right"><span class="tx-amount ${amountClass}">${sign}${tx.amount.toLocaleString("vi-VN")} ₫</span><small class="tx-source">${tx.source || (isDeposit ? "Ngân hàng" : "Rút về")}</small></div>`
-          : `<span class="tx-amount ${amountClass}">${sign}${tx.amount.toLocaleString("vi-VN")} ₫</span>`;
-        const statusBadge = tx.status === "pending" ? '<span class="tx-status pending">Đang xử lý</span>' : "";
+          ? `<div class="tx-right"><span class="tx-amount ${amountClass}">${sign}${absAmt.toLocaleString("vi-VN")} ₫</span><small class="tx-source">${tx.source || "Hệ thống"}</small></div>`
+          : `<span class="tx-amount ${amountClass}">${sign}${absAmt.toLocaleString("vi-VN")} ₫</span>`;
+        let statusBadge = "";
+        if (tx.status === "pending") statusBadge = '<span class="tx-status pending">⏳ Đang xử lý</span>';
+        else if (tx.status === "rejected") statusBadge = '<span class="tx-status rejected">✕ Đã từ chối</span>';
+        else if (tx.status === "completed" || tx.status === "approved") statusBadge = '<span class="tx-status approved">✓ Hoàn tất</span>';
         return `
           <li>
             <span class="tx-icon tx-icon-${tx.type}"><svg viewBox="0 0 24 24">${iconPath}</svg></span>
@@ -1628,10 +1636,14 @@
 
       function renderTxs() {
         const list = loadTxs();
-        // Recent on wallet main (top 1)
+        // Recent on wallet main — hiện toàn bộ lịch sử
         const recent = document.querySelector("#txListRecent");
         if (recent) {
-          recent.innerHTML = list.slice(0, 1).map((t) => txItemHtml(t)).join("");
+          if (list.length === 0) {
+            recent.innerHTML = `<li class="tx-empty" style="padding:18px;text-align:center;color:#94a3b8;font-size:13px">Chưa có giao dịch nào</li>`;
+          } else {
+            recent.innerHTML = list.map((t) => txItemHtml(t, { includeSource: true })).join("");
+          }
         }
         // History balance tab (all)
         const fullBal = document.querySelector("#txListBalance");
@@ -2211,18 +2223,42 @@
             updateVipDisplay();
           }
           // Sync server txs into local for rendering
-          const serverTxs = (d.txs || []).map((t) => ({
-            id: t.id,
-            type: t.type,
-            amount: t.amount,
-            status: t.status === "approved" ? "completed" : t.status,
-            source: t.bankInfo ? `${t.bankInfo.bank} (${t.bankInfo.account})` : (t.paymentMethod || "Hệ thống"),
-            note: (t.type === "deposit"
-              ? `Yêu cầu nạp tiền ${t.amount.toLocaleString("vi-VN")} ₫`
-              : `Yêu cầu rút tiền ${t.amount.toLocaleString("vi-VN")} ₫ về ${t.bankInfo ? t.bankInfo.bank : 'NH'}`)
-              + (t.status === "rejected" ? ` (Bị từ chối: ${t.rejectedReason || ""})` : ""),
-            ts: t.createdAt
-          }));
+          const serverTxs = (d.txs || []).map((t) => {
+            const amt = Number(t.amount || 0);
+            const absAmt = Math.abs(amt);
+            let note = "";
+            let source = "Hệ thống";
+            if (t.type === "deposit") {
+              note = `Yêu cầu nạp tiền ${amt.toLocaleString("vi-VN")} ₫`;
+              source = t.bankInfo ? `${t.bankInfo.bank} (${t.bankInfo.account})` : (t.paymentMethod || "Chuyển khoản");
+            } else if (t.type === "withdraw") {
+              note = `Yêu cầu rút tiền ${amt.toLocaleString("vi-VN")} ₫ về ${t.bankInfo ? t.bankInfo.bank : "NH"}`;
+              source = t.bankInfo ? `${t.bankInfo.bank} (${t.bankInfo.account})` : "Ngân hàng";
+            } else if (t.type === "adjustment") {
+              note = (amt >= 0 ? "Admin cộng tiền " : "Admin trừ tiền ") + absAmt.toLocaleString("vi-VN") + " ₫";
+              if (t.reason) note += ` — ${t.reason}`;
+              source = "Điều chỉnh từ admin";
+            } else if (t.type === "referral-bonus") {
+              note = `Hoa hồng giới thiệu +${absAmt.toLocaleString("vi-VN")} ₫`;
+              if (t.referredUser) note += ` (từ @${t.referredUser})`;
+              source = "Chương trình giới thiệu";
+            } else if (t.type === "referral-claim") {
+              note = `Rút hoa hồng giới thiệu ${absAmt.toLocaleString("vi-VN")} ₫`;
+              source = "Rút hoa hồng";
+            } else {
+              note = `${t.type}: ${absAmt.toLocaleString("vi-VN")} ₫`;
+            }
+            if (t.status === "rejected") note += ` (Bị từ chối: ${t.rejectedReason || ""})`;
+            return {
+              id: t.id,
+              type: t.type,
+              amount: amt,
+              status: t.status === "approved" ? "completed" : t.status,
+              source,
+              note,
+              ts: t.createdAt,
+            };
+          });
           // Seed system entry on top if no deposits/withdrawals at all
           if (serverTxs.length === 0) {
             serverTxs.push({
