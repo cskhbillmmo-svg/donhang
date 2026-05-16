@@ -873,6 +873,8 @@ async function handleAdminCreateProduct(request, response) {
     const title = String(data.title || "").trim();
     const img = String(data.img || "").trim();
     const amount = Math.max(0, Math.round(Number(data.amount || 0)));
+    const rating = data.rating == null || data.rating === "" ? null : Math.max(0, Math.min(5, Number(data.rating)));
+    const orderCount = data.orderCount == null || data.orderCount === "" ? null : Math.max(0, Math.round(Number(data.orderCount)));
     if (!title) {
       sendJson(response, 400, { ok: false, message: "Cần nhập tên sản phẩm." });
       return;
@@ -884,6 +886,8 @@ async function handleAdminCreateProduct(request, response) {
       title,
       img,
       amount,
+      rating,
+      orderCount,
       enabled: true,
       createdAt: Date.now(),
     };
@@ -914,6 +918,12 @@ async function handleAdminUpdateProduct(request, response, productId) {
     if (data.title != null) p.products[idx].title = String(data.title).trim();
     if (data.img != null) p.products[idx].img = String(data.img).trim();
     if (data.amount != null) p.products[idx].amount = Math.max(0, Math.round(Number(data.amount || 0)));
+    if (Object.prototype.hasOwnProperty.call(data, "rating")) {
+      p.products[idx].rating = data.rating == null || data.rating === "" ? null : Math.max(0, Math.min(5, Number(data.rating)));
+    }
+    if (Object.prototype.hasOwnProperty.call(data, "orderCount")) {
+      p.products[idx].orderCount = data.orderCount == null || data.orderCount === "" ? null : Math.max(0, Math.round(Number(data.orderCount)));
+    }
     if (data.enabled != null) p.products[idx].enabled = !!data.enabled;
     writeProducts(p);
     audit("product-update", productId, { fields: Object.keys(data).filter((k) => k !== "adminPassword") });

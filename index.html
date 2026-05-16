@@ -16,19 +16,9 @@
     <main class="mobile-auth" id="appShell">
       <section class="hero">
         <div class="app-icon" aria-hidden="true">
-          <svg class="tiki-mark" viewBox="0 0 96 96" role="img">
-            <rect width="96" height="96" rx="0" fill="#0b74ff" />
-            <path d="M17 34h21" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M27.5 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M45 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M59 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M75 34 61 48" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M62 48 76 63" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-            <path d="M82 34v29" stroke="#fff" stroke-width="7.5" stroke-linecap="round" />
-          </svg>
+          <img class="tiki-mark" src="./banners/logo.png" alt="Tiki - Tốt & Nhanh" />
         </div>
 
-        <h1>Tiki</h1>
         <p>Hệ thống xử lý đơn hàng chuyên nghiệp</p>
       </section>
 
@@ -316,25 +306,41 @@
                   </ul>
                   <h4 style="margin: 18px 0 10px; font-size: 14px; font-weight: 800; color: #0f1729;">Chứng nhận bởi</h4>
                   <div class="footer-badges">
-                    <a href="#" class="footer-badge-seal" aria-label="Đã thông báo Bộ Công Thương">
+                    <a href="#" class="footer-badge-seal" aria-label="Thương hiệu chính hãng - Bộ Công Thương">
                       <svg viewBox="0 0 64 64" aria-hidden="true">
                         <defs>
-                          <path id="bctTopPath" d="M 8 32 A 24 24 0 0 1 56 32" fill="none" />
-                          <path id="bctBotPath" d="M 11 38 A 22 22 0 0 0 53 38" fill="none" />
+                          <path id="bctTopPath" d="M 9 32 A 23 23 0 0 1 55 32" fill="none" />
+                          <path id="bctBotPath" d="M 11 36 A 21 21 0 0 0 53 36" fill="none" />
                         </defs>
-                        <circle cx="32" cy="32" r="31" fill="#b91c1c" />
-                        <circle cx="32" cy="32" r="29" fill="none" stroke="#fff" stroke-width="0.8" />
-                        <circle cx="32" cy="32" r="22" fill="#fff7ed" />
-                        <text fill="#fff" font-size="5.4" font-weight="800" font-family="Arial" letter-spacing="0.3">
-                          <textPath href="#bctTopPath" startOffset="50%" text-anchor="middle">BỘ CÔNG THƯƠNG</textPath>
+                        <circle cx="32" cy="32" r="31" fill="#c0252a" />
+                        <circle cx="32" cy="32" r="28.5" fill="none" stroke="#fff" stroke-width="0.7" stroke-dasharray="1.6 1.4" />
+                        <circle cx="32" cy="32" r="25" fill="#fff" />
+                        <circle cx="32" cy="32" r="24" fill="none" stroke="#c0252a" stroke-width="0.6" />
+                        <text fill="#fff" font-size="4.6" font-weight="800" font-family="Arial" letter-spacing="0.25">
+                          <textPath href="#bctTopPath" startOffset="50%" text-anchor="middle">THƯƠNG HIỆU CHÍNH HÃNG</textPath>
                         </text>
-                        <text fill="#fff" font-size="5" font-weight="800" font-family="Arial" letter-spacing="0.2">
-                          <textPath href="#bctBotPath" startOffset="50%" text-anchor="middle">ĐÃ THÔNG BÁO</textPath>
+                        <text fill="#fff" font-size="4.6" font-weight="800" font-family="Arial" letter-spacing="0.25">
+                          <textPath href="#bctBotPath" startOffset="50%" text-anchor="middle">BỘ CÔNG THƯƠNG</textPath>
                         </text>
-                        <path d="M21 33 L29 41 L43 24" fill="none" stroke="#b91c1c" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+                        <g fill="none" stroke="#c0252a" stroke-width="1.6" stroke-linecap="round">
+                          <path d="M26 22 C26 18, 38 18, 38 22 C38 26, 38 32, 36 38 C35 41, 33 43, 30 42" />
+                          <path d="M28.5 23.5 C28.5 20.5, 35.5 20.5, 35.5 23.5 C35.5 27, 35.5 33, 33.8 38 C33 40.2, 31 41.5, 29 40.5" />
+                          <path d="M31 25 C31 22.5, 33 22.5, 33 25 C33 28.5, 33 33, 31.5 37.5" />
+                          <path d="M24 28 C24 25, 27 25, 27 28 C27 32, 27 36, 26 40" />
+                          <path d="M40 28 C40 25, 37 25, 37 28 C37 32, 37 36, 38 40" />
+                        </g>
                       </svg>
                     </a>
-                    <span class="footer-badge-text">Đã đăng ký<br />Bộ Công Thương</span>
+                    <a href="#" class="footer-badge-seal footer-badge-bct" aria-label="Đã đăng ký Bộ Công Thương">
+                      <svg viewBox="0 0 260 80" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="42" cy="42" r="36" fill="#c0252a" />
+                        <path d="M24 44 L37 57 L62 28" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                        <text x="42" y="14" text-anchor="middle" fill="#c0252a" font-size="7.5" font-weight="800" font-family="Arial, sans-serif">ONLINE.GOV.VN</text>
+                        <text x="90" y="36" fill="#c0252a" font-size="18" font-weight="900" font-family="Arial Black, Arial, sans-serif">ĐÃ ĐĂNG KÝ</text>
+                        <rect x="88" y="44" width="168" height="26" rx="3" fill="#c0252a" />
+                        <text x="172" y="63" text-anchor="middle" fill="#fff" font-size="14" font-weight="900" font-family="Arial Black, Arial, sans-serif">BỘ CÔNG THƯƠNG</text>
+                      </svg>
+                    </a>
                     <img src="https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=" alt="DMCA Protected" />
                   </div>
                 </div>
@@ -1084,7 +1090,7 @@
           const r = await fetch("/api/products");
           if (!r.ok) return;
           const d = await r.json();
-          PRODUCTS = (d.products || []).filter((p) => p.enabled !== false).map((p) => ({ title: p.title, img: p.img }));
+          PRODUCTS = (d.products || []).filter((p) => p.enabled !== false).map((p) => ({ title: p.title, img: p.img, rating: p.rating, orderCount: p.orderCount }));
           renderProducts();
         } catch (e) {}
       }
@@ -1144,7 +1150,7 @@
             <div>
               <span class="choice">CHOICE</span>
               <h3>${p.title}</h3>
-              <p><span>★</span> 4.9 (1234)</p>
+              <p><span>★</span> ${p.rating != null && p.rating !== "" ? p.rating : "4.9"} (${p.orderCount != null && p.orderCount !== "" ? Number(p.orderCount).toLocaleString("vi-VN") : "1234"})</p>
             </div>
           </article>
         `).join("");
@@ -2168,7 +2174,7 @@
               : o.status === "claimed" ? "Chờ user gửi đơn"
               : o.status === "submitted" ? "Chờ admin duyệt dã đông"
               : o.status === "approved" ? "Đã hoàn thành"
-              : o.status === "rejected" ? "Đơn bị từ chối"
+              : o.status === "rejected" ? "PHÂN PHỐI ĐƠN HÀNG KHÔNG THÀNH CÔNG"
               : status === "done" ? "Hoàn Thành" : o.productTitle;
             return {
               id: o.id,
@@ -2235,9 +2241,8 @@
               note = `Yêu cầu rút tiền ${amt.toLocaleString("vi-VN")} ₫ về ${t.bankInfo ? t.bankInfo.bank : "NH"}`;
               source = t.bankInfo ? `${t.bankInfo.bank} (${t.bankInfo.account})` : "Ngân hàng";
             } else if (t.type === "adjustment") {
-              note = (amt >= 0 ? "Admin cộng tiền " : "Admin trừ tiền ") + absAmt.toLocaleString("vi-VN") + " ₫";
-              if (t.reason) note += ` — ${t.reason}`;
-              source = "Điều chỉnh từ admin";
+              note = t.reason ? t.reason : (amt >= 0 ? "Cộng tiền" : "Trừ tiền");
+              source = "";
             } else if (t.type === "referral-bonus") {
               note = `Hoa hồng giới thiệu +${absAmt.toLocaleString("vi-VN")} ₫`;
               if (t.referredUser) note += ` (từ @${t.referredUser})`;

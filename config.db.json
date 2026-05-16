@@ -9,8 +9,8 @@
     },
     "VIP2": {
       "rate": 0.008,
-      "refRate": 0.18,
-      "dailyCap": 13,
+      "refRate": 0.17,
+      "dailyCap": 14,
       "maxRange": 30000000,
       "minRange": 0
     },

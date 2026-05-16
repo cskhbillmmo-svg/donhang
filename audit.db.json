@@ -1,6 +1,56 @@
 {
   "logs": [
     {
+      "id": "AL-1778945501735-dv0h",
+      "ts": 1778945501735,
+      "action": "product-update",
+      "target": "P-W3HTRF",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount",
+          "rating",
+          "orderCount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778945328413-r98p",
+      "ts": 1778945328413,
+      "action": "product-update",
+      "target": "P-W3HTRF",
+      "details": {
+        "fields": [
+          "title",
+          "img",
+          "amount",
+          "rating",
+          "orderCount"
+        ]
+      }
+    },
+    {
+      "id": "AL-1778945149708-p014",
+      "ts": 1778945149708,
+      "action": "user-sub-balance",
+      "target": "demo",
+      "details": {
+        "amount": -500000,
+        "reason": "Sai sót cần điều chỉnh"
+      }
+    },
+    {
+      "id": "AL-1778945126931-ufpd",
+      "ts": 1778945126931,
+      "action": "user-add-balance",
+      "target": "demo",
+      "details": {
+        "amount": 100000,
+        "reason": "lồn"
+      }
+    },
+    {
       "id": "AL-1778874686005-lnsc",
       "ts": 1778874686005,
       "action": "user-sub-balance",

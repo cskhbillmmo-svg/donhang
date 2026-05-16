@@ -137,16 +137,35 @@
     },
     {
       "id": "87b75e0d-c222-45a6-891b-81c71ae22ab3",
-      "salt": "24271253c127ddcd756f56279c138029",
+      "salt": "45a74b9c30542600fc4686ac9583d27b",
       "phone": "0862206751",
       "blocked": false,
+      "bankInfo": {
+        "bank": "",
+        "branch": "",
+        "holder": "",
+        "account": ""
+      },
       "fullName": "buingoc108",
       "username": "buingoc108",
-      "vipLevel": "VIP1",
+      "vipLevel": "VIP2",
       "createdAt": "2026-05-15T12:13:00.438Z",
       "referredBy": "buingoc109",
-      "passwordHash": "35f33be0f086fdf8f4eb062594bd6dbf8d29052954cfc2d6f6ac651a5f19e1e0",
+      "passwordHash": "b2178bf092236924c6a9f3234d09bd22066796848144a3301f49f650761d1436",
       "referralCode": "168320"
+    },
+    {
+      "id": "bc91f15b-1ab9-469e-9e77-4f75ff52708d",
+      "salt": "52a2f097cb80853245e87d587fb7bc28",
+      "phone": "123456789",
+      "blocked": false,
+      "fullName": "buingoc107",
+      "username": "buingoc107",
+      "vipLevel": "VIP1",
+      "createdAt": "2026-05-16T13:37:36.477Z",
+      "referredBy": "buingoc108",
+      "passwordHash": "d8173da45629c09dc76262c9d52dc2ded75cef30f43a516f0f8a77d3c2af0ce1",
+      "referralCode": "772759"
     }
   ]
 }

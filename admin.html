@@ -1066,8 +1066,12 @@
                 <div style="display:grid;gap:8px">
                   <label style="margin:0">Tên sản phẩm <input name="title" required placeholder="VD: Tủ lạnh Casper..." /></label>
                   <label style="margin:0">URL ảnh sản phẩm <input name="img" id="productFormImg" placeholder="https://images.unsplash.com/..." /></label>
-                  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
                     <label style="margin:0">Số tiền (₫) <input name="amount" type="number" min="0" step="any" placeholder="VD: 500000" /></label>
+                    <label style="margin:0">Đánh giá ★ <input name="rating" type="number" min="0" max="5" step="0.1" placeholder="VD: 4.9" /></label>
+                    <label style="margin:0">Số đơn đã bán <input name="orderCount" type="number" min="0" step="1" placeholder="VD: 1234" /></label>
+                  </div>
+                  <div style="display:flex;justify-content:flex-end">
                     <button type="submit" class="btn-primary" style="width:auto;min-height:42px">+ Thêm sản phẩm</button>
                   </div>
                 </div>
@@ -1144,6 +1148,10 @@
                 <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Tên sản phẩm <input name="title" required style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
                 <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">URL ảnh sản phẩm <input name="img" id="peImg" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
                 <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Số tiền (₫) <input name="amount" type="number" min="0" step="any" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Đánh giá ★ <input name="rating" type="number" min="0" max="5" step="0.1" placeholder="VD: 4.9" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                  <label style="margin:0;display:grid;gap:6px;font-size:12px;color:#64748b">Số đơn đã bán <input name="orderCount" type="number" min="0" step="1" placeholder="VD: 1234" style="padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px" /></label>
+                </div>
               </div>
             </div>
             <div style="display:flex;gap:8px;justify-content:flex-end">
@@ -1706,6 +1714,13 @@
         _abError.classList.remove("is-show");
         _abConfirm.textContent = isAdd ? "Cộng tiền" : "Trừ tiền";
         _abConfirm.className = "btn-confirm " + (isAdd ? "is-success" : "is-danger");
+        const _abSign = isAdd ? "+" : "−";
+        _abQuick.querySelectorAll("button[data-amt]").forEach((btn) => {
+          if (btn.classList.contains("is-clear")) return;
+          const amt = Number(btn.dataset.amt);
+          const label = amt >= 1000000 ? "1Tr" : amt >= 1000 ? amt / 1000 + "K" : String(amt);
+          btn.textContent = _abSign + label;
+        });
         const reasons = isAdd
           ? ["Thưởng từ admin", "Hoàn tiền hỗ trợ", "Nạp bù", "Khuyến mãi"]
           : ["Trừ phí", "Sai sót cần điều chỉnh", "Hoàn trả thưởng", "Vi phạm"];
@@ -2057,16 +2072,22 @@
         peForm.elements.title.value = p.title || "";
         peForm.elements.img.value = p.img || "";
         peForm.elements.amount.value = p.amount || "";
+        peForm.elements.rating.value = p.rating != null ? p.rating : "";
+        peForm.elements.orderCount.value = p.orderCount != null ? p.orderCount : "";
         updatePePreview();
         productEditModal.style.display = "flex";
       }
       peForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const fd = new FormData(peForm);
+        const ratingRaw = fd.get("rating");
+        const orderCountRaw = fd.get("orderCount");
         const body = {
           title: fd.get("title"),
           img: fd.get("img"),
           amount: Number(fd.get("amount") || 0),
+          rating: ratingRaw === "" || ratingRaw == null ? null : Number(ratingRaw),
+          orderCount: orderCountRaw === "" || orderCountRaw == null ? null : Number(orderCountRaw),
         };
         try {
           await api(`/api/admin/products/${fd.get("id")}/update`, body);
@@ -2115,10 +2136,14 @@
         e.preventDefault();
         const fd = new FormData(e.target);
         try {
+          const ratingRaw = fd.get("rating");
+          const orderCountRaw = fd.get("orderCount");
           await api("/api/admin/products/create", {
             title: fd.get("title"),
             img: fd.get("img"),
             amount: Number(fd.get("amount") || 0),
+            rating: ratingRaw === "" || ratingRaw == null ? null : Number(ratingRaw),
+            orderCount: orderCountRaw === "" || orderCountRaw == null ? null : Number(orderCountRaw),
           });
           e.target.reset();
           productFormPreview.style.backgroundImage = "";
